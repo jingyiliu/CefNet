@@ -71,17 +71,6 @@ namespace CefNet.CApi
 		public int ignore_certificate_errors;
 
 		/// <summary>
-		/// Set to true (1) to enable date-based expiration of built in network
-		/// security information (i.e. certificate transparency logs, HSTS preloading
-		/// and pinning information). Enabling this option improves network security
-		/// but may cause HTTPS load failures when using CEF binaries built more than
-		/// 10 weeks in the past. See https://www.certificate-transparency.org/ and
-		/// https://www.chromium.org/hsts for details. Can be set globally using the
-		/// CefSettings.enable_net_security_expiration value.
-		/// </summary>
-		public int enable_net_security_expiration;
-
-		/// <summary>
 		/// Comma delimited ordered list of language codes without any whitespace that
 		/// will be used in the &quot;Accept-Language&quot; HTTP header. Can be set globally
 		/// using the CefSettings.accept_language_list value or overridden on a per-

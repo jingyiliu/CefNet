@@ -56,18 +56,6 @@ namespace CefNet.CApi
 		public unsafe extern int IsReadOnly();
 
 		/// <summary>
-		/// _cef_print_settings_t* (*)(_cef_print_settings_t* self)*
-		/// </summary>
-		public void* copy;
-
-		/// <summary>
-		/// Returns a writable copy of this object.
-		/// </summary>
-		[NativeName("copy")]
-		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern cef_print_settings_t* Copy();
-
-		/// <summary>
 		/// void (*)(_cef_print_settings_t* self, int landscape)*
 		/// </summary>
 		public void* set_orientation;

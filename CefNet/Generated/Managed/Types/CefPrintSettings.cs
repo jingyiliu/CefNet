@@ -180,14 +180,6 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Returns a writable copy of this object.
-		/// </summary>
-		public unsafe virtual CefPrintSettings Copy()
-		{
-			return CefPrintSettings.Wrap(CefPrintSettings.Create, NativeInstance->Copy());
-		}
-
-		/// <summary>
 		/// Set the printer printable area in device units. Some platforms already
 		/// provide flipped area. Set |landscape_needs_flip| to false (0) on those
 		/// platforms to avoid double flipping.

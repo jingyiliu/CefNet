@@ -237,6 +237,9 @@ namespace CefNet
 
 		/// <summary>
 		/// Load the request represented by the |request| object.
+		/// WARNING: This function will fail with &quot;bad IPC message&quot; reason
+		/// INVALID_INITIATOR_ORIGIN (213) unless you first navigate to the request
+		/// origin using some other mechanism (LoadURL, link click, etc).
 		/// </summary>
 		public unsafe virtual void LoadRequest(CefRequest request)
 		{
@@ -252,22 +255,6 @@ namespace CefNet
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = url != null ? url.Length : 0 };
 				NativeInstance->LoadUrl(&cstr0);
-			}
-		}
-
-		/// <summary>
-		/// Load the contents of |string_val| with the specified dummy |url|. |url|
-		/// should have a standard scheme (for example, http scheme) or behaviors like
-		/// link clicks and web security restrictions may not behave as expected.
-		/// </summary>
-		public unsafe virtual void LoadString(string stringVal, string url)
-		{
-			fixed (char* s0 = stringVal)
-			fixed (char* s1 = url)
-			{
-				var cstr0 = new cef_string_t { Str = s0, Length = stringVal != null ? stringVal.Length : 0 };
-				var cstr1 = new cef_string_t { Str = s1, Length = url != null ? url.Length : 0 };
-				NativeInstance->LoadString(&cstr0, &cstr1);
 			}
 		}
 

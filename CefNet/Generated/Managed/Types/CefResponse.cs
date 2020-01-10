@@ -164,12 +164,28 @@ namespace CefNet
 		/// Get the value for the specified response header field.
 		/// The resulting string must be freed by calling cef_string_userfree_free().
 		/// </summary>
-		public unsafe virtual string GetHeader(string name)
+		public unsafe virtual string GetHeaderByName(string name)
 		{
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetHeader(&cstr0));
+				return CefString.ReadAndFree(NativeInstance->GetHeaderByName(&cstr0));
+			}
+		}
+
+		/// <summary>
+		/// Set the header |name| to |value|. If |overwrite| is true (1) any existing
+		/// values will be replaced with the new value. If |overwrite| is false (0) any
+		/// existing values will not be overwritten.
+		/// </summary>
+		public unsafe virtual void SetHeaderByName(string name, string value, bool overwrite)
+		{
+			fixed (char* s0 = name)
+			fixed (char* s1 = value)
+			{
+				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
+				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
+				NativeInstance->SetHeaderByName(&cstr0, &cstr1, overwrite ? 1 : 0);
 			}
 		}
 

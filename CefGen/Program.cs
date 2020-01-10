@@ -189,6 +189,10 @@ namespace CefGen
 				options.TargetSystem = "linux";
 				options.TargetVendor = "pc";
 			}
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				options.Defines.Add("_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH");
+			}
 
 
 			var nativeBuild = new NativeCefApiBuilder(onlyStdCall)

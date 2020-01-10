@@ -80,8 +80,6 @@ namespace CefNet
 
 		BlockedByResponse = -27,
 
-		BlockedByXssAuditor = -28,
-
 		CleartextNotPermitted = -29,
 
 		ConnectionClosed = -100,
@@ -256,7 +254,7 @@ namespace CefNet
 
 		CertSymantecLegacy = -215,
 
-		CertEnd = -216,
+		CertEnd = -217,
 
 		InvalidUrl = -300,
 
@@ -283,8 +281,6 @@ namespace CefNet
 		EmptyResponse = -324,
 
 		ResponseHeadersTooBig = -325,
-
-		PacStatusNotOk = -326,
 
 		PacScriptFailed = -327,
 
@@ -380,6 +376,10 @@ namespace CefNet
 
 		Http2PushedResponseDoesNotMatch = -378,
 
+		HttpResponseCodeFailure = -379,
+
+		QuicCertRootNotKnown = -380,
+
 		CacheMiss = -400,
 
 		CacheReadFailure = -401,
@@ -415,6 +415,8 @@ namespace CefNet
 		AddUserCertFailed = -503,
 
 		InvalidSignedExchange = -504,
+
+		InvalidBundledExchanges = -505,
 
 		FtpFailed = -601,
 

@@ -48,23 +48,6 @@
 			ret
 		}
 
-		// _cef_print_settings_t* (*)(_cef_print_settings_t* self)*
-		.method public hidebysig valuetype CefNet.CApi.cef_print_settings_t* Copy()
-		{
-			.maxstack 2
-			ldarg.0
-			ldarg.0
-			ldfld void* CefNet.CApi.cef_print_settings_t::copy
-			calli explicit unmanaged
-#ifdef WINDOWS
-				stdcall
-#else
-				cdecl
-#endif
-				valuetype CefNet.CApi.cef_print_settings_t*(valuetype CefNet.CApi.cef_print_settings_t*)
-			ret
-		}
-
 		// void (*)(_cef_print_settings_t* self, int landscape)*
 		.method public hidebysig void SetOrientation(int32 landscape)
 		{

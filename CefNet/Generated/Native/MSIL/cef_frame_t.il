@@ -239,25 +239,6 @@
 			ret
 		}
 
-		// void (*)(_cef_frame_t* self, const cef_string_t* string_val, const cef_string_t* url)*
-		.method public hidebysig void LoadString(valuetype CefNet.CApi.cef_string_t* string_val, valuetype CefNet.CApi.cef_string_t* url)
-		{
-			.maxstack 4
-			ldarg.0
-			ldarg.1
-			ldarg.2
-			ldarg.0
-			ldfld void* CefNet.CApi.cef_frame_t::load_string
-			calli explicit unmanaged
-#ifdef WINDOWS
-				stdcall
-#else
-				cdecl
-#endif
-				void(valuetype CefNet.CApi.cef_frame_t*, valuetype CefNet.CApi.cef_string_t*, valuetype CefNet.CApi.cef_string_t*)
-			ret
-		}
-
 		// void (*)(_cef_frame_t* self, const cef_string_t* code, const cef_string_t* script_url, int start_line)*
 		.method public hidebysig void ExecuteJavaScript(valuetype CefNet.CApi.cef_string_t* code, valuetype CefNet.CApi.cef_string_t* script_url, int32 start_line)
 		{

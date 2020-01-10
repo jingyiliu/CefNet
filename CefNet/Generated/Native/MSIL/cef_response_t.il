@@ -207,13 +207,13 @@
 		}
 
 		// cef_string_userfree_t (*)(_cef_response_t* self, const cef_string_t* name)*
-		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetHeader(valuetype CefNet.CApi.cef_string_t* name)
+		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetHeaderByName(valuetype CefNet.CApi.cef_string_t* name)
 		{
 			.maxstack 3
 			ldarg.0
 			ldarg.1
 			ldarg.0
-			ldfld void* CefNet.CApi.cef_response_t::get_header
+			ldfld void* CefNet.CApi.cef_response_t::get_header_by_name
 			calli explicit unmanaged
 #ifdef WINDOWS
 				stdcall
@@ -221,6 +221,26 @@
 				cdecl
 #endif
 				valuetype CefNet.CApi.cef_string_userfree_t(valuetype CefNet.CApi.cef_response_t*, valuetype CefNet.CApi.cef_string_t*)
+			ret
+		}
+
+		// void (*)(_cef_response_t* self, const cef_string_t* name, const cef_string_t* value, int overwrite)*
+		.method public hidebysig void SetHeaderByName(valuetype CefNet.CApi.cef_string_t* name, valuetype CefNet.CApi.cef_string_t* 'value', int32 overwrite)
+		{
+			.maxstack 5
+			ldarg.0
+			ldarg.1
+			ldarg.2
+			ldarg.3
+			ldarg.0
+			ldfld void* CefNet.CApi.cef_response_t::set_header_by_name
+			calli explicit unmanaged
+#ifdef WINDOWS
+				stdcall
+#else
+				cdecl
+#endif
+				void(valuetype CefNet.CApi.cef_response_t*, valuetype CefNet.CApi.cef_string_t*, valuetype CefNet.CApi.cef_string_t*, int32)
 			ret
 		}
 

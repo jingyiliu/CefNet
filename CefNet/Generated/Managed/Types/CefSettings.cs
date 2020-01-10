@@ -566,29 +566,6 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Set to true (1) to enable date-based expiration of built in network
-		/// security information (i.e. certificate transparency logs, HSTS preloading
-		/// and pinning information). Enabling this option improves network security
-		/// but may cause HTTPS load failures when using CEF binaries built more than
-		/// 10 weeks in the past. See https://www.certificate-transparency.org/ and
-		/// https://www.chromium.org/hsts for details. Also configurable using the
-		/// &quot;enable-net-security-expiration&quot; command-line switch. Can be overridden for
-		/// individual CefRequestContext instances via the
-		/// CefRequestContextSettings.enable_net_security_expiration value.
-		/// </summary>
-		public bool EnableNetSecurityExpiration
-		{
-			get
-			{
-				return _instance->enable_net_security_expiration != 0;
-			}
-			set
-			{
-				_instance->enable_net_security_expiration = value ? 1 : 0;
-			}
-		}
-
-		/// <summary>
 		/// Background color used for the browser before a document is loaded and when
 		/// no document color is specified. The alpha component must be either fully
 		/// opaque (0xFF) or fully transparent (0x00). If the alpha component is fully

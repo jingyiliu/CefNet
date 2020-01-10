@@ -18,7 +18,7 @@ namespace CefNet.CApi
 {
 	public static partial class CefNativeApi
 	{
-		public static readonly string ApiHash = "440be38b46f14493a9981a1d9282742a83b9070e";
+		public static readonly string ApiHash = "3ad9591f7024619a1e2fd796c7ad51ae3a34abbb";
 
 		/// <summary>
 		/// Add an entry to the cross-origin access whitelist.
@@ -623,7 +623,7 @@ namespace CefNet.CApi
 		public static unsafe extern int cef_initialize(cef_main_args_t* args, cef_settings_t* settings, cef_app_t* application, void* windows_sandbox_info);
 
 		/// <summary>
-		/// Returns true (1) if the certificate status has any error, major or minor.
+		/// Returns true (1) if the certificate status represents an error.
 		/// </summary>
 		/// <remarks>
 		/// Defined in include/capi/cef_ssl_info_capi.h as
@@ -631,17 +631,6 @@ namespace CefNet.CApi
 		/// </remarks>
 		[DllImport("libcef", CallingConvention = CallingConvention.Cdecl)]
 		public static unsafe extern int cef_is_cert_status_error(CefCertStatus status);
-
-		/// <summary>
-		/// Returns true (1) if the certificate status represents only minor errors (e.g.
-		/// failure to verify certificate revocation).
-		/// </summary>
-		/// <remarks>
-		/// Defined in include/capi/cef_ssl_info_capi.h as
-		/// int cef_is_cert_status_minor_error(cef_cert_status_t status)
-		/// </remarks>
-		[DllImport("libcef", CallingConvention = CallingConvention.Cdecl)]
-		public static unsafe extern int cef_is_cert_status_minor_error(CefCertStatus status);
 
 		/// <summary>
 		/// Query if a plugin is unstable. Can be called on any thread in the browser

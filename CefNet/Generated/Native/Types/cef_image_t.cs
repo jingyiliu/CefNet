@@ -24,7 +24,7 @@ namespace CefNet.CApi
 	/// (DIP) units. For example, if the image at scale factor 1.0 is 100x100 pixels
 	/// then the image at scale factor 2.0 should be 200x200 pixels -- both images
 	/// will display with a DIP size of 100x100 units. The functions of this
-	/// structure must be called on the browser process UI thread.
+	/// structure can be called on any browser process thread.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe partial struct cef_image_t

@@ -169,15 +169,29 @@ namespace CefNet.CApi
 		/// <summary>
 		/// cef_string_userfree_t (*)(_cef_response_t* self, const cef_string_t* name)*
 		/// </summary>
-		public void* get_header;
+		public void* get_header_by_name;
 
 		/// <summary>
 		/// Get the value for the specified response header field.
 		/// The resulting string must be freed by calling cef_string_userfree_free().
 		/// </summary>
-		[NativeName("get_header")]
+		[NativeName("get_header_by_name")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern cef_string_userfree_t GetHeader([Immutable]cef_string_t* name);
+		public unsafe extern cef_string_userfree_t GetHeaderByName([Immutable]cef_string_t* name);
+
+		/// <summary>
+		/// void (*)(_cef_response_t* self, const cef_string_t* name, const cef_string_t* value, int overwrite)*
+		/// </summary>
+		public void* set_header_by_name;
+
+		/// <summary>
+		/// Set the header |name| to |value|. If |overwrite| is true (1) any existing
+		/// values will be replaced with the new value. If |overwrite| is false (0) any
+		/// existing values will not be overwritten.
+		/// </summary>
+		[NativeName("set_header_by_name")]
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		public unsafe extern void SetHeaderByName([Immutable]cef_string_t* name, [Immutable]cef_string_t* value, int overwrite);
 
 		/// <summary>
 		/// void (*)(_cef_response_t* self, cef_string_multimap_t headerMap)*

@@ -175,6 +175,9 @@ namespace CefNet.CApi
 
 		/// <summary>
 		/// Load the request represented by the |request| object.
+		/// WARNING: This function will fail with &quot;bad IPC message&quot; reason
+		/// INVALID_INITIATOR_ORIGIN (213) unless you first navigate to the request
+		/// origin using some other mechanism (LoadURL, link click, etc).
 		/// </summary>
 		[NativeName("load_request")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
@@ -191,20 +194,6 @@ namespace CefNet.CApi
 		[NativeName("load_url")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
 		public unsafe extern void LoadUrl([Immutable]cef_string_t* url);
-
-		/// <summary>
-		/// void (*)(_cef_frame_t* self, const cef_string_t* string_val, const cef_string_t* url)*
-		/// </summary>
-		public void* load_string;
-
-		/// <summary>
-		/// Load the contents of |string_val| with the specified dummy |url|. |url|
-		/// should have a standard scheme (for example, http scheme) or behaviors like
-		/// link clicks and web security restrictions may not behave as expected.
-		/// </summary>
-		[NativeName("load_string")]
-		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern void LoadString([Immutable]cef_string_t* string_val, [Immutable]cef_string_t* url);
 
 		/// <summary>
 		/// void (*)(_cef_frame_t* self, const cef_string_t* code, const cef_string_t* script_url, int start_line)*

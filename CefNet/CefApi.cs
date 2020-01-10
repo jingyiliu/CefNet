@@ -321,15 +321,6 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Returns True if the certificate status represents only minor errors (e.g.
-		/// failure to verify certificate revocation).
-		/// </summary>
-		public static bool IsCertStatusMinorError(CefCertStatus status)
-		{
-			return CefNativeApi.cef_is_cert_status_minor_error(status) != 0;
-		}
-
-		/// <summary>
 		/// Crash reporting is configured using an INI-style config file named
 		/// &quot;crash_reporter.cfg&quot;. On Windows and Linux this file must be placed next to
 		/// the main application executable. On macOS this file must be placed in the
