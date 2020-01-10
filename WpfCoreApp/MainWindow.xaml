@@ -1,0 +1,24 @@
+﻿<Window x:Class="WpfCoreApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfCoreApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Padding="0" UseLayoutRounding="True">
+    <DockPanel>
+        <Menu VerticalAlignment="Top" DockPanel.Dock="Top" Name="menu">
+            <MenuItem Header="File">
+                <MenuItem Header="Add Tab" Click="AddTab_Click" />
+            </MenuItem>
+        </Menu>
+        <DockPanel DockPanel.Dock="Top" Name="controlsPanel">
+            <Button Content=" &lt; " Margin="2,2,0,0" />
+            <Button Content=" &gt; " Margin="2,2,0,0" />
+            <Button Content="Go" Margin="2,2,0,0" Click="NavigateButton_Click"/>
+            <TextBox Name="txtAddress" Margin="2,2,0,0" KeyDown="txtAddress_KeyDown" />
+        </DockPanel>
+        <TabControl Name="tabs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0">
+        </TabControl>
+    </DockPanel>
+</Window>

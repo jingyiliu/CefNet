@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;net48</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);TRACE;WINFORMS;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CefNet\WebView.CommonImplementation.cs" Link="WebView.CommonImplementation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CefNet\CefNet.csproj" />
+  </ItemGroup>
+
+</Project>

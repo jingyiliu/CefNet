@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);TRACE;WPF;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CefNet.Windows.Forms\Internal\CrossThreadEventMethod.cs" Link="Internal\CrossThreadEventMethod.cs" />
+    <Compile Include="..\CefNet\WebView.CommonImplementation.cs" Link="WebView.CommonImplementation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CefNet\CefNet.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="WinApi\" />
+  </ItemGroup>
+
+</Project>
