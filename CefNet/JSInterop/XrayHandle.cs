@@ -43,7 +43,7 @@ namespace CefNet.JSInterop
 			if (this.gcHandle == IntPtr.Zero)
 				return null;
 
-			if(frame.Identifier != this.frame)
+			if(frame is null || frame.Identifier != this.frame)
 				throw new ObjectDeadException();
 
 			GCHandle handle = GCHandle.FromIntPtr(this.gcHandle);

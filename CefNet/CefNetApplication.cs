@@ -3,6 +3,7 @@ using CefNet.JSInterop;
 using CefNet.WinApi;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -29,7 +30,6 @@ namespace CefNet
 
 		private static bool? _IsRendererProcess;
 		private int _initThreadId;
-
 
 		public CefNetApplication()
 		{
@@ -268,7 +268,10 @@ namespace CefNet
 			{
 				if (args.GetType(0) != CefValueType.Binary)
 					return;
-				XrayHandle.FromCfxBinaryValue(args.GetBinary(0)).Release();
+				XrayHandle handle = XrayHandle.FromCfxBinaryValue(args.GetBinary(0));
+				if ((int)(handle.frame >> 32) != (int)(e.Frame.Identifier >> 32))
+					return; // Mismatch process IDs
+				handle.Release();
 			}
 		}
 

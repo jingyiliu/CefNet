@@ -12,11 +12,13 @@ namespace CefNet.JSInterop
 	public class ScriptableObjectProvider : IEquatable<ScriptableObjectProvider>
 	{
 		private readonly CefFrame _frame;
+		private readonly long _frameId;
 		private static int _corsIndex;
 
 		public ScriptableObjectProvider(CefFrame frame)
 		{
 			_frame = frame;
+			_frameId = frame.Identifier;
 		}
 
 		public override bool Equals(object obj)
@@ -28,7 +30,7 @@ namespace CefNet.JSInterop
 		{
 			if (obj is null)
 				return false;
-			return obj._frame == _frame;
+			return obj._frameId == _frameId;
 		}
 
 		public static bool operator ==(ScriptableObjectProvider a, ScriptableObjectProvider b)
@@ -47,7 +49,28 @@ namespace CefNet.JSInterop
 
 		public override int GetHashCode()
 		{
-			return _frame.GetHashCode();
+			return _frameId.GetHashCode();
+		}
+
+		private CefBrowser Browser
+		{
+			get
+			{
+				CefBrowser browser = _frame.Browser;
+				if (browser is null)
+					throw new InvalidOperationException();
+				return browser;
+			}
+		}
+
+		private CefFrame Frame
+		{
+			get
+			{
+				if (_frame.Identifier != _frameId || !_frame.IsValid)
+					throw new InvalidOperationException();
+				return _frame;
+			}
 		}
 
 		public object SendRequest(XrayAction action, XrayHandle thisArg, params object[] args)
@@ -65,9 +88,10 @@ namespace CefNet.JSInterop
 				argList.SetBinary(2, ValidateXrayHandle(thisArg).ToCfxBinaryValue());
 				AppendArgs(argList, 3, args);
 
-				if (!_frame.IsValid)
+				CefFrame frame = this.Frame;
+				if (!frame.IsValid || frame.Identifier != _frameId)
 					throw new ObjectDeadException();
-				_frame.SendProcessMessage(CefProcessId.Renderer, msg);
+				frame.SendProcessMessage(CefProcessId.Renderer, msg);
 				sqi.Wait();
 				return sqi.GetResult();
 			}
@@ -80,7 +104,7 @@ namespace CefNet.JSInterop
 
 		public XrayHandle GetGlobal()
 		{
-			return GetGlobal(_frame);
+			return GetGlobal(this.Frame);
 		}
 
 		private static XrayHandle GetGlobal(CefFrame frame)
@@ -167,7 +191,7 @@ namespace CefNet.JSInterop
 				}
 			}
 
-			XrayObject target = self.GetTarget(_frame);
+			XrayObject target = self.GetTarget(this.Frame);
 			if (target is null || !target.Context.Enter())
 				throw new InvalidOperationException();
 
@@ -196,7 +220,9 @@ namespace CefNet.JSInterop
 				object rv = SendRequest(XrayAction.Get, self, name);
 				if (rv is XrayHandle handle && handle.dataType == XrayDataType.CorsRedirect)
 				{
-					CefFrame frame = _frame.Browser.GetFrame(CefNetApplication.GetCorsQueryFrame(handle.iRaw));
+					CefFrame frame = Browser.GetFrameByIdent(CefNetApplication.GetCorsQueryFrame(handle.iRaw));
+					if (frame is null)
+						throw new InvalidOperationException();
 					var provider = new ScriptableObjectProvider(frame);
 					var globalObj = new ScriptableObject(provider.GetGlobal(), provider);
 					if (name == "contentDocument")
@@ -222,7 +248,7 @@ namespace CefNet.JSInterop
 			}
 
 
-			XrayObject target = self.GetTarget(_frame);
+			XrayObject target = self.GetTarget(this.Frame);
 			if (!target.Context.Enter())
 				throw new InvalidOperationException();
 
@@ -264,7 +290,7 @@ namespace CefNet.JSInterop
 				}
 			}
 
-			XrayObject target = self.GetTarget(_frame);
+			XrayObject target = self.GetTarget(this.Frame);
 			if (target is null || !target.Context.Enter())
 				throw new InvalidOperationException();
 
@@ -309,7 +335,7 @@ namespace CefNet.JSInterop
 				}
 			}
 
-			XrayObject target = self.GetTarget(_frame);
+			XrayObject target = self.GetTarget(this.Frame);
 			if (target is null || !target.Context.Enter())
 				throw new InvalidOperationException();
 
@@ -373,7 +399,7 @@ namespace CefNet.JSInterop
 			CefProcessMessage msg = null;
 			try
 			{
-				if (_frame.Identifier != handle.frame)
+				if (_frameId != handle.frame)
 					return;
 				obj = handle.ToCfxBinaryValue();
 
@@ -397,7 +423,7 @@ namespace CefNet.JSInterop
 
 		protected XrayHandle ValidateXrayHandle(XrayHandle handle)
 		{
-			if (_frame.Identifier != handle.frame)
+			if (_frameId != handle.frame)
 				throw new InvalidOperationException();
 			return handle;
 		}
@@ -574,7 +600,7 @@ namespace CefNet.JSInterop
 				}
 			}
 
-			XrayObject target = self.GetTarget(_frame);
+			XrayObject target = self.GetTarget(this.Frame);
 			if (target is null || !target.Context.Enter())
 				throw new InvalidOperationException();
 
@@ -663,7 +689,7 @@ namespace CefNet.JSInterop
 				}
 			}
 
-			XrayObject target = self.GetTarget(_frame);
+			XrayObject target = self.GetTarget(this.Frame);
 			if (target is null || !target.Context.Enter())
 				throw new InvalidOperationException();
 
