@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <AvaloniaResource Include="**\*.xaml">
+      <SubType>Designer</SubType>
+    </AvaloniaResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\WinFormsCoreApp\CefAppImpl.cs" Link="CefAppImpl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.9.1" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CefNet.Avalonia\CefNet.Avalonia.csproj" />
+    <ProjectReference Include="..\CefNet\CefNet.csproj" />
+  </ItemGroup>
+</Project>

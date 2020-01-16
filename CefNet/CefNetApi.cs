@@ -1,4 +1,5 @@
-﻿using CefNet.WinApi;
+﻿using CefNet.Internal;
+using CefNet.WinApi;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,5 +51,26 @@ namespace CefNet
 
 			return (keyInfo << 16) | (repeatCount & 0xFFFF);
 		}
+
+		/// <summary>
+		/// Post an action for execution on the specified thread. This function may be
+		/// called on any thread. It is an error to request a thread from the wrong
+		/// process.
+		/// </summary>
+		public static bool Post(CefThreadId threadId, Action action)
+		{
+			return CefApi.PostTask(threadId, new CefActionTask(action));
+		}
+
+		/// <summary>
+		/// Post an action for execution on the specified thread. This function may be
+		/// called on any thread. It is an error to request a thread from the wrong
+		/// process.
+		/// </summary>
+		public static bool Post(CefThreadId threadId, Action action, long delay)
+		{
+			return CefApi.PostTask(threadId, new CefActionTask(action), delay);
+		}
+
 	}
 }

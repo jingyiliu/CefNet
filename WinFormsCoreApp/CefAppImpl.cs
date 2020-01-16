@@ -35,5 +35,16 @@ namespace WinFormsCoreApp
 			commandLine.AppendSwitch("enable-media-stream");
 		}
 
+		protected override void OnContextCreated(CefBrowser browser, CefFrame frame, CefV8Context context)
+		{
+			base.OnContextCreated(browser, frame, context);
+			frame.ExecuteJavaScript(@"
+{
+const newProto = navigator.__proto__;
+delete newProto.webdriver;
+navigator.__proto__ = newProto;
+}", frame.Url, 0);
+
+		}
 	}
 }

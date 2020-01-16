@@ -1,15 +1,15 @@
-﻿using CefNet.Internal;
-using CefNet.Wpf;
+﻿using Avalonia.Interactivity;
+using CefNet.Avalonia;
+using CefNet.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
 
-namespace WpfCoreApp
+namespace AvaloniaApp
 {
 	sealed class CustomWebView : WebView
 	{
-		public static RoutedEvent FullscreenEvent = EventManager.RegisterRoutedEvent("Fullscreen", RoutingStrategy.Bubble, typeof(EventHandler<FullscreenModeChangeEventArgs>), typeof(WebView));
+		public static RoutedEvent<FullscreenModeChangeEventArgs> FullscreenEvent = RoutedEvent.Register<WebView, FullscreenModeChangeEventArgs>("Fullscreen", RoutingStrategies.Bubble);
 
 		public event EventHandler<FullscreenModeChangeEventArgs> Fullscreen
 		{
@@ -42,7 +42,6 @@ namespace WpfCoreApp
 
 		private void OnFullScreenModeChange(FullscreenModeChangeEventArgs e)
 		{
-
 			RaiseEvent(e);
 		}
 

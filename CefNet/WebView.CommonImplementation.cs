@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 namespace CefNet.Wpf
 #elif WINFORMS
 namespace CefNet.Windows.Forms
+#elif AVALONIA
+namespace CefNet.Avalonia
 #else
 namespace CefNet
 #endif

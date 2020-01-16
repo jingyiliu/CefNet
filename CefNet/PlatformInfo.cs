@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace CefNet
 {
-	sealed class PlatformInfo
+	public sealed class PlatformInfo
 	{
 
 		public static bool IsWindows { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
