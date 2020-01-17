@@ -124,8 +124,11 @@ namespace CefNet
 		/// <exception cref="InvalidOperationException"></exception>
 		public void Initialize(string path, CefSettings settings)
 		{
-			if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
-				throw new InvalidOperationException("The calling thread must be STA");
+			if (PlatformInfo.IsWindows)
+			{
+				if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
+					throw new InvalidOperationException("The calling thread must be STA");
+			}
 
 			if (IsInitialized)
 				throw new InvalidOperationException("CEF already initialized. You must call Initialize once per application process.");
