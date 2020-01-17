@@ -416,11 +416,9 @@ namespace CefNet
 		/// </summary>
 		public void SetAsPopup(IntPtr parentWindow, string windowName)
 		{
-			if (!PlatformInfo.IsWindows)
-				throw new PlatformNotSupportedException();
-
-			Style = WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_CLIPCHILDREN | WindowStyle.WS_CLIPSIBLINGS | WindowStyle.WS_VISIBLE;
-
+			if (PlatformInfo.IsWindows)
+				Style = WindowStyle.WS_OVERLAPPEDWINDOW | WindowStyle.WS_CLIPCHILDREN | WindowStyle.WS_CLIPSIBLINGS | WindowStyle.WS_VISIBLE;
+			
 			ParentWindow = parentWindow;
 			X = CW_USEDEFAULT;
 			Y = CW_USEDEFAULT;
