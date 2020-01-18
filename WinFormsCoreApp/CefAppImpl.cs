@@ -1,6 +1,6 @@
 ﻿using CefNet;
 using System;
-using System.IO;
+using System.Runtime.InteropServices;
 
 namespace WinFormsCoreApp
 {
@@ -33,6 +33,12 @@ namespace WinFormsCoreApp
 
 			commandLine.AppendSwitch("enable-begin-frame-scheduling");
 			commandLine.AppendSwitch("enable-media-stream");
+
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			{
+				commandLine.AppendSwitch("--no-zygote");
+				commandLine.AppendSwitch("--no-sandbox");
+			}
 		}
 
 		protected override void OnContextCreated(CefBrowser browser, CefFrame frame, CefV8Context context)

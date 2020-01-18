@@ -1,6 +1,7 @@
 ﻿#if true
 using CefNet;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -48,6 +49,14 @@ namespace CefNetTest
 				}
 			}
 			Console.Write("\n\n");
+
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+				&& !args.Any(arg => arg.StartsWith("--type="))
+				&& !args.Contains("--no-zygote"))
+			{
+				Console.WriteLine("Please run with --no-zygote");
+				return;
+			}
 
 			// CEF version
 			if (args.Length == 0)
