@@ -16,6 +16,9 @@ namespace CefNet.Windows.Forms
 
 	partial class WebView: IWinFormsWebViewPrivate
 	{
+		private CefEventFlags _keydownModifiers;
+		private IntPtr _keyboardLayout;
+
 		/// <summary>
 		/// Gets emulated device.
 		/// </summary>
@@ -543,9 +546,13 @@ namespace CefNet.Windows.Forms
 		{
 			const int MA_ACTIVATE = 0x1;
 			const int WM_MOUSEHWHEEL = 0x20E;
+			const int WM_INPUTLANGCHANGE = 0x0051;
 
 			switch (m.Msg)
 			{
+				case WM_INPUTLANGCHANGE:
+					SetKeyboardLayoutForCefUIThreadIfNeeded();
+					return false;
 				case WM_MOUSEHWHEEL:
 					WmMouseHWheel(ref m);
 					return true;
@@ -591,14 +598,14 @@ namespace CefNet.Windows.Forms
 				if (m.Msg == WM_KEYDOWN || m.Msg == WM_SYSKEYDOWN)
 				{
 					Keys key = (Keys)m.WParam.ToInt64();
-					if (key >= Keys.PageUp && key <= Keys.Down)
+					if ((key >= Keys.PageUp && key <= Keys.Down) || key == Keys.Tab)
 					{
 						var e = new CefKeyEvent();
 						e.WindowsKeyCode = unchecked((int)m.WParam);
 						e.NativeKeyCode = (int)((ulong)m.LParam & 0xFFFFFFFFUL);
 						e.IsSystemKey = (m.Msg == WM_SYSKEYDOWN);
 						e.Type = CefKeyEventType.RawKeyDown;
-						e.Modifiers = (uint)GetCefKeyboardModifiers(m.WParam, m.LParam);
+						e.Modifiers = (uint)GetCefKeyboardModifiers((Keys)m.WParam.ToInt64(), m.LParam);
 						this.BrowserObject?.Host.SendKeyEvent(e);
 						return true;
 					}
@@ -621,14 +628,31 @@ namespace CefNet.Windows.Forms
 				k.WindowsKeyCode = unchecked((int)m.WParam);
 				k.NativeKeyCode = unchecked((int)((ulong)m.LParam & 0xFFFFFFFFUL));
 				k.IsSystemKey = m.Msg >= WM_SYSKEYDOWN && m.Msg <= WM_SYSCHAR;
+				
+				CefEventFlags modifiers;
 				if (m.Msg == WM_KEYDOWN || m.Msg == WM_SYSKEYDOWN)
+				{
+					modifiers = GetCefKeyboardModifiers((Keys)m.WParam.ToInt64(), m.LParam);
+					_keydownModifiers = modifiers;
 					k.Type = CefKeyEventType.RawKeyDown;
+					SetKeyboardLayoutForCefUIThreadIfNeeded();
+				}
 				else if (m.Msg == WM_KEYUP || m.Msg == WM_SYSKEYUP)
+				{
+					modifiers = GetCefKeyboardModifiers((Keys)m.WParam.ToInt64(), m.LParam);
+					if (_keydownModifiers.HasFlag(CefEventFlags.IsRight))
+						modifiers = CefEventFlags.IsRight & ~CefEventFlags.IsLeft;
+					_keydownModifiers = CefEventFlags.None;
 					k.Type = CefKeyEventType.KeyUp;
+					SetKeyboardLayoutForCefUIThreadIfNeeded();
+				}
 				else
+				{
 					k.Type = CefKeyEventType.Char;
+					modifiers = GetCefKeyboardModifiers((Keys)NativeMethods.MapVirtualKey((uint)(m.LParam.ToInt64() >> 16) & 0xFFU, MapVirtualKeyType.MAPVK_VSC_TO_VK_EX), m.LParam);
+				}
+				k.Modifiers = (uint)modifiers;
 
-				k.Modifiers = (uint)GetCefKeyboardModifiers(m.WParam, m.LParam);
 				this.BrowserObject?.Host.SendKeyEvent(k);
 			}
 			return base.ProcessKeyEventArgs(ref m);
@@ -647,7 +671,7 @@ namespace CefNet.Windows.Forms
 			return modifiers;
 		}
 
-		protected CefEventFlags GetCefKeyboardModifiers(IntPtr wparam, IntPtr lparam)
+		protected CefEventFlags GetCefKeyboardModifiers(Keys key, IntPtr lparam)
 		{
 			const int KF_EXTENDED = 0x100;
 
@@ -658,7 +682,7 @@ namespace CefNet.Windows.Forms
 			if (IsKeyLocked(Keys.CapsLock))
 				modifiers |= CefEventFlags.CapsLockOn;
 
-			switch ((Keys)wparam.ToInt64())
+			switch (key)
 			{
 				case Keys.Return:
 					if (((lparam.ToInt64() >> 16) & KF_EXTENDED) != 0)
@@ -696,32 +720,65 @@ namespace CefNet.Windows.Forms
 				case Keys.Clear:
 					modifiers |= CefEventFlags.IsKeyPad;
 					break;
-				//case VK_SHIFT:
-				//	if (IsKeyDown(VK_LSHIFT))
-				//		modifiers |= CefEventFlags.IsLeft;
-				//	else if (IsKeyDown(VK_RSHIFT))
-				//		modifiers |= CefEventFlags.IsRight;
-				//	break;
-				//case VK_CONTROL:
-				//	if (IsKeyDown(VK_LCONTROL))
-				//		modifiers |= CefEventFlags.IsLeft;
-				//	else if (IsKeyDown(VK_RCONTROL))
-				//		modifiers |= CefEventFlags.IsRight;
-				//	break;
-				//case VK_MENU:
-				//	if (IsKeyDown(VK_LMENU))
-				//		modifiers |= CefEventFlags.IsLeft;
-				//	else if (IsKeyDown(VK_RMENU))
-				//		modifiers |= CefEventFlags.IsRight;
-				//	break;
+				case Keys.LShiftKey:
+				case Keys.LControlKey:
+				case Keys.LMenu:
 				case Keys.LWin:
 					modifiers |= CefEventFlags.IsLeft;
 					break;
+				case Keys.RShiftKey:
+				case Keys.RControlKey:
+				case Keys.RMenu:
 				case Keys.RWin:
-					modifiers |= CefEventFlags.IsRight;
+					modifiers |= CefEventFlags.IsLeft;
+					break;
+				case Keys.ShiftKey:
+					if (NativeMethods.GetKeyState(VirtualKeys.RShiftKey).HasFlag(KeyState.Pressed))
+						modifiers |= CefEventFlags.IsRight;
+					else
+						modifiers |= CefEventFlags.IsLeft;
+					break;
+				case Keys.ControlKey:
+					if (NativeMethods.GetKeyState(VirtualKeys.RControlKey).HasFlag(KeyState.Pressed))
+						modifiers |= CefEventFlags.IsRight;
+					else
+						modifiers |= CefEventFlags.IsLeft;
+					break;
+				case Keys.Menu:
+					if (NativeMethods.GetKeyState(VirtualKeys.RMenu).HasFlag(KeyState.Pressed))
+						modifiers |= CefEventFlags.IsRight;
+					else
+						modifiers |= CefEventFlags.IsLeft;
+					break;
+				default:
+					if (((lparam.ToInt64() >> 16) & KF_EXTENDED) != 0)
+						modifiers |= CefEventFlags.IsKeyPad;
 					break;
 			}
 			return modifiers;
 		}
+
+		/// <summary>
+		/// Sets the current input locale identifier for the UI thread in the browser.
+		/// </summary>
+		protected void SetKeyboardLayoutForCefUIThreadIfNeeded()
+		{
+			IntPtr hkl = NativeMethods.GetKeyboardLayout(0);
+			if (_keyboardLayout == hkl)
+				return;
+
+			if (CefApi.CurrentlyOn(CefThreadId.UI))
+			{
+				_keyboardLayout = hkl;
+			}
+			else
+			{
+				CefNetApi.Post(CefThreadId.UI, () => {
+					NativeMethods.ActivateKeyboardLayout(hkl, 0);
+					_keyboardLayout = hkl;
+				});
+			}
+		}
+
 	}
 }

@@ -67,7 +67,7 @@ namespace CefNet.Internal
 						_source.Dispose();
 					}
 					break;
-				case 0x0047: //WM_WINDOWPOSCHANGED
+				case 0x0047: // WM_WINDOWPOSCHANGED
 					WINDOWPOS* windowPos = (WINDOWPOS*)lParam;
 					if ((windowPos->flags & 0x0002) != 0) // SWP_NOMOVE
 						break;
@@ -87,6 +87,11 @@ namespace CefNet.Internal
 					{
 						tuple.Item1.OnRootResizeEnd(EventArgs.Empty);
 					}
+					break;
+				case 0x0112: // WM_SYSCOMMAND
+					const int SC_KEYMENU = 0xF100;
+					// Menu loop must not be runned with Alt key
+					handled = ((int)(wParam.ToInt64() & 0xFFF0) == SC_KEYMENU && lParam == IntPtr.Zero);
 					break;
 			}
 			return IntPtr.Zero;

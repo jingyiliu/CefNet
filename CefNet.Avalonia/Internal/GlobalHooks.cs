@@ -47,60 +47,69 @@ namespace CefNet.Internal
 			}
 		}
 
-		private WindowsWndProcHook _wndprocHook;
+		private WindowsHwndSource _source;
 		private WeakReference<Window> _windowRef;
 
-		private GlobalHooks(WindowsWndProcHook source, Window window)
+		private GlobalHooks(WindowsHwndSource source, Window window)
 		{
-			_wndprocHook = source;
+			_source = source;
 			_windowRef = new WeakReference<Window>(window);
 			source.WndProcCallback = WndProc;
 		}
 
-		private unsafe void WndProc(ref CWPSTRUCT msg)
+		private unsafe IntPtr WndProc(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
-			switch (msg.message)
+			switch (message)
 			{
 				case 0x0002: // WM_DESTROY
-					_wndprocHook.WndProcCallback = null;
-					foreach (var tuple in GetViews(msg.hwnd))
+					_source.WndProcCallback = null;
+					foreach (var tuple in GetViews(hwnd))
 					{
 						tuple.Item1.Close();
 					}
 					lock (_HookedWindows)
 					{
-						_HookedWindows.Remove(_wndprocHook.Handle);
-						_wndprocHook.Dispose();
+						_HookedWindows.Remove(_source.Handle);
+						_source.Dispose();
 					}
 					break;
 				case 0x0047: //WM_WINDOWPOSCHANGED
-					WINDOWPOS* windowPos = (WINDOWPOS*)msg.lParam;
+					WINDOWPOS* windowPos = (WINDOWPOS*)lParam;
 					if ((windowPos->flags & 0x0002) != 0) // SWP_NOMOVE
 						break;
-					foreach (var tuple in GetViews(msg.hwnd))
+					foreach (var tuple in GetViews(hwnd))
 					{
 						Rect bounds = tuple.Item2.Bounds;
 						tuple.Item1.RootBoundsChanged(new CefRect((int)bounds.X, (int)bounds.Y, (int)bounds.Width, (int)bounds.Height));
 					}
 					break;
 				case 0x0231: // WM_ENTERSIZEMOVE
-					foreach (var tuple in GetViews(msg.hwnd))
+					foreach (var tuple in GetViews(hwnd))
 					{
 						tuple.Item1.OnRootResizeBegin(EventArgs.Empty);
 					}
 					break;
 				case 0x0232: // WM_EXITSIZEMOVE
-					foreach (var tuple in GetViews(msg.hwnd))
+					foreach (var tuple in GetViews(hwnd))
 					{
 						tuple.Item1.OnRootResizeEnd(EventArgs.Empty);
 					}
 					break;
+				case 0x0112: // WM_SYSCOMMAND
+					const int SC_KEYMENU = 0xF100;
+					// Menu loop must not be runned with Alt key
+					if ((int)(wParam.ToInt64() & 0xFFF0) == SC_KEYMENU && lParam == IntPtr.Zero)
+					{
+						handled = true;
+					}
+					break;
 			}
+			return IntPtr.Zero;
 		}
 
 		private IEnumerable<ValueTuple<WebView, Window>> GetViews(IntPtr hwnd)
 		{
-			if (hwnd != _wndprocHook.Handle)
+			if (hwnd != _source.Handle)
 				yield break;
 
 			Window window;
@@ -142,7 +151,7 @@ namespace CefNet.Internal
 			if (_HookedWindows.ContainsKey(hwnd))
 				return;
 
-			WindowsWndProcHook source = WindowsWndProcHook.FromHwnd(hwnd);
+			WindowsHwndSource source = WindowsHwndSource.FromHwnd(hwnd);
 			if (source == null)
 				return;
 

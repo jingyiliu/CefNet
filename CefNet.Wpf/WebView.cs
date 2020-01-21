@@ -22,6 +22,7 @@ namespace CefNet.Wpf
 	{
 		private CefRect _windowBounds;
 		private bool _allowResizeNotifications = true;
+		private IntPtr _keyboardLayout;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
 		public static RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent("StatusTextChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
@@ -511,40 +512,33 @@ namespace CefNet.Wpf
 
 		protected virtual bool ProcessPreviewKey(CefKeyEventType eventType, KeyEventArgs e)
 		{
+			SetKeyboardLayoutForCefUIThreadIfNeeded();
+
 			Key key = e.Key;
-			VirtualKeys virtualKey;
+			VirtualKeys virtualKey = (key == Key.System ? e.SystemKey.ToVirtualKey() : key.ToVirtualKey());
 
 			var k = new CefKeyEvent();
 			k.Type = eventType;
 			k.Modifiers = (uint)GetCefKeyboardModifiers(e);
-			if (key == Key.System)
-			{
-				virtualKey = e.SystemKey.ToVirtualKey();
-				k.IsSystemKey = true;
-				e.Handled = true;
-			}
-			else
-			{
-				virtualKey = key.ToVirtualKey();
-			}
+			k.IsSystemKey = (key == Key.System);
 			k.WindowsKeyCode = (int)virtualKey;
-			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, e.IsRepeat, key == Key.System, e.IsExtendedKey());
+			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, e.IsRepeat, k.IsSystemKey, e.IsExtendedKey());
 			this.BrowserObject?.Host.SendKeyEvent(k);
 
-			if (Keyboard.Modifiers != ModifierKeys.None)
-			{
-				// Prevent call OnPreviewTextInput.
+			if (k.IsSystemKey)
 				return true;
-			}
 
-			// Hooking the Tab key like this makes the tab focusing in essence work like
-			// KeyboardNavigation.TabNavigation="Cycle"; you will never be able to Tab out of the web browser control.
-			// We also add the condition to allow ctrl+a to work when the web browser control is put inside listbox.
 			// Prevent keyboard navigation using arrows and home and end keys
-			if (key >= Key.PageUp && key <= Key.Down) // todo: TAB, CTRL+A
-			{
+			if (key >= Key.PageUp && key <= Key.Down)
 				return true;
-			}
+
+			if (key == Key.Tab)
+				return true;
+
+			// Allow Ctrl+A to work when the WebView control is put inside listbox.
+			if (key == Key.A && ((CefEventFlags)k.Modifiers).HasFlag(CefEventFlags.ControlDown))
+				return true;
+
 			return false;
 		}
 
@@ -565,7 +559,7 @@ namespace CefNet.Wpf
 				var k = new CefKeyEvent();
 				k.Type = CefKeyEventType.Char;
 				k.WindowsKeyCode = (int)symbol;
-				k.NativeKeyCode = ((VirtualKeys)symbol).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
+				k.NativeKeyCode = ((VirtualKeys)(NativeMethods.VkKeyScan(symbol) & 0xFF)).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
 				k.Modifiers = (uint)GetModifierKeys();
 				this.BrowserObject?.Host.SendKeyEvent(k);
 			}
@@ -660,10 +654,33 @@ namespace CefNet.Wpf
 					if (e.SystemKey == Key.LeftAlt)
 						modifiers |= CefEventFlags.IsLeft;
 					else if (e.SystemKey == Key.RightAlt)
-						modifiers |= CefEventFlags.IsLeft;
+						modifiers |= CefEventFlags.IsRight;
 					break;
 			}
 			return modifiers;
 		}
+
+		/// <summary>
+		/// Sets the current input locale identifier for the UI thread in the browser.
+		/// </summary>
+		protected void SetKeyboardLayoutForCefUIThreadIfNeeded()
+		{
+			IntPtr hkl = NativeMethods.GetKeyboardLayout(0);
+			if (_keyboardLayout == hkl)
+				return;
+
+			if (CefApi.CurrentlyOn(CefThreadId.UI))
+			{
+				_keyboardLayout = hkl;
+			}
+			else
+			{
+				CefNetApi.Post(CefThreadId.UI, () => {
+					NativeMethods.ActivateKeyboardLayout(hkl, 0);
+					_keyboardLayout = hkl;
+				});
+			}
+		}
+
 	}
 }

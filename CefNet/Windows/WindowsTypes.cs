@@ -22,7 +22,7 @@ namespace CefNet.WinApi
 		/// <summary>
 		/// Additional information about the message. The exact meaning depends on the value of the message member.
 		/// </summary>
-		public UIntPtr wParam;
+		public IntPtr wParam;
 		/// <summary>
 		/// Additional information about the message. The exact meaning depends on the value of the message member.
 		/// </summary>

@@ -6,393 +6,393 @@ namespace CefNet.WinApi
 {
 	public enum VirtualKeys
 	{
-		/// <summary>Битовая маска для извлечения кода клавиши из значения клавиши.</summary>
+		/// <summary>The bitmask to extract a key code from a key value.</summary>
 		KeyCode = 0xFFFF,
-		/// <summary>Битовая маска для извлечения модификаторов из значения клавиши.</summary>
+		/// <summary>The bitmask to extract modifiers from a key value.</summary>
 		Modifiers = -65536,
-		/// <summary>Нет нажатых клавиш.</summary>
+		/// <summary>No key pressed.</summary>
 		None = 0x0,
-		/// <summary>Левая кнопка мыши.</summary>
+		/// <summary>The left mouse button.</summary>
 		LButton = 0x1,
-		/// <summary>Правая кнопка мыши.</summary>
+		/// <summary>The right mouse button.</summary>
 		RButton = 0x2,
-		/// <summary>Клавиша отмены.</summary>
+		/// <summary>The CANCEL key.</summary>
 		Cancel = 0x3,
-		/// <summary>Средняя кнопка мыши (трехкнопочная мышь).</summary>
+		/// <summary>The middle mouse button (three-button mouse).</summary>
 		MButton = 0x4,
-		/// <summary>Первая кнопка мыши (пятикнопочная мышь).</summary>
+		/// <summary>The first x mouse button (five-button mouse).</summary>
 		XButton1 = 0x5,
-		/// <summary>Вторая кнопка мыши (пятикнопочная мышь).</summary>
+		/// <summary>The second x mouse button (five-button mouse).</summary>
 		XButton2 = 0x6,
-		/// <summary>Клавиша BACKSPACE.</summary>
+		/// <summary>The BACKSPACE key.</summary>
 		Back = 0x8,
-		/// <summary>Клавиша TAB.</summary>
+		/// <summary>The TAB key.</summary>
 		Tab = 0x9,
-		/// <summary>Клавиша LINEFEED.</summary>
+		/// <summary>The LINEFEED key.</summary>
 		LineFeed = 0xA,
-		/// <summary>Клавиша CLEAR.</summary>
+		/// <summary>The CLEAR key.</summary>
 		Clear = 0xC,
-		/// <summary>Клавиша RETURN.</summary>
+		/// <summary>The RETURN key.</summary>
 		Return = 0xD,
-		/// <summary>Клавиша ВВОД.</summary>
+		/// <summary>The ENTER key.</summary>
 		Enter = 0xD,
-		/// <summary>Клавиша SHIFT.</summary>
+		/// <summary>The SHIFT key.</summary>
 		ShiftKey = 0x10,
-		/// <summary>Клавиша CTRL.</summary>
+		/// <summary>The CTRL key.</summary>
 		ControlKey = 0x11,
-		/// <summary>Клавиша ALT.</summary>
+		/// <summary>The ALT key.</summary>
 		Menu = 0x12,
-		/// <summary>Клавиша PAUSE.</summary>
+		/// <summary>The PAUSE key.</summary>
 		Pause = 0x13,
-		/// <summary>Клавиша CAPS LOCK.</summary>
+		/// <summary>The CAPS LOCK key.</summary>
 		Capital = 0x14,
-		/// <summary>Клавиша CAPS LOCK.</summary>
+		/// <summary>The CAPS LOCK key.</summary>
 		CapsLock = 0x14,
-		/// <summary>Клавиша режима "Кана" редактора метода ввода.</summary>
+		/// <summary>The IME Kana mode key.</summary>
 		KanaMode = 0x15,
-		/// <summary>Клавиша режима IME Hanguel (поддерживается для обеспечения совместимости; используйте клавишу <see langword="HangulMode" />).</summary>
+		/// <summary>The IME Hanguel mode key. (maintained for compatibility; use <see langword="HangulMode" />)</summary>
 		HanguelMode = 0x15,
-		/// <summary>Клавиша режима "Хангыль" редактора метода ввода.</summary>
+		/// <summary>The IME Hangul mode key.</summary>
 		HangulMode = 0x15,
-		/// <summary>Клавиша режима "Джунджа" редактора метода ввода.</summary>
+		/// <summary>The IME Junja mode key.</summary>
 		JunjaMode = 0x17,
-		/// <summary>Клавиша окончательного режима IME.</summary>
+		/// <summary>The IME final mode key.</summary>
 		FinalMode = 0x18,
-		/// <summary>Клавиша режима "Ханджа" редактора метода ввода.</summary>
+		/// <summary>The IME Hanja mode key.</summary>
 		HanjaMode = 0x19,
-		/// <summary>Клавиша режима "Кандзи" редактора метода ввода.</summary>
+		/// <summary>The IME Kanji mode key.</summary>
 		KanjiMode = 0x19,
-		/// <summary>Клавиша ESC.</summary>
+		/// <summary>The ESC key.</summary>
 		Escape = 0x1B,
-		/// <summary>Клавиша преобразования IME.</summary>
+		/// <summary>The IME convert key.</summary>
 		IMEConvert = 0x1C,
-		/// <summary>Клавиша без преобразования IME.</summary>
+		/// <summary>The IME nonconvert key.</summary>
 		IMENonconvert = 0x1D,
-		/// <summary>Клавиша принятия IME, заменяет клавишу <see cref="F:System.Windows.Forms.Keys.IMEAceept" />.</summary>
+		/// <summary>The IME accept key, replaces <see cref="F:System.Windows.Forms.Keys.IMEAceept" />.</summary>
 		IMEAccept = 0x1E,
-		/// <summary>Клавиша принятия IME. Является устаревшей, вместо нее используется клавиша <see cref="F:System.Windows.Forms.Keys.IMEAccept" />.</summary>
+		/// <summary>The IME accept key. Obsolete, use <see cref="F:System.Windows.Forms.Keys.IMEAccept" /> instead.</summary>
 		IMEAceept = 0x1E,
-		/// <summary>Клавиша изменения режима IME.</summary>
+		/// <summary>The IME mode change key.</summary>
 		IMEModeChange = 0x1F,
-		/// <summary>Клавиша ПРОБЕЛ.</summary>
+		/// <summary>The SPACEBAR key.</summary>
 		Space = 0x20,
-		/// <summary>Клавиша PAGE UP.</summary>
+		/// <summary>The PAGE UP key.</summary>
 		Prior = 0x21,
-		/// <summary>Клавиша PAGE UP.</summary>
+		/// <summary>The PAGE UP key.</summary>
 		PageUp = 0x21,
-		/// <summary>Клавиша PAGE DOWN.</summary>
+		/// <summary>The PAGE DOWN key.</summary>
 		Next = 0x22,
-		/// <summary>Клавиша PAGE DOWN.</summary>
+		/// <summary>The PAGE DOWN key.</summary>
 		PageDown = 0x22,
-		/// <summary>Клавиша END.</summary>
+		/// <summary>The END key.</summary>
 		End = 0x23,
-		/// <summary>Клавиша HOME.</summary>
+		/// <summary>The HOME key.</summary>
 		Home = 0x24,
-		/// <summary>Клавиша СТРЕЛКА ВЛЕВО.</summary>
+		/// <summary>The LEFT ARROW key.</summary>
 		Left = 0x25,
-		/// <summary>Клавиша СТРЕЛКА ВВЕРХ.</summary>
+		/// <summary>The UP ARROW key.</summary>
 		Up = 0x26,
-		/// <summary>Клавиша СТРЕЛКА ВПРАВО.</summary>
+		/// <summary>The RIGHT ARROW key.</summary>
 		Right = 0x27,
-		/// <summary>Клавиша СТРЕЛКА ВНИЗ.</summary>
+		/// <summary>The DOWN ARROW key.</summary>
 		Down = 0x28,
-		/// <summary>Клавиша SELECT.</summary>
+		/// <summary>The SELECT key.</summary>
 		Select = 0x29,
-		/// <summary>Клавиша PRINT.</summary>
+		/// <summary>The PRINT key.</summary>
 		Print = 0x2A,
-		/// <summary>Клавиша EXECUTE.</summary>
+		/// <summary>The EXECUTE key.</summary>
 		Execute = 0x2B,
-		/// <summary>Клавиша PRINT SCREEN.</summary>
+		/// <summary>The PRINT SCREEN key.</summary>
 		Snapshot = 0x2C,
-		/// <summary>Клавиша PRINT SCREEN.</summary>
+		/// <summary>The PRINT SCREEN key.</summary>
 		PrintScreen = 0x2C,
-		/// <summary>Клавиша INS.</summary>
+		/// <summary>The INS key.</summary>
 		Insert = 0x2D,
-		/// <summary>Клавиша DEL.</summary>
+		/// <summary>The DEL key.</summary>
 		Delete = 0x2E,
-		/// <summary>Клавиша HELP.</summary>
+		/// <summary>The HELP key.</summary>
 		Help = 0x2F,
-		/// <summary>Клавиша 0.</summary>
+		/// <summary>The 0 key.</summary>
 		D0 = 0x30,
-		/// <summary>Клавиша 1.</summary>
+		/// <summary>The 1 key.</summary>
 		D1 = 0x31,
-		/// <summary>Клавиша 2.</summary>
+		/// <summary>The 2 key.</summary>
 		D2 = 0x32,
-		/// <summary>Клавиша 3.</summary>
+		/// <summary>The 3 key.</summary>
 		D3 = 0x33,
-		/// <summary>Клавиша 4.</summary>
+		/// <summary>The 4 key.</summary>
 		D4 = 0x34,
-		/// <summary>Клавиша 5.</summary>
+		/// <summary>The 5 key.</summary>
 		D5 = 0x35,
-		/// <summary>Клавиша 6.</summary>
+		/// <summary>The 6 key.</summary>
 		D6 = 0x36,
-		/// <summary>Клавиша 7.</summary>
+		/// <summary>The 7 key.</summary>
 		D7 = 0x37,
-		/// <summary>Клавиша 8.</summary>
+		/// <summary>The 8 key.</summary>
 		D8 = 0x38,
-		/// <summary>Клавиша 9.</summary>
+		/// <summary>The 9 key.</summary>
 		D9 = 0x39,
-		/// <summary>Клавиша A.</summary>
+		/// <summary>The A key.</summary>
 		A = 0x41,
-		/// <summary>Клавиша B.</summary>
+		/// <summary>The B key.</summary>
 		B = 0x42,
-		/// <summary>Клавиша C.</summary>
+		/// <summary>The C key.</summary>
 		C = 0x43,
-		/// <summary>Клавиша D.</summary>
+		/// <summary>The D key.</summary>
 		D = 0x44,
-		/// <summary>Клавиша E.</summary>
+		/// <summary>The E key.</summary>
 		E = 0x45,
-		/// <summary>Клавиша F.</summary>
+		/// <summary>The F key.</summary>
 		F = 0x46,
-		/// <summary>Клавиша G.</summary>
+		/// <summary>The G key.</summary>
 		G = 0x47,
-		/// <summary>Клавиша H.</summary>
+		/// <summary>The H key.</summary>
 		H = 0x48,
-		/// <summary>Клавиша I.</summary>
+		/// <summary>The I key.</summary>
 		I = 0x49,
-		/// <summary>Клавиша J.</summary>
+		/// <summary>The J key.</summary>
 		J = 0x4A,
-		/// <summary>Клавиша K.</summary>
+		/// <summary>The K key.</summary>
 		K = 0x4B,
-		/// <summary>Клавиша L.</summary>
+		/// <summary>The L key.</summary>
 		L = 0x4C,
-		/// <summary>Клавиша M.</summary>
+		/// <summary>The M key.</summary>
 		M = 0x4D,
-		/// <summary>Клавиша N.</summary>
+		/// <summary>The N key.</summary>
 		N = 0x4E,
-		/// <summary>Клавиша O.</summary>
+		/// <summary>The O key.</summary>
 		O = 0x4F,
-		/// <summary>Клавиша P.</summary>
+		/// <summary>The P key.</summary>
 		P = 0x50,
-		/// <summary>Клавиша Q.</summary>
+		/// <summary>The Q key.</summary>
 		Q = 0x51,
-		/// <summary>Клавиша R.</summary>
+		/// <summary>The R key.</summary>
 		R = 0x52,
-		/// <summary>Клавиша S.</summary>
+		/// <summary>The S key.</summary>
 		S = 0x53,
-		/// <summary>Клавиша T.</summary>
+		/// <summary>The T key.</summary>
 		T = 0x54,
-		/// <summary>Клавиша U.</summary>
+		/// <summary>The U key.</summary>
 		U = 0x55,
-		/// <summary>Клавиша V.</summary>
+		/// <summary>The V key.</summary>
 		V = 0x56,
-		/// <summary>Клавиша W.</summary>
+		/// <summary>The W key.</summary>
 		W = 0x57,
-		/// <summary>Клавиша X.</summary>
+		/// <summary>The X key.</summary>
 		X = 0x58,
-		/// <summary>Клавиша Y.</summary>
+		/// <summary>The Y key.</summary>
 		Y = 0x59,
-		/// <summary>Клавиша Z.</summary>
+		/// <summary>The Z key.</summary>
 		Z = 0x5A,
-		/// <summary>Левая клавиша с логотипом Windows (клавиатура Microsoft Natural Keyboard).</summary>
+		/// <summary>The left Windows logo key (Microsoft Natural Keyboard).</summary>
 		LWin = 0x5B,
-		/// <summary>Правая клавиша с логотипом Windows (клавиатура Microsoft Natural Keyboard).</summary>
+		/// <summary>The right Windows logo key (Microsoft Natural Keyboard).</summary>
 		RWin = 0x5C,
-		/// <summary>Клавиша контекстного меню (клавиатура Microsoft Natural).</summary>
+		/// <summary>The application key (Microsoft Natural Keyboard).</summary>
 		Apps = 0x5D,
-		/// <summary>Клавиша перевода компьютера в спящий режим.</summary>
+		/// <summary>The computer sleep key.</summary>
 		Sleep = 0x5F,
-		/// <summary>Клавиша 0 на цифровой клавиатуре.</summary>
+		/// <summary>The 0 key on the numeric keypad.</summary>
 		NumPad0 = 0x60,
-		/// <summary>Клавиша 1 на цифровой клавиатуре.</summary>
+		/// <summary>The 1 key on the numeric keypad.</summary>
 		NumPad1 = 0x61,
-		/// <summary>Клавиша 2 на цифровой клавиатуре.</summary>
+		/// <summary>The 2 key on the numeric keypad.</summary>
 		NumPad2 = 0x62,
-		/// <summary>Клавиша 3 на цифровой клавиатуре.</summary>
+		/// <summary>The 3 key on the numeric keypad.</summary>
 		NumPad3 = 0x63,
-		/// <summary>Клавиша 4 на цифровой клавиатуре.</summary>
+		/// <summary>The 4 key on the numeric keypad.</summary>
 		NumPad4 = 0x64,
-		/// <summary>Клавиша 5 на цифровой клавиатуре.</summary>
+		/// <summary>The 5 key on the numeric keypad.</summary>
 		NumPad5 = 0x65,
-		/// <summary>Клавиша 6 на цифровой клавиатуре.</summary>
+		/// <summary>The 6 key on the numeric keypad.</summary>
 		NumPad6 = 0x66,
-		/// <summary>Клавиша 7 на цифровой клавиатуре.</summary>
+		/// <summary>The 7 key on the numeric keypad.</summary>
 		NumPad7 = 0x67,
-		/// <summary>Клавиша 8 на цифровой клавиатуре.</summary>
+		/// <summary>The 8 key on the numeric keypad.</summary>
 		NumPad8 = 0x68,
-		/// <summary>Клавиша 9 на цифровой клавиатуре.</summary>
+		/// <summary>The 9 key on the numeric keypad.</summary>
 		NumPad9 = 0x69,
-		/// <summary>Клавиша умножения.</summary>
+		/// <summary>The multiply key.</summary>
 		Multiply = 0x6A,
-		/// <summary>Клавиша сложения.</summary>
+		/// <summary>The add key.</summary>
 		Add = 0x6B,
-		/// <summary>Клавиша разделителя.</summary>
+		/// <summary>The separator key.</summary>
 		Separator = 0x6C,
-		/// <summary>Клавиша вычитания.</summary>
+		/// <summary>The subtract key.</summary>
 		Subtract = 0x6D,
-		/// <summary>Клавиша десятичного разделителя.</summary>
+		/// <summary>The decimal key.</summary>
 		Decimal = 0x6E,
-		/// <summary>Клавиша деления.</summary>
+		/// <summary>The divide key.</summary>
 		Divide = 0x6F,
-		/// <summary>Клавиша F1.</summary>
+		/// <summary>The F1 key.</summary>
 		F1 = 0x70,
-		/// <summary>Клавиша F2.</summary>
+		/// <summary>The F2 key.</summary>
 		F2 = 0x71,
-		/// <summary>Клавиша F3.</summary>
+		/// <summary>The F3 key.</summary>
 		F3 = 0x72,
-		/// <summary>Клавиша F4.</summary>
+		/// <summary>The F4 key.</summary>
 		F4 = 0x73,
-		/// <summary>Клавиша F5.</summary>
+		/// <summary>The F5 key.</summary>
 		F5 = 0x74,
-		/// <summary>Клавиша F6.</summary>
+		/// <summary>The F6 key.</summary>
 		F6 = 0x75,
-		/// <summary>Клавиша F7.</summary>
+		/// <summary>The F7 key.</summary>
 		F7 = 0x76,
-		/// <summary>Клавиша F8.</summary>
+		/// <summary>The F8 key.</summary>
 		F8 = 0x77,
-		/// <summary>Клавиша F9.</summary>
+		/// <summary>The F9 key.</summary>
 		F9 = 0x78,
-		/// <summary>Клавиша F10.</summary>
+		/// <summary>The F10 key.</summary>
 		F10 = 0x79,
-		/// <summary>Клавиша F11.</summary>
+		/// <summary>The F11 key.</summary>
 		F11 = 0x7A,
-		/// <summary>Клавиша F12.</summary>
+		/// <summary>The F12 key.</summary>
 		F12 = 0x7B,
-		/// <summary>Клавиша F13.</summary>
+		/// <summary>The F13 key.</summary>
 		F13 = 0x7C,
-		/// <summary>Клавиша F14.</summary>
+		/// <summary>The F14 key.</summary>
 		F14 = 0x7D,
-		/// <summary>Клавиша F15.</summary>
+		/// <summary>The F15 key.</summary>
 		F15 = 0x7E,
-		/// <summary>Клавиша F16.</summary>
+		/// <summary>The F16 key.</summary>
 		F16 = 0x7F,
-		/// <summary>Клавиша F17.</summary>
+		/// <summary>The F17 key.</summary>
 		F17 = 0x80,
-		/// <summary>Клавиша F18.</summary>
+		/// <summary>The F18 key.</summary>
 		F18 = 0x81,
-		/// <summary>Клавиша F19.</summary>
+		/// <summary>The F19 key.</summary>
 		F19 = 0x82,
-		/// <summary>Клавиша F20.</summary>
+		/// <summary>The F20 key.</summary>
 		F20 = 0x83,
-		/// <summary>Клавиша F21.</summary>
+		/// <summary>The F21 key.</summary>
 		F21 = 0x84,
-		/// <summary>Клавиша F22.</summary>
+		/// <summary>The F22 key.</summary>
 		F22 = 0x85,
-		/// <summary>Клавиша F23.</summary>
+		/// <summary>The F23 key.</summary>
 		F23 = 0x86,
-		/// <summary>Клавиша F24.</summary>
+		/// <summary>The F24 key.</summary>
 		F24 = 0x87,
-		/// <summary>Клавиша NUM LOCK.</summary>
+		/// <summary>The NUM LOCK key.</summary>
 		NumLock = 0x90,
-		/// <summary>Клавиша SCROLL LOCK.</summary>
+		/// <summary>The SCROLL LOCK key.</summary>
 		Scroll = 0x91,
-		/// <summary>Левая клавиша SHIFT.</summary>
+		/// <summary>The left SHIFT key.</summary>
 		LShiftKey = 0xA0,
-		/// <summary>Правая клавиша SHIFT.</summary>
+		/// <summary>The right SHIFT key.</summary>
 		RShiftKey = 0xA1,
-		/// <summary>Левая клавиша CTRL.</summary>
+		/// <summary>The left CTRL key.</summary>
 		LControlKey = 0xA2,
-		/// <summary>Правая клавиша CTRL.</summary>
+		/// <summary>The right CTRL key.</summary>
 		RControlKey = 0xA3,
-		/// <summary>Левая клавиша ALT.</summary>
+		/// <summary>The left ALT key.</summary>
 		LMenu = 0xA4,
-		/// <summary>Правая клавиша ALT.</summary>
+		/// <summary>The right ALT key.</summary>
 		RMenu = 0xA5,
-		/// <summary>Клавиша перехода назад в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser back key (Windows 2000 or later).</summary>
 		BrowserBack = 0xA6,
-		/// <summary>Клавиша перехода вперед в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser forward key (Windows 2000 or later).</summary>
 		BrowserForward = 0xA7,
-		/// <summary>Клавиша обновления в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser refresh key (Windows 2000 or later).</summary>
 		BrowserRefresh = 0xA8,
-		/// <summary>Клавиша остановки в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser stop key (Windows 2000 or later).</summary>
 		BrowserStop = 0xA9,
-		/// <summary>Клавиша поиска в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser search key (Windows 2000 or later).</summary>
 		BrowserSearch = 0xAA,
-		/// <summary>Клавиша избранного в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser favorites key (Windows 2000 or later).</summary>
 		BrowserFavorites = 0xAB,
-		/// <summary>Клавиша домашней страницы в браузере (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The browser home key (Windows 2000 or later).</summary>
 		BrowserHome = 0xAC,
-		/// <summary>Клавиша выключения звука (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The volume mute key (Windows 2000 or later).</summary>
 		VolumeMute = 0xAD,
-		/// <summary>Клавиша уменьшения громкости (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The volume down key (Windows 2000 or later).</summary>
 		VolumeDown = 0xAE,
-		/// <summary>Клавиша увеличения громкости (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The volume up key (Windows 2000 or later).</summary>
 		VolumeUp = 0xAF,
-		/// <summary>Клавиша перехода на следующую запись (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The media next track key (Windows 2000 or later).</summary>
 		MediaNextTrack = 0xB0,
-		/// <summary>Клавиша перехода на предыдущую запись (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The media previous track key (Windows 2000 or later).</summary>
 		MediaPreviousTrack = 0xB1,
-		/// <summary>Клавиша остановки воспроизведения (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The media Stop key (Windows 2000 or later).</summary>
 		MediaStop = 0xB2,
-		/// <summary>Клавиша приостановки воспроизведения (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The media play pause key (Windows 2000 or later).</summary>
 		MediaPlayPause = 0xB3,
-		/// <summary>Клавиша запуска почты (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The launch mail key (Windows 2000 or later).</summary>
 		LaunchMail = 0xB4,
-		/// <summary>Клавиша выбора записи (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The select media key (Windows 2000 or later).</summary>
 		SelectMedia = 0xB5,
-		/// <summary>Клавиша запуска приложения один (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The start application one key (Windows 2000 or later).</summary>
 		LaunchApplication1 = 0xB6,
-		/// <summary>Клавиша запуска приложения два (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The start application two key (Windows 2000 or later).</summary>
 		LaunchApplication2 = 0xB7,
-		/// <summary>Клавиша OEM с точкой с запятой на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM Semicolon key on a US standard keyboard (Windows 2000 or later).</summary>
 		OemSemicolon = 0xBA,
-		/// <summary>Клавиша OEM 1.</summary>
+		/// <summary>The OEM 1 key.</summary>
 		Oem1 = 0xBA,
-		/// <summary>Клавиша OEM со знаком плюса на клавиатуре любой страны или региона (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM plus key on any country/region keyboard (Windows 2000 or later).</summary>
 		Oemplus = 0xBB,
-		/// <summary>Клавиша OEM с запятой на клавиатуре любой страны или региона (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM comma key on any country/region keyboard (Windows 2000 or later).</summary>
 		Oemcomma = 0xBC,
-		/// <summary>Клавиша OEM со знаком минуса на клавиатуре любой страны или региона (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM minus key on any country/region keyboard (Windows 2000 or later).</summary>
 		OemMinus = 0xBD,
-		/// <summary>Клавиша OEM с точкой на клавиатуре любой страны или региона (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM period key on any country/region keyboard (Windows 2000 or later).</summary>
 		OemPeriod = 0xBE,
-		/// <summary>Клавиша OEM с вопросительным знаком на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM question mark key on a US standard keyboard (Windows 2000 or later).</summary>
 		OemQuestion = 0xBF,
-		/// <summary>Клавиша OEM 2.</summary>
+		/// <summary>The OEM 2 key.</summary>
 		Oem2 = 0xBF,
-		/// <summary>Клавиша OEM со знаком тильды на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM tilde key on a US standard keyboard (Windows 2000 or later).</summary>
 		Oemtilde = 0xC0,
-		/// <summary>Клавиша OEM 3.</summary>
+		/// <summary>The OEM 3 key.</summary>
 		Oem3 = 0xC0,
-		/// <summary>Клавиша OEM с открывающей квадратной скобкой на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM open bracket key on a US standard keyboard (Windows 2000 or later).</summary>
 		OemOpenBrackets = 0xDB,
-		/// <summary>Клавиша OEM 4.</summary>
+		/// <summary>The OEM 4 key.</summary>
 		Oem4 = 0xDB,
-		/// <summary>Клавиша OEM с вертикальной чертой на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM pipe key on a US standard keyboard (Windows 2000 or later).</summary>
 		OemPipe = 0xDC,
-		/// <summary>Клавиша OEM 5.</summary>
+		/// <summary>The OEM 5 key.</summary>
 		Oem5 = 0xDC,
-		/// <summary>Клавиша OEM с закрывающей квадратной скобкой на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM close bracket key on a US standard keyboard (Windows 2000 or later).</summary>
 		OemCloseBrackets = 0xDD,
-		/// <summary>Клавиша OEM 6.</summary>
+		/// <summary>The OEM 6 key.</summary>
 		Oem6 = 0xDD,
-		/// <summary>Клавиша OEM с одинарной/двойной кавычкой на стандартной клавиатуре США (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM singled/double quote key on a US standard keyboard (Windows 2000 or later).</summary>
 		OemQuotes = 0xDE,
-		/// <summary>Клавиша OEM 7.</summary>
+		/// <summary>The OEM 7 key.</summary>
 		Oem7 = 0xDE,
-		/// <summary>Клавиша OEM 8.</summary>
+		/// <summary>The OEM 8 key.</summary>
 		Oem8 = 0xDF,
-		/// <summary>Клавиша OEM с угловой скобкой или обратной косой чертой на клавиатуре RT со 102 клавишами (Windows 2000 или более поздняя версия).</summary>
+		/// <summary>The OEM angle bracket or backslash key on the RT 102 key keyboard (Windows 2000 or later).</summary>
 		OemBackslash = 0xE2,
-		/// <summary>Клавиша OEM 102.</summary>
+		/// <summary>The OEM 102 key.</summary>
 		Oem102 = 0xE2,
-		/// <summary>Клавиша PROCESS KEY.</summary>
+		/// <summary>The PROCESS KEY key.</summary>
 		ProcessKey = 0xE5,
-		/// <summary>Используется для передачи символов в Юникоде в виде нажатия клавиш. Значение клавиши пакета является младшим словом 32-разрядного виртуального значения клавиши, используемого для бесклавиатурных методов ввода.</summary>
+		/// <summary>Used to pass Unicode characters as if they were keystrokes. The Packet key value is the low word of a 32-bit virtual-key value used for non-keyboard input methods.</summary>
 		Packet = 0xE7,
-		/// <summary>Клавиша ATTN.</summary>
+		/// <summary>The ATTN key.</summary>
 		Attn = 0xF6,
-		/// <summary>Клавиша CRSEL.</summary>
+		/// <summary>The CRSEL key.</summary>
 		Crsel = 0xF7,
-		/// <summary>Клавиша EXSEL.</summary>
+		/// <summary>The EXSEL key.</summary>
 		Exsel = 0xF8,
-		/// <summary>Клавиша ERASE EOF.</summary>
+		/// <summary>The ERASE EOF key.</summary>
 		EraseEof = 0xF9,
-		/// <summary>Клавиша PLAY.</summary>
+		/// <summary>The PLAY key.</summary>
 		Play = 0xFA,
-		/// <summary>Клавиша ZOOM.</summary>
+		/// <summary>The ZOOM key.</summary>
 		Zoom = 0xFB,
-		/// <summary>Константа, зарезервированная для использования в будущем.</summary>
+		/// <summary>A constant reserved for future use.</summary>
 		NoName = 0xFC,
-		/// <summary>Клавиша PA1.</summary>
+		/// <summary>The PA1 key.</summary>
 		Pa1 = 0xFD,
-		/// <summary>Клавиша CLEAR.</summary>
+		/// <summary>The CLEAR key.</summary>
 		OemClear = 0xFE,
-		/// <summary>Клавиша SHIFT.</summary>
+		/// <summary>The SHIFT modifier key.</summary>
 		Shift = 0x10000,
-		/// <summary>Клавиша CTRL.</summary>
+		/// <summary>The CTRL modifier key.</summary>
 		Control = 0x20000,
-		/// <summary>Клавиша ALT.</summary>
+		/// <summary>The ALT modifier key.</summary>
 		Alt = 0x40000
 	}
 }

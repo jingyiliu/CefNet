@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -10,17 +10,21 @@
     <DefineConstants>$(DefineConstants);TRACE;WPF;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net')) AND $([System.Char]::IsDigit(TargetFramework, 3))">
+    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\CefNet.Windows.Forms\Internal\CrossThreadEventMethod.cs" Link="Internal\CrossThreadEventMethod.cs" />
     <Compile Include="..\CefNet\WebView.CommonImplementation.cs" Link="WebView.CommonImplementation.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CefNet\CefNet.csproj" />
+    <PackageReference Include="System.Buffers" Version="4.5.0" Condition="$(DefineConstants.Contains(NETFRAMEWORK))" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="WinApi\" />
+    <ProjectReference Include="..\CefNet\CefNet.csproj" />
   </ItemGroup>
 
 </Project>

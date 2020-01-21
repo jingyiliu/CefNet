@@ -27,6 +27,7 @@ namespace CefNet.Avalonia
 	public partial class WebView : TemplatedControl, IAvaloniaWebViewPrivate, IDisposable
 	{
 		private CefRect _windowBounds;
+		private IntPtr _keyboardLayout;
 		private bool _allowResizeNotifications = true;
 		private bool _suppressLostFocusEvent = false;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
@@ -61,8 +62,8 @@ namespace CefNet.Avalonia
 
 			this.GetPropertyChangedObservable(Control.BoundsProperty).Subscribe(OnBoundsChanged);
 
-			AddHandler(InputElement.KeyDownEvent, HandlePreviewKeyDown, RoutingStrategies.Tunnel);
-			AddHandler(InputElement.KeyUpEvent, HandlePreviewKeyUp, RoutingStrategies.Tunnel);
+			AddHandler(InputElement.KeyDownEvent, HandlePreviewKeyDown, RoutingStrategies.Tunnel, true);
+			AddHandler(InputElement.KeyUpEvent, HandlePreviewKeyUp, RoutingStrategies.Tunnel, true);
 		}
 
 		protected bool IsDesignMode
@@ -537,37 +538,34 @@ namespace CefNet.Avalonia
 
 		protected virtual bool ProcessPreviewKey(CefKeyEventType eventType, KeyEventArgs e)
 		{
+			if (PlatformInfo.IsWindows)
+				SetWindowsKeyboardLayoutForCefUIThreadIfNeeded();
+
 			Key key = e.Key;
-			VirtualKeys virtualKey;
+			VirtualKeys virtualKey = key.ToVirtualKey();
 
 			var k = new CefKeyEvent();
 			k.Type = eventType;
 			k.Modifiers = (uint)GetCefKeyboardModifiers(e);
-			bool isSystemKey = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
-			if (isSystemKey)
-			{
-				k.IsSystemKey = true;
-				e.Handled = true;
-			}
-			virtualKey = key.ToVirtualKey();
+			k.IsSystemKey = (e.KeyModifiers.HasFlag(KeyModifiers.Alt) || key == Key.LeftAlt || key == Key.RightAlt);
 			k.WindowsKeyCode = (int)virtualKey;
-			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, false, isSystemKey, false);
+			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, false, k.IsSystemKey, false);
 			this.BrowserObject?.Host.SendKeyEvent(k);
 
-			if (e.KeyModifiers != KeyModifiers.None)
-			{
-				// Prevent call OnPreviewTextInput.
+			if (k.IsSystemKey)
 				return true;
-			}
 
-			// Hooking the Tab key like this makes the tab focusing in essence work like
-			// KeyboardNavigation.TabNavigation="Cycle"; you will never be able to Tab out of the web browser control.
-			// We also add the condition to allow ctrl+a to work when the web browser control is put inside listbox.
 			// Prevent keyboard navigation using arrows and home and end keys
-			if (key >= Key.PageUp && key <= Key.Down) // todo: TAB, CTRL+A
-			{
+			if (key >= Key.PageUp && key <= Key.Down)
 				return true;
-			}
+
+			if (key == Key.Tab)
+				return true;
+
+			// Allow Ctrl+A to work when the WebView control is put inside listbox.
+			if (key == Key.A && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+				return true;
+
 			return false;
 		}
 
@@ -598,7 +596,10 @@ namespace CefNet.Avalonia
 				var k = new CefKeyEvent();
 				k.Type = CefKeyEventType.Char;
 				k.WindowsKeyCode = (int)symbol;
-				k.NativeKeyCode = ((VirtualKeys)symbol).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
+				if(PlatformInfo.IsWindows)
+					k.NativeKeyCode = ((VirtualKeys)(CefNet.WinApi.NativeMethods.VkKeyScan(symbol) & 0xFF)).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
+				else
+					k.NativeKeyCode = ((VirtualKeys)symbol).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
 				k.Modifiers = (uint)GetModifierKeys(KeyModifiers.None);
 				this.BrowserObject?.Host.SendKeyEvent(k);
 			}
@@ -695,6 +696,28 @@ namespace CefNet.Avalonia
 					break;
 			}
 			return modifiers;
+		}
+
+		/// <summary>
+		/// Sets the current input locale identifier for the UI thread in the browser.
+		/// </summary>
+		private void SetWindowsKeyboardLayoutForCefUIThreadIfNeeded()
+		{
+			IntPtr hkl = NativeMethods.GetKeyboardLayout(0);
+			if (_keyboardLayout == hkl)
+				return;
+
+			if (CefApi.CurrentlyOn(CefThreadId.UI))
+			{
+				_keyboardLayout = hkl;
+			}
+			else
+			{
+				CefNetApi.Post(CefThreadId.UI, () => {
+					NativeMethods.ActivateKeyboardLayout(hkl, 0);
+					_keyboardLayout = hkl;
+				});
+			}
 		}
 	}
 }

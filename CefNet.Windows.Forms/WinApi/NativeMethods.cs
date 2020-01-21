@@ -78,6 +78,19 @@ namespace CefNet.WinApi
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public extern static bool PostMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public extern static KeyState GetKeyState(VirtualKeys key);
+
+		[DllImport("user32.dll")]
+		public static extern uint MapVirtualKey(uint code, MapVirtualKeyType type);
+
+		[DllImport("user32.dll")]
+		public static extern IntPtr GetKeyboardLayout(ushort dwLayout);
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public static extern IntPtr ActivateKeyboardLayout(IntPtr hkl, int flags);
+
+
 		public static IntPtr MakeParam(short high, short low)
 		{
 			unchecked
