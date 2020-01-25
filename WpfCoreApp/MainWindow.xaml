@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfCoreApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Padding="0" UseLayoutRounding="True">
+        Title="MainWindow"
+        Height="450"
+        Width="800"
+        Padding="0"
+        UseLayoutRounding="True"
+        Closing="Window_Closing">
     <DockPanel>
         <Menu VerticalAlignment="Top" DockPanel.Dock="Top" Name="menu">
             <MenuItem Header="File">

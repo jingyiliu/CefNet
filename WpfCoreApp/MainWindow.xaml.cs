@@ -128,5 +128,18 @@ namespace WpfCoreApp
 				}
 			}
 		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			ItemCollection tabItems = tabs.Items;
+			for (int i = tabItems.Count - 1; i >= 0; i--)
+			{
+				if (tabItems[i] is WebViewTab tab)
+				{
+					tab.Close();
+				}
+			}
+		}
+
 	}
 }

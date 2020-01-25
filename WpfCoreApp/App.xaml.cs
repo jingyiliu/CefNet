@@ -6,6 +6,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using WinFormsCoreApp;
@@ -42,6 +43,10 @@ namespace WpfCoreApp
 
 		protected override void OnExit(ExitEventArgs e)
 		{
+			//Thread.Sleep(1000);
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+
 			app?.Shutdown();
 			base.OnExit(e);
 

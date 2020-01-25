@@ -228,10 +228,18 @@ namespace CefNet
 				{
 					GlobalSyncRoot.ExitWriteLock();
 				}
-				if (!CefStructure.Free(key))
+#if NETFRAMEWORK
+				if (Environment.HasShutdownStarted)
 				{
-					base.Dispose(disposing);
+					if (CefStructure.IsAllocated(key)) // allow leaks to fix potential UAF
+						return;
 				}
+				else
+#endif
+				if (CefStructure.Free(key))
+					return;
+				
+				base.Dispose(disposing);
 			}
 		}
 
@@ -305,7 +313,11 @@ namespace CefNet
 				GlobalSyncRoot.ExitReadLock();
 			}
 			if (reference == null)
+			{
+				if (Environment.HasShutdownStarted)
+					return 0;
 				throw new InvalidOperationException();
+			}
 			return reference.Release();
 		}
 
