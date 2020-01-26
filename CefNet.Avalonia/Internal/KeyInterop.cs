@@ -1,5 +1,7 @@
 ﻿using Avalonia.Input;
 
+#pragma warning disable CS0219
+
 namespace CefNet.Internal
 {
 	/// <summary>

@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup Condition="$(Configuration) != 'Nuget_Release'">
+    <VersionSuffix>m-$([System.DateTime]::UtcNow.ToString(mmss))</VersionSuffix>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Nuget_Release'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CefVersion>79.1.10</CefVersion>
+    <VersionBuild>$([System.DateTime]::UtcNow.ToString(yy))</VersionBuild>
+    <VersionRevision>$([System.DateTime]::UtcNow.DayOfYear.ToString(000))$([System.DateTime]::UtcNow.ToString(HH))</VersionRevision>
+    <VersionPrefix>$(CefVersion)$(VersionBuild).$(VersionRevision)</VersionPrefix>
+    <AssemblyOriginatorKeyFile>../cefnet.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly Condition="Exists($(AssemblyOriginatorKeyFile))">true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>The CefNet Authors</Authors>
+    <PackageProjectUrl>https://github.com/cefnet</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/cefnet/cefnet</RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+</Project>

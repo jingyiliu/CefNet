@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks Condition="$(Platform.StartsWith('win'))">netcoreapp3.0;net48</TargetFrameworks>
-    <TargetFrameworks Condition="$(Platform.StartsWith('win')) != 'True'">netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net45;net48</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>$(NoWarn),IDE1006,IDE0017,IDE0016</NoWarn>
-    <Platforms>win;linux</Platforms>
     <DefineConstants>$(DefineConstants);TRACE;WINDOWLESS;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
-    <Version>77.0.0.0</Version>
+    <Configurations>Debug;Release;Nuget_Release</Configurations>
+    <Description>.NET binding for the Chromium Embedded Framework (CEF)</Description>
+    <PackageTags>CefNet, CEF, browser, chromium</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,7 +22,19 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net')) AND $([System.Char]::IsDigit(TargetFramework, 3))">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>$(DefineConstants);NET45;NETSTANDARD_2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <DefineConstants>$(DefineConstants);NET48;NETSTANDARD_2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>$(DefineConstants);NETSTANDARD_2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net')) AND $([System.Char]::IsDigit($(TargetFramework), 3))">
     <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
   </PropertyGroup>
   
@@ -36,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <IL Include="Windows\Windows.il" Condition="$(RuntimeIdentifier.StartsWith('win')) or $(Platform.StartsWith('win'))" />
+    <IL Include="Windows\Windows.il" Condition="$(RuntimeIdentifier.StartsWith('win')) or $(Platform.StartsWith('win')) or '$(Configuration)'=='Nuget_Release' or '$(OS)' == 'Windows_NT'" />
     <IL Include="**\*.il" Exclude="**\obj\**\*.il;**\bin\**\*.il;Windows\Windows.il" />
   </ItemGroup>
 
@@ -80,14 +93,11 @@
   </Target>
   
   <Target Name="CoreDecompile" Inputs="@(IntermediateAssembly)" Outputs="$(ILFile)" Condition=" Exists ( @(IntermediateAssembly) ) ">
-    <GetFrameworkSdkPath Condition="$(Platform.StartsWith('win'))">
+    <GetFrameworkSdkPath Condition="'$(MSBuildRuntimeType)' == 'Full' AND '$(FrameworkSdkPath)' == ''">
       <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
     </GetFrameworkSdkPath>
-    <GetFrameworkPath>
-      <Output TaskParameter="Path" PropertyName="FrameworkPath" />
-    </GetFrameworkPath>
     <PropertyGroup>
-      <ILDasmExe>$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe</ILDasmExe>
+      <ILDasmExe>$(FrameworkSdkPath)\bin\NETFX 4.8 Tools\ildasm.exe</ILDasmExe>
       <ILDasm>"$(ILDasmExe)" /nobar /linenum /source /utf8 /out="$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
       <ILDasm Condition=" !Exists ( $(ILDasmExe) ) ">dotnet asm ildasm -linenum -source -utf8 -out="$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
     </PropertyGroup>
@@ -101,8 +111,6 @@
       <Replacement>// method ${method} forwardref removed for IL import</Replacement>
       <Pattern>\.method [^{}]+ cil managed forwardref[^}]+} // end of method (?&lt;method&gt;[^ \r\t\n]+)</Pattern>
       <ILSource>$([System.Text.RegularExpressions.Regex]::Replace($(ILSource), $(Pattern), $(Replacement)))</ILSource>
-      <!--Pattern>\.method [^{}]+ cil managed[^\a]+"extern was not given a DllImport attribute"[^}]+} // end of method (?&lt;method&gt;[^ \r\t\n]+)</Pattern>
-      <ILSource>$([System.Text.RegularExpressions.Regex]::Replace($(ILSource), $(Pattern), $(Replacement)))</ILSource-->
     </PropertyGroup>
     <WriteLinesToFile File="$(ILFile)" Lines="$(ILSource)" Overwrite="true" />
     <PropertyGroup>
@@ -111,7 +119,7 @@
     <Delete Files="@(IntermediateAssembly)" />
   </Target>
 
-  <Target Name="ConvertResources" Inputs="$(ILResourceResFile)" Outputs="$(ILResourceObjFile)" Condition="Exists ( '$(ILResourceResFile)' )">
+  <Target Name="ConvertResources" Inputs="$(ILResourceResFile)" Outputs="$(ILResourceObjFile)" Condition="Exists('$(ILResourceResFile)') AND '$(OS)' == 'Windows_NT'">
     <GetFrameworkPath>
       <Output TaskParameter="Path" PropertyName="FrameworkPath" />
     </GetFrameworkPath>
@@ -119,6 +127,7 @@
       <FileWrites Include="$(ILResourceObjFile)" />
     </ItemGroup>
     <PropertyGroup>
+      <FrameworkPath Condition="!Exists('$(FrameworkPath)')">C:\Windows\Microsoft.NET\Framework\v4.0.30319</FrameworkPath>
       <CvtRes>$(FrameworkPath)\cvtres.exe /NOLOGO /MACHINE:x86 /OUT:"$(ILResourceObjFile)" "$(ILResourceResFile)"</CvtRes>
     </PropertyGroup>
     <Exec Command="$(CvtRes)" />
@@ -160,10 +169,10 @@
     <PropertyGroup Condition=" '$(Platform)' == 'Itanium' ">
       <ILAsm>$(ILAsm) -pe64 -itanium</ILAsm>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' != '' ">
+    <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' != '' AND $(SignAssembly) ">
       <ILAsm>$(ILAsm) -key:"$(AssemblyOriginatorKeyFile)"</ILAsm>
     </PropertyGroup>
-    <PropertyGroup Condition=" Exists ( '$(ILResourceResFile)' ) ">
+    <PropertyGroup Condition=" Exists ( '$(ILResourceObjFile)' ) ">
       <ILAsm>$(ILAsm) -resource:"$(ILResourceObjFile)"</ILAsm>
     </PropertyGroup>
     <PropertyGroup Condition=" Exists ( '$(ILFile)' ) ">

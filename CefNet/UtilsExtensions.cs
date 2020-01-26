@@ -10,7 +10,7 @@ namespace CefNet
 {
 	static class UtilsExtensions
 	{
-#if NETFRAMEWORK
+#if NETSTANDARD_2_0
 		public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> self, TKey key, out TValue value)
 		{
 			if (!self.TryGetValue(key, out value))

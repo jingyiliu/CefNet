@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net461</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Configurations>Debug;Release;Nuget_Release</Configurations>
+    <Description>.NET binding for the Chromium Embedded Framework (Avalonia control)</Description>
+    <PackageTags>CefNet, CEF, browser, chromium, Avalonia, AvaloniaUI</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -18,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.1" />
+    <PackageReference Include="Avalonia" Version="0.9.2" />
   </ItemGroup>
 
 </Project>

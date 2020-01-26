@@ -2,13 +2,6 @@
 using Avalonia.Media;
 using CefNet.Internal;
 using CefNet.WinApi;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Windows;
-using System.Windows.Input;
 
 namespace CefNet.Avalonia
 {

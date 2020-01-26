@@ -97,7 +97,7 @@ namespace CefNet.Internal
 			return IntPtr.Zero;
 		}
 
-		private IEnumerable<ValueTuple<WebView, Window>> GetViews(IntPtr hwnd)
+		private IEnumerable<Tuple<WebView, Window>> GetViews(IntPtr hwnd)
 		{
 			if (hwnd != _source.Handle)
 				yield break;
@@ -112,7 +112,7 @@ namespace CefNet.Internal
 						Window window = Window.GetWindow(view);
 						if (window != null && window == _source.RootVisual)
 						{
-							yield return new ValueTuple<WebView, Window>(view, window);
+							yield return new Tuple<WebView, Window>(view, window);
 						}
 					}
 					else

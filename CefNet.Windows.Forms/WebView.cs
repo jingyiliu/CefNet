@@ -317,7 +317,11 @@ namespace CefNet.Windows.Forms
 
 		bool IChromiumWebViewPrivate.RaiseRunContextMenu(CefFrame frame, CefContextMenuParams menuParams, CefMenuModel model, CefRunContextMenuCallback callback)
 		{
-			if (model.Count == 0 || ContextMenuStrip != null || ContextMenu != null)
+			if (model.Count == 0
+#if OBSOLETED_CONTROLS_3_1
+				|| ContextMenu != null
+#endif
+				|| ContextMenuStrip != null)
 			{
 				callback.Cancel();
 				return true;
