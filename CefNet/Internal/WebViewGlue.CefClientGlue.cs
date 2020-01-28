@@ -28,7 +28,7 @@ namespace CefNet.Internal
 
 		internal CefDragHandler GetDragHandler()
 		{
-			return null;
+			return DragGlue;
 		}
 
 		internal CefFindHandler GetFindHandler()

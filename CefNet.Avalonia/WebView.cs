@@ -21,14 +21,31 @@ namespace CefNet.Avalonia
 		private IntPtr _keyboardLayout;
 		private bool _allowResizeNotifications = true;
 		private bool _suppressLostFocusEvent = false;
+		private PointerPressedEventArgs _lastPointerPressedEventArgs;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
-		public static RoutedEvent StatusTextChangedEvent = RoutedEvent.Register<WebView, RoutedEventArgs>("StatusTextChanged", RoutingStrategies.Bubble);
+		public static RoutedEvent StatusTextChangedEvent = RoutedEvent.Register<WebView, RoutedEventArgs>(nameof(StatusTextChanged), RoutingStrategies.Bubble);
 
 		public event EventHandler<RoutedEventArgs> StatusTextChanged
 		{
 			add { AddHandler(StatusTextChangedEvent, value); }
 			remove { RemoveHandler(StatusTextChangedEvent, value); }
+		}
+
+		public static RoutedEvent<StartDraggingEventArgs> StartDraggingEvent = RoutedEvent.Register<WebView, StartDraggingEventArgs>(nameof(StartDragging), RoutingStrategies.Bubble);
+
+		/// <summary>
+		/// Occurs when the user starts dragging content in the web view.
+		/// </summary>
+		/// <remarks>
+		/// OS APIs that run a system message loop may be used within the StartDragging event handler.
+		/// Call <see cref="WebView.DragSourceEndedAt"/> and <see cref="WebView.DragSourceSystemDragEnded"/>
+		/// either synchronously or asynchronously to inform the web view that the drag operation has ended.
+		/// </remarks>
+		public event EventHandler<StartDraggingEventArgs> StartDragging
+		{
+			add { AddHandler(StartDraggingEvent, value); }
+			remove { RemoveHandler(StartDraggingEvent, value); }
 		}
 
 		public WebView()
@@ -55,6 +72,10 @@ namespace CefNet.Avalonia
 
 			AddHandler(InputElement.KeyDownEvent, HandlePreviewKeyDown, RoutingStrategies.Tunnel, true);
 			AddHandler(InputElement.KeyUpEvent, HandlePreviewKeyUp, RoutingStrategies.Tunnel, true);
+			AddHandler(DragDrop.DragEnterEvent, HandleDragEnter);
+			AddHandler(DragDrop.DragOverEvent, HandleDragOver);
+			AddHandler(DragDrop.DragLeaveEvent, HandleDragLeave);
+			AddHandler(DragDrop.DropEvent, HandleDrop);
 		}
 
 		protected bool IsDesignMode
@@ -144,6 +165,7 @@ namespace CefNet.Avalonia
 
 		protected virtual void Initialize()
 		{
+			DragDrop.SetAllowDrop(this, true);
 			ToolTip = new ToolTip { IsVisible = false };
 			this.ViewGlue = CreateWebViewGlue();
 		}
@@ -458,6 +480,27 @@ namespace CefNet.Avalonia
 			RaiseEvent(new RoutedEventArgs(StatusTextChangedEvent, this));
 		}
 
+		void IAvaloniaWebViewPrivate.RaiseStartDragging(StartDraggingEventArgs e)
+		{
+			RaiseCrossThreadEvent(OnStartDragging, e, true);
+		}
+
+		/// <summary>
+		/// Raises <see cref="WebView.StartDragging"/> event.
+		/// </summary>
+		/// <param name="e">The event data.</param>
+		protected virtual async void OnStartDragging(StartDraggingEventArgs e)
+		{
+			RaiseEvent(e);
+
+			if (e.Handled)
+				return;
+
+			e.Handled = true;
+
+			await DragDrop.DoDragDrop(_lastPointerPressedEventArgs, new CefNetDragData(this, e.Data), e.AllowedEffects.ToDragDropEffects());
+			DragSourceSystemDragEnded();
+		}
 
 		protected override void OnGotFocus(GotFocusEventArgs e)
 		{
@@ -495,6 +538,8 @@ namespace CefNet.Avalonia
 
 		protected override void OnPointerPressed(PointerPressedEventArgs e)
 		{
+			_lastPointerPressedEventArgs = e;
+
 			if (!IsFocused)
 			{
 				Focus();
@@ -593,6 +638,64 @@ namespace CefNet.Avalonia
 					k.NativeKeyCode = ((VirtualKeys)symbol).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
 				k.Modifiers = (uint)GetModifierKeys(KeyModifiers.None);
 				this.BrowserObject?.Host.SendKeyEvent(k);
+			}
+			e.Handled = true;
+		}
+
+		private void HandleDragEnter(object sender, DragEventArgs e)
+		{
+			OnDragEnter(e);
+		}
+
+		private void HandleDragOver(object sender, DragEventArgs e)
+		{
+			OnDragOver(e);
+		}
+
+		private void HandleDragLeave(object sender, RoutedEventArgs e)
+		{
+			OnDragLeave(e);
+		}
+
+		private void HandleDrop(object sender, DragEventArgs e)
+		{
+			OnDrop(e);
+		}
+
+		protected virtual void OnDragEnter(DragEventArgs e)
+		{
+			Point mousePos = e.GetPosition(this);
+			SendDragEnterEvent((int)mousePos.X, (int)mousePos.Y, e.GetModifiers(), e.GetCefDragData(), e.DragEffects.ToCefDragOperationsMask());
+			e.DragEffects = DragDropEffects.Copy & e.DragEffects;
+			e.Handled = true;
+		}
+
+		protected virtual void OnDragOver(DragEventArgs e)
+		{
+			Point mousePos = e.GetPosition(this);
+			SendDragOverEvent((int)mousePos.X, (int)mousePos.Y, e.GetModifiers(), e.DragEffects.ToCefDragOperationsMask());
+			e.DragEffects = e.DragEffects & DragDropEffects.Copy;
+			e.Handled = true;
+		}
+
+		protected virtual void OnDragLeave(RoutedEventArgs e)
+		{
+			SendDragLeaveEvent();
+			e.Handled = true;
+		}
+
+		protected virtual void OnDrop(DragEventArgs e)
+		{
+			Point mousePos = e.GetPosition(this);
+			SendDragDropEvent((int)mousePos.X, (int)mousePos.Y, e.GetModifiers());
+
+			if (e.Data.Contains(nameof(CefNetDragData)))
+			{
+				CefNetDragData data = (CefNetDragData)e.Data.Get(nameof(CefNetDragData));
+				if (data != null && data.Source == this)
+				{
+					DragSourceEndedAt((int)mousePos.X, (int)mousePos.Y, e.DragEffects.ToCefDragOperationsMask());
+				}
 			}
 			e.Handled = true;
 		}

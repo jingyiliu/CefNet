@@ -8,6 +8,7 @@ namespace CefNet.Internal
 	public static class CursorInteropHelper
 	{
 		private static readonly Dictionary<IntPtr, Cursor> _Cursors = new Dictionary<IntPtr, Cursor>();
+		private static readonly Dictionary<StandardCursorType, Cursor> _StdCursors = new Dictionary<StandardCursorType, Cursor>();
 
 		static CursorInteropHelper()
 		{
@@ -18,6 +19,7 @@ namespace CefNet.Internal
 					continue;
 
 				_Cursors.Add(cursor.PlatformCursor.Handle, cursor);
+				_StdCursors.Add(cursorType, cursor);
 			}
 		}
 
@@ -27,5 +29,20 @@ namespace CefNet.Internal
 				return cursor;
 			return Cursor.Default;
 		}
+
+		public static Cursor Create(StandardCursorType cursorType)
+		{
+			Cursor cursor;
+			lock (_StdCursors)
+			{
+				if (!_StdCursors.TryGetValue(cursorType, out cursor))
+				{
+					cursor = new Cursor(cursorType);
+					_StdCursors[cursorType] = cursor;
+				}
+			}
+			return cursor;
+		}
+
 	}
 }

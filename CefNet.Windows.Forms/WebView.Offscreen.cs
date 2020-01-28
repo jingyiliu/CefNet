@@ -20,6 +20,16 @@ namespace CefNet.Windows.Forms
 		private IntPtr _keyboardLayout;
 
 		/// <summary>
+		/// Occurs when the user starts dragging content in the web view.
+		/// </summary>
+		/// <remarks>
+		/// OS APIs that run a system message loop may be used within the StartDragging event handler.
+		/// Call <see cref="WebView.DragSourceEndedAt"/> and <see cref="WebView.DragSourceSystemDragEnded"/>
+		/// either synchronously or asynchronously to inform the web view that the drag operation has ended.
+		/// </remarks>
+		public event EventHandler<StartDraggingEventArgs> StartDragging;
+
+		/// <summary>
 		/// Gets emulated device.
 		/// </summary>
 		protected VirtualDevice Device { get; private set; }
@@ -244,6 +254,26 @@ namespace CefNet.Windows.Forms
 			{
 				toolTip.SetToolTip(this, e.Text);
 			}
+		}
+
+		void IWinFormsWebViewPrivate.RaiseStartDragging(StartDraggingEventArgs e)
+		{
+			RaiseCrossThreadEvent(OnStartDragging, e, true);
+		}
+
+		/// <summary>
+		/// Raises <see cref="WebView.StartDragging"/> event.
+		/// </summary>
+		/// <param name="e">The event data.</param>
+		protected virtual void OnStartDragging(StartDraggingEventArgs e)
+		{
+			StartDragging?.Invoke(this, e);
+			if (e.Handled)
+				return;
+			
+			DoDragDrop(new CefNetDragData(this, e.Data), e.AllowedEffects.ToDragDropEffects());
+			DragSourceSystemDragEnded();
+			e.Handled = true;
 		}
 
 		public void CefInvalidate()
@@ -539,6 +569,61 @@ namespace CefNet.Windows.Forms
 			if (!handledMouseEventArgs.Handled)
 			{
 				DefWndProc(ref m);
+			}
+		}
+
+		protected override void OnDragEnter(DragEventArgs e)
+		{
+			base.OnDragEnter(e);
+
+			Point mousePos = PointToClient(new Point(e.X, e.Y));
+			if (WindowlessRenderingEnabled && PointInViewport(mousePos.X, mousePos.Y))
+			{
+				SendDragEnterEvent(mousePos.X, mousePos.Y, e.GetModifiers(), e.GetCefDragData(), e.AllowedEffect.ToCefDragOperationsMask());
+				e.Effect = DragDropEffects.Copy & e.AllowedEffect;
+			}
+		}
+
+		protected override void OnDragOver(DragEventArgs e)
+		{
+			base.OnDragOver(e);
+
+			Point mousePos = PointToClient(new Point(e.X, e.Y));
+			if (WindowlessRenderingEnabled && PointInViewport(mousePos.X, mousePos.Y))
+			{
+				SendDragOverEvent(mousePos.X, mousePos.Y, e.GetModifiers(), e.AllowedEffect.ToCefDragOperationsMask());
+			}
+		}
+
+		protected override void OnDragLeave(EventArgs e)
+		{
+			base.OnDragLeave(e);
+
+			if (!WindowlessRenderingEnabled)
+				return;
+
+			SendDragLeaveEvent();
+		}
+
+		protected override void OnDragDrop(DragEventArgs e)
+		{
+			base.OnDragDrop(e);
+
+			if (!WindowlessRenderingEnabled)
+				return;
+
+			Point mousePos = PointToClient(new Point(e.X, e.Y));
+			if (WindowlessRenderingEnabled && PointInViewport(mousePos.X, mousePos.Y))
+			{
+				SendDragDropEvent(mousePos.X, mousePos.Y, e.GetModifiers());
+				if (e.Data.GetDataPresent(nameof(CefNetDragData)))
+				{
+					CefNetDragData data = (CefNetDragData)e.Data.GetData(nameof(CefNetDragData));
+					if (data != null && data.Source == this)
+					{
+						DragSourceEndedAt(mousePos.X, mousePos.Y, e.AllowedEffect.ToCefDragOperationsMask());
+					}
+				}
 			}
 		}
 

@@ -15,6 +15,9 @@ namespace CefNet.Internal
 		private bool _isFocusGlueInitialized;
 		private CefFocusHandlerGlue _focusGlue;
 
+		private bool _isDragGlueInitialized;
+		private CefDragHandlerGlue _dragGlue;
+
 		protected IChromiumWebViewPrivate WebView { get; private set; }
 
 		public CefBrowser BrowserObject { get; protected set; }
@@ -113,6 +116,27 @@ namespace CefNet.Internal
 
 				_isFocusGlueInitialized = true;
 				return _focusGlue;
+			}
+		}
+
+		private CefDragHandlerGlue DragGlue
+		{
+			get
+			{
+				if (_isDragGlueInitialized)
+					return _dragGlue;
+
+				if (AvoidOnDragEnter() && AvoidOnDraggableRegionsChanged())
+				{
+					_dragGlue = null;
+				}
+				else
+				{
+					_dragGlue = new CefDragHandlerGlue(this);
+				}
+
+				_isDragGlueInitialized = true;
+				return _dragGlue;
 			}
 		}
 

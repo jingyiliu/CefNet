@@ -1,6 +1,7 @@
 ﻿using CefNet.WinApi;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -129,20 +130,16 @@ namespace CefNet.Internal
 
 		}
 
-		internal bool AvoidStartDragging()
-		{
-			return false;
-		}
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		internal extern bool AvoidStartDragging();
 
 		internal protected virtual bool StartDragging(CefBrowser browser, CefDragData dragData, CefDragOperationsMask allowedOps, int x, int y)
 		{
 			return false;
 		}
 
-		internal bool AvoidUpdateDragCursor()
-		{
-			return false;
-		}
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		internal extern bool AvoidUpdateDragCursor();
 
 		internal protected virtual void UpdateDragCursor(CefBrowser browser, CefDragOperationsMask operation)
 		{

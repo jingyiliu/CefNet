@@ -835,6 +835,97 @@ namespace CefNet
 			browserHost.SendMouseWheelEvent(_mouseEventProxy, deltaX, deltaY);
 		}
 
+		/// <summary>
+		/// Call this function when the user drags the mouse into the web view.
+		/// <para/>This function is only used when window rendering is disabled.
+		/// </summary>
+		/// <param name="dragData">
+		/// The <paramref name="dragData"/> should not contain file contents as this type of data is not allowed to be
+		/// dragged into the web view. File contents can be removed using <see cref="CefDragData.ResetFileContents"/>
+		/// (for example, if <paramref name="dragData"/> comes from the <see cref="StartDragging"/> event).
+		/// </param>
+		public void SendDragEnterEvent(int x, int y, CefEventFlags modifiers, CefDragData dragData, CefDragOperationsMask allowedOps)
+		{
+			if (dragData is null)
+				throw new ArgumentNullException(nameof(dragData));
+
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null)
+				return;
+
+			InitMouseEvent(x, y, modifiers);
+			browserHost.DragTargetDragEnter(dragData, _mouseEventProxy, allowedOps);
+		}
+
+		/// <summary>
+		/// Call this function each time the mouse is moved across the web view during
+		/// a drag operation.
+		/// <para/>This function is only used when window rendering is disabled.
+		/// </summary>
+		public void SendDragOverEvent(int x, int y, CefEventFlags modifiers, CefDragOperationsMask allowedOps)
+		{
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null)
+				return;
+
+			InitMouseEvent(x, y, modifiers);
+			browserHost.DragTargetDragOver(_mouseEventProxy, allowedOps);
+		}
+
+		/// <summary>
+		/// Call this function when the user drags the mouse out of the web view.
+		/// <para/>This function is only used when window rendering is disabled.
+		/// </summary>
+		public void SendDragLeaveEvent()
+		{
+			this.BrowserObject?.Host?.DragTargetDragLeave();
+		}
+
+		/// <summary>
+		/// Call this function when the user completes the drag operation by dropping
+		/// the object onto the web view. The object being dropped is |dragData|, given
+		/// as an argument to the previous <see cref="SendDragEnterEvent"/> call.
+		/// <para/>This function is only used when window rendering is disabled.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="modifiers"></param>
+		public void SendDragDropEvent(int x, int y, CefEventFlags modifiers)
+		{
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null)
+				return;
+
+			InitMouseEvent(x, y, modifiers);
+			browserHost.DragTargetDrop(_mouseEventProxy);
+		}
+
+		/// <summary>
+		/// Inform the web view that the drag operation started by a <see cref="StartDragging"/>
+		/// event has ended. If the web view is both the drag source and the drag target then all
+		/// Drag* functions should be called before DragSource* methods.
+		/// <para/>This function is only used when window rendering is disabled.
+		/// </summary>
+		public void DragSourceSystemDragEnded()
+		{
+			this.BrowserObject?.Host?.DragSourceSystemDragEnded();
+		}
+
+		/// <summary>
+		/// Inform the web view that the drag operation started by a CefRenderHandler::StartDragging call
+		/// has ended either in a drop or by being cancelled. If the web view is both the drag source and the
+		/// drag target then all Drag* functions should be called before DragSource* methods.
+		/// <para/>This function is only used when window rendering is disabled.
+		/// </summary>
+		/// <param name="x">The x-coordinate of the mouse pointer relative to the left edge of the view.</param>
+		/// <param name="y">The y-coordinate of the mouse pointer relative to the upper edge of the view.</param>
+		/// <param name="effects"></param>
+		public void DragSourceEndedAt(int x, int y, CefDragOperationsMask effects)
+		{
+			CefPoint point = PointToViewport(new CefPoint(x, y));
+			this.BrowserObject?.Host?.DragSourceEndedAt(point.X, point.Y, effects);
+		}
+
 
 #if USERAGENTOVERRIDE
 

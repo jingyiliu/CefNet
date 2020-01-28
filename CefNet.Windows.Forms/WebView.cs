@@ -194,6 +194,7 @@ namespace CefNet.Windows.Forms
 			SetStyle(ControlStyles.UserMouse, WindowlessRenderingEnabled);
 
 			this.BackColor = Color.White;
+			this.AllowDrop = true;
 
 			this.ViewGlue = CreateWebViewGlue();
 			this.ToolTip = new ToolTip { ShowAlways = true };

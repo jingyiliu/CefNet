@@ -25,12 +25,28 @@ namespace CefNet.Wpf
 		private IntPtr _keyboardLayout;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
-		public static RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent("StatusTextChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
+		public static RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusTextChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
 
 		public event RoutedEventHandler StatusTextChanged
 		{
 			add { AddHandler(StatusTextChangedEvent, value); }
 			remove { RemoveHandler(StatusTextChangedEvent, value); }
+		}
+
+		public static RoutedEvent StartDraggingEvent = EventManager.RegisterRoutedEvent(nameof(StartDragging), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
+
+		/// <summary>
+		/// Occurs when the user starts dragging content in the web view.
+		/// </summary>
+		/// <remarks>
+		/// OS APIs that run a system message loop may be used within the StartDragging event handler.
+		/// Call <see cref="WebView.DragSourceEndedAt"/> and <see cref="WebView.DragSourceSystemDragEnded"/>
+		/// either synchronously or asynchronously to inform the web view that the drag operation has ended.
+		/// </remarks>
+		public event RoutedEventHandler StartDragging
+		{
+			add { AddHandler(StartDraggingEvent, value); }
+			remove { RemoveHandler(StartDraggingEvent, value); }
 		}
 
 		public WebView()
@@ -139,6 +155,7 @@ namespace CefNet.Wpf
 
 		protected virtual void Initialize()
 		{
+			this.AllowDrop = true;
 			this.FocusVisualStyle = null;
 			//defaultTooltip = new ToolTip();
 			ToolTip = new ToolTip { Visibility = Visibility.Collapsed };
@@ -434,6 +451,26 @@ namespace CefNet.Wpf
 			RaiseEvent(new RoutedEventArgs(StatusTextChangedEvent, this));
 		}
 
+		void IWpfWebViewPrivate.RaiseStartDragging(StartDraggingEventArgs e)
+		{
+			RaiseCrossThreadEvent(OnStartDragging, e, true);
+		}
+
+		/// <summary>
+		/// Raises <see cref="WebView.StartDragging"/> event.
+		/// </summary>
+		/// <param name="e">The event data.</param>
+		protected virtual void OnStartDragging(StartDraggingEventArgs e)
+		{
+			RaiseEvent(e);
+
+			if (e.Handled)
+				return;
+
+			DragDrop.DoDragDrop(this, new CefNetDragData(this, e.Data), e.AllowedEffects.ToDragDropEffects());
+			DragSourceSystemDragEnded();
+			e.Handled = true;
+		}
 
 		protected override void OnGotFocus(RoutedEventArgs e)
 		{
@@ -564,6 +601,55 @@ namespace CefNet.Wpf
 				this.BrowserObject?.Host.SendKeyEvent(k);
 			}
 			e.Handled = true;
+		}
+
+		protected override void OnDragEnter(DragEventArgs e)
+		{
+			base.OnDragEnter(e);
+			if (e.Handled)
+				return;
+
+			Point mousePos = e.GetPosition(this);
+			SendDragEnterEvent((int)mousePos.X, (int)mousePos.Y, e.GetModifiers(), e.GetCefDragData(), e.AllowedEffects.ToCefDragOperationsMask());
+			e.Effects = DragDropEffects.Copy & e.AllowedEffects;
+		}
+
+		protected override void OnDragOver(DragEventArgs e)
+		{
+			base.OnDragOver(e);
+			if (e.Handled)
+				return;
+
+			Point mousePos = e.GetPosition(this);
+			SendDragOverEvent((int)mousePos.X, (int)mousePos.Y, e.GetModifiers(), e.AllowedEffects.ToCefDragOperationsMask());
+		}
+
+		protected override void OnDragLeave(DragEventArgs e)
+		{
+			base.OnDragLeave(e);
+			if (e.Handled)
+				return;
+
+			SendDragLeaveEvent();
+		}
+
+		protected override void OnDrop(DragEventArgs e)
+		{
+			base.OnDrop(e);
+			if (e.Handled)
+				return;
+
+			Point mousePos = e.GetPosition(this);
+			SendDragDropEvent((int)mousePos.X, (int)mousePos.Y, e.GetModifiers());
+
+			if (e.Data.GetDataPresent(nameof(CefNetDragData)))
+			{
+				CefNetDragData data = (CefNetDragData)e.Data.GetData(nameof(CefNetDragData));
+				if (data != null && data.Source == this)
+				{
+					DragSourceEndedAt((int)mousePos.X, (int)mousePos.Y, e.AllowedEffects.ToCefDragOperationsMask());
+				}
+			}
 		}
 
 		private static CefMouseButtonType GetButton(MouseButtonEventArgs e)

@@ -18,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\CefNet.Windows.Forms\CefNetDragData.cs" Link="CefNetDragData.cs" />
     <Compile Include="..\CefNet.Windows.Forms\Internal\CrossThreadEventMethod.cs" Link="Internal\CrossThreadEventMethod.cs" />
     <Compile Include="..\CefNet\WebView.CommonImplementation.cs" Link="WebView.CommonImplementation.cs" />
   </ItemGroup>
