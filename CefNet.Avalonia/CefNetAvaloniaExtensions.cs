@@ -31,14 +31,14 @@ namespace CefNet.Avalonia
 			return (VirtualKeys)KeyInterop.VirtualKeyFromKey(key);
 		}
 
-		public static int ToNativeKeyCode(this VirtualKeys key, CefKeyEventType eventType, bool isRepeat, bool isSystemKey, bool isExtended)
+		public static int ToNativeKeyCode(this VirtualKeys key, CefKeyEventType eventType, bool isRepeat, CefEventFlags modifiers, bool isExtended)
 		{
-			return CefNetApi.GetNativeKeyCode(eventType, isRepeat ? 1 : 0, key, isSystemKey, isExtended);
+			return CefNetApi.GetNativeKeyCode(eventType, isRepeat ? 1 : 0, key, modifiers, isExtended);
 		}
 
-		public static int ToNativeKeyCode(this Key key, CefKeyEventType eventType, bool isRepeat, bool isSystemKey, bool isExtended)
+		public static int ToNativeKeyCode(this Key key, CefKeyEventType eventType, bool isRepeat, CefEventFlags modifiers, bool isExtended)
 		{
-			return CefNetApi.GetNativeKeyCode(eventType, isRepeat ? 1 : 0, ToVirtualKey(key), isSystemKey, isExtended);
+			return CefNetApi.GetNativeKeyCode(eventType, isRepeat ? 1 : 0, ToVirtualKey(key), modifiers, isExtended);
 		}
 
 		public static Color ToColor(this CefColor color)

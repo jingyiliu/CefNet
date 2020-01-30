@@ -577,18 +577,41 @@ namespace CefNet.Avalonia
 			if (PlatformInfo.IsWindows)
 				SetWindowsKeyboardLayoutForCefUIThreadIfNeeded();
 
+			CefEventFlags modifiers = GetCefKeyboardModifiers(e);
 			Key key = e.Key;
+			if (eventType == CefKeyEventType.KeyUp && key == Key.None)
+			{
+				if (e.KeyModifiers == KeyModifiers.Shift)
+				{
+					key = Key.LeftShift;
+					modifiers |= CefEventFlags.IsLeft;
+				}
+			}
+			
 			VirtualKeys virtualKey = key.ToVirtualKey();
+			bool isSystemKey = (e.KeyModifiers.HasFlag(KeyModifiers.Alt) || key == Key.LeftAlt || key == Key.RightAlt);
 
-			var k = new CefKeyEvent();
-			k.Type = eventType;
-			k.Modifiers = (uint)GetCefKeyboardModifiers(e);
-			k.IsSystemKey = (e.KeyModifiers.HasFlag(KeyModifiers.Alt) || key == Key.LeftAlt || key == Key.RightAlt);
-			k.WindowsKeyCode = (int)virtualKey;
-			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, false, k.IsSystemKey, false);
-			this.BrowserObject?.Host.SendKeyEvent(k);
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost != null)
+			{
+				var k = new CefKeyEvent();
+				k.Type = eventType;
+				k.Modifiers = (uint)modifiers;
+				k.IsSystemKey = isSystemKey;
+				k.WindowsKeyCode = (int)virtualKey;
+				k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, false, modifiers, false);
+				this.BrowserObject?.Host.SendKeyEvent(k);
 
-			if (k.IsSystemKey)
+				if (key == Key.Enter && eventType == CefKeyEventType.RawKeyDown)
+				{
+					k.Type = CefKeyEventType.Char;
+					k.Character = '\r';
+					k.UnmodifiedCharacter = '\r';
+					this.BrowserObject?.Host.SendKeyEvent(k);
+				}
+			}
+
+			if (isSystemKey)
 				return true;
 
 			// Prevent keyboard navigation using arrows and home and end keys
@@ -629,14 +652,16 @@ namespace CefNet.Avalonia
 		{
 			foreach (char symbol in e.Text)
 			{
+				VirtualKeys key = CefNetApi.GetVirtualKey(symbol);
+				CefEventFlags modifiers = CefNetApi.IsShiftRequired(symbol) ? CefEventFlags.ShiftDown : CefEventFlags.None;
+				
 				var k = new CefKeyEvent();
 				k.Type = CefKeyEventType.Char;
-				k.WindowsKeyCode = (int)symbol;
-				if(PlatformInfo.IsWindows)
-					k.NativeKeyCode = ((VirtualKeys)(CefNet.WinApi.NativeMethods.VkKeyScan(symbol) & 0xFF)).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
-				else
-					k.NativeKeyCode = ((VirtualKeys)symbol).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
-				k.Modifiers = (uint)GetModifierKeys(KeyModifiers.None);
+				k.WindowsKeyCode = PlatformInfo.IsWindows ? symbol : (int)key;
+				k.Character = symbol;
+				k.UnmodifiedCharacter = symbol;
+				k.Modifiers = (uint)modifiers;
+				k.NativeKeyCode = CefNetApi.GetNativeKeyCode(symbol, 0, modifiers, false);
 				this.BrowserObject?.Host.SendKeyEvent(k);
 			}
 			e.Handled = true;

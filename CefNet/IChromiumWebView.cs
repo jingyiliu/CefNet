@@ -1,5 +1,6 @@
 ﻿//using CefNet.DOM;
 
+using CefNet.WinApi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -59,6 +60,63 @@ namespace CefNet
 
 		CefBrowser BrowserObject { get; }
 
+		/// <summary>
+		/// Sends the KeyDown event to the browser.
+		/// </summary>
+		/// <param name="c">The character associated with the key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="repeatCount">The repeat count.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		void SendKeyDown(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, int repeatCount = 0, bool extendedKey = false);
+
+		/// <summary>
+		/// Sends the KeyDown event to the browser.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="repeatCount">The repeat count.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		void SendKeyDown(VirtualKeys key, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, int repeatCount = 0, bool extendedKey = false);
+
+		/// <summary>
+		/// Sends the KeyUp event to the browser.
+		/// </summary>
+		/// <param name="c">The character associated with the key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		void SendKeyUp(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false);
+
+
+		/// <summary>
+		/// Sends the KeyUp event to the browser.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		void SendKeyUp(VirtualKeys key, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false);
+
+		/// <summary>
+		/// Sends the KeyPress event to the browser.
+		/// </summary>
+		/// <param name="c">The character associated with the key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		void SendKeyPress(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false);
 
 #if USERAGENTOVERRIDE
 		void SetUserAgentOverride(string useragent);

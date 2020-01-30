@@ -23,6 +23,7 @@ namespace CefNet.Wpf
 		private CefRect _windowBounds;
 		private bool _allowResizeNotifications = true;
 		private IntPtr _keyboardLayout;
+		private bool _lastKeydownIsExtendedKey;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
 		public static RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusTextChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
@@ -553,13 +554,15 @@ namespace CefNet.Wpf
 
 			Key key = e.Key;
 			VirtualKeys virtualKey = (key == Key.System ? e.SystemKey.ToVirtualKey() : key.ToVirtualKey());
+			CefEventFlags modifiers = GetCefKeyboardModifiers(e);
+			_lastKeydownIsExtendedKey = e.IsExtendedKey();
 
 			var k = new CefKeyEvent();
 			k.Type = eventType;
-			k.Modifiers = (uint)GetCefKeyboardModifiers(e);
+			k.Modifiers = (uint)modifiers;
 			k.IsSystemKey = (key == Key.System);
 			k.WindowsKeyCode = (int)virtualKey;
-			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, e.IsRepeat, k.IsSystemKey, e.IsExtendedKey());
+			k.NativeKeyCode = virtualKey.ToNativeKeyCode(eventType, e.IsRepeat, modifiers, _lastKeydownIsExtendedKey);
 			this.BrowserObject?.Host.SendKeyEvent(k);
 
 			if (k.IsSystemKey)
@@ -593,11 +596,17 @@ namespace CefNet.Wpf
 		{
 			foreach (char symbol in e.Text)
 			{
+				CefEventFlags modifiers = GetCefKeyboardModifiers();
+				if (CefNetApi.IsShiftRequired(symbol))
+					modifiers |= CefEventFlags.ShiftDown;
+				if (_lastKeydownIsExtendedKey)
+					modifiers |= CefEventFlags.IsKeyPad;
+
 				var k = new CefKeyEvent();
 				k.Type = CefKeyEventType.Char;
-				k.WindowsKeyCode = (int)symbol;
-				k.NativeKeyCode = ((VirtualKeys)(NativeMethods.VkKeyScan(symbol) & 0xFF)).ToNativeKeyCode(CefKeyEventType.Char, false, false, false);
-				k.Modifiers = (uint)GetModifierKeys();
+				k.WindowsKeyCode = symbol;
+				k.NativeKeyCode = CefNetApi.GetNativeKeyCode(symbol, 0, modifiers, _lastKeydownIsExtendedKey);
+				k.Modifiers = (uint)modifiers;
 				this.BrowserObject?.Host.SendKeyEvent(k);
 			}
 			e.Handled = true;
@@ -677,7 +686,7 @@ namespace CefNet.Wpf
 			return modifiers;
 		}
 
-		protected CefEventFlags GetCefKeyboardModifiers(KeyEventArgs e)
+		protected CefEventFlags GetCefKeyboardModifiers()
 		{
 			CefEventFlags modifiers = GetModifierKeys();
 
@@ -685,7 +694,13 @@ namespace CefNet.Wpf
 				modifiers |= CefEventFlags.NumLockOn;
 			if (Keyboard.IsKeyToggled(Key.CapsLock))
 				modifiers |= CefEventFlags.CapsLockOn;
-			
+			return modifiers;
+		}
+
+		protected CefEventFlags GetCefKeyboardModifiers(KeyEventArgs e)
+		{
+			CefEventFlags modifiers = GetCefKeyboardModifiers();
+
 			switch (e.Key)
 			{
 				case Key.Return:

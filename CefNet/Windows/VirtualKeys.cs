@@ -329,9 +329,9 @@ namespace CefNet.WinApi
 		/// <summary>The OEM 1 key.</summary>
 		Oem1 = 0xBA,
 		/// <summary>The OEM plus key on any country/region keyboard (Windows 2000 or later).</summary>
-		Oemplus = 0xBB,
+		OemPlus = 0xBB,
 		/// <summary>The OEM comma key on any country/region keyboard (Windows 2000 or later).</summary>
-		Oemcomma = 0xBC,
+		OemComma = 0xBC,
 		/// <summary>The OEM minus key on any country/region keyboard (Windows 2000 or later).</summary>
 		OemMinus = 0xBD,
 		/// <summary>The OEM period key on any country/region keyboard (Windows 2000 or later).</summary>
@@ -341,7 +341,7 @@ namespace CefNet.WinApi
 		/// <summary>The OEM 2 key.</summary>
 		Oem2 = 0xBF,
 		/// <summary>The OEM tilde key on a US standard keyboard (Windows 2000 or later).</summary>
-		Oemtilde = 0xC0,
+		OemTilde = 0xC0,
 		/// <summary>The OEM 3 key.</summary>
 		Oem3 = 0xC0,
 		/// <summary>The OEM open bracket key on a US standard keyboard (Windows 2000 or later).</summary>
@@ -393,6 +393,40 @@ namespace CefNet.WinApi
 		/// <summary>The CTRL modifier key.</summary>
 		Control = 0x20000,
 		/// <summary>The ALT modifier key.</summary>
-		Alt = 0x40000
+		Alt = 0x40000,
+
+		/// <summary></summary>
+		DbeSbcsChar = 0xF3,
+		/// <summary></summary>
+		DbeDbcsChar = 0xF4,
+
+		/// <summary>
+		/// The AltGr modifier key. Windows does not have a specific key code for AltGr.
+		/// We use the unused 0xE1 (VK_OEM_AX) code to represent AltGr, matching the
+		/// behaviour of Firefox on Linux.
+		/// </summary>
+		AltGr = 0xE1,
+		/// <summary>
+		/// The Compose key. Windows does not have a specific key code for Compose.
+		/// We use the unused 0xE6 (VK_ICO_CLEAR) code to represent Compose.
+		/// </summary>
+		Compose = 0xE6,
+
+		// POSIX specific VKEYs. Note that as of Windows SDK 7.1, 0x97-9F, 0xD8-DA,
+		// and 0xE8 are unassigned.
+
+		/// <summary>The WIRELESS LAN key.</summary>
+		WirelessLan = 0x97,
+		/// <summary>The POWER key.</summary>
+		Power = 0x98,
+		/// <summary>The BRIGHTNESS DOWN key.</summary>
+		BrightnessDown = 0xD8,
+		/// <summary>The BRIGHTNESS UP key.</summary>
+		BrightnessUp = 0xD9,
+		/// <summary>The KEYBOARD BRIGHTNESS DOWN key.</summary>
+		KbdBrightnessDown = 0xDA,
+		/// <summary>The KEYBOARD BRIGHTNESS UP key.</summary>
+		KbdBrightnessUp = 0xE8,
+
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using CefNet.Internal;
 using CefNet.WinApi;
+using CefNet.Linux;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,12 +9,14 @@ namespace CefNet
 {
 	public static class CefNetApi
 	{
-		public static int GetNativeKeyCode(CefKeyEventType eventType, int repeatCount, VirtualKeys key, bool isSystemKey, bool isExtended)
+		public static int GetNativeKeyCode(CefKeyEventType eventType, int repeatCount, VirtualKeys key, CefEventFlags modifiers, bool isExtended)
 		{
 			if (PlatformInfo.IsWindows)
-				return GetWindowsNativeKeyCode(eventType, repeatCount, (byte)NativeMethods.MapVirtualKey((uint)key, MapVirtualKeyType.MAPVK_VK_TO_VSC), isSystemKey, isExtended);
-			
-			throw new NotImplementedException();
+				return GetWindowsNativeKeyCode(eventType, repeatCount, (byte)NativeMethods.MapVirtualKey((uint)key, MapVirtualKeyType.MAPVK_VK_TO_VSC), modifiers.HasFlag(CefEventFlags.AltDown), isExtended);
+			if (PlatformInfo.IsLinux)
+				return GetLinuxNativeKeyCode(key, modifiers.HasFlag(CefEventFlags.ShiftDown));
+
+			return 0;
 		}
 
 		public static int GetWindowsNativeKeyCode(CefKeyEventType eventType, int repeatCount, byte scanCode, bool isSystemKey, bool isExtended)
@@ -50,6 +53,107 @@ namespace CefNet
 				keyInfo |= KF_EXTENDED;
 
 			return (keyInfo << 16) | (repeatCount & 0xFFFF);
+		}
+
+		public static VirtualKeys GetVirtualKey(char c)
+		{
+			if (PlatformInfo.IsWindows)
+			{
+				int virtualKeyCode = (WinApi.NativeMethods.VkKeyScan(c) & 0xFF);
+				if (virtualKeyCode == 0xFF)
+					throw new InvalidOperationException("Incompatible input locale.");
+				return (VirtualKeys)virtualKeyCode;
+			}
+
+			if (PlatformInfo.IsLinux)
+			{
+				XKeySym keysym = Linux.KeyInterop.CharToXKeySym(c);
+				if (keysym == XKeySym.None)
+					keysym = Linux.NativeMethods.XStringToKeysym("U" + ((int)c).ToString("X"));
+				return Linux.KeyInterop.XKeySymToVirtualKey(TranslateXKeySymToAsciiXKeySym(keysym));
+			}
+
+			throw new NotImplementedException();
+		}
+
+		public static XKeySym TranslateXKeySymToAsciiXKeySym(XKeySym keysym)
+		{
+			IntPtr display = Linux.NativeMethods.XOpenDisplay(IntPtr.Zero);
+			try
+			{
+				byte keycode = Linux.NativeMethods.XKeysymToKeycode(display, keysym);
+				return Linux.NativeMethods.XKeycodeToKeysym(display, keycode, 0);
+			}
+			finally
+			{
+				Linux.NativeMethods.XCloseDisplay(display);
+			}
+		}
+
+		public static byte GetHardwareKeyCode(XKeySym keysym)
+		{
+			IntPtr display = Linux.NativeMethods.XOpenDisplay(IntPtr.Zero);
+			try
+			{
+				return Linux.NativeMethods.XKeysymToKeycode(display, keysym);
+			}
+			finally
+			{
+				Linux.NativeMethods.XCloseDisplay(display);
+			}
+		}
+
+		public static int GetLinuxNativeKeyCode(VirtualKeys key, bool shift)
+		{
+			XKeySym keysym = Linux.KeyInterop.VirtualKeyToXKeySym(key, shift);
+			if (keysym == XKeySym.None)
+				return 0;
+			return GetHardwareKeyCode(keysym);
+		}
+
+		/// <summary>
+		/// Converts the value of a UTF-16 encoded character into a native key code.
+		/// </summary>
+		/// <param name="c"></param>
+		/// <param name="repeatCount"></param>
+		/// <param name="modifiers"></param>
+		/// <param name="isExtended"></param>
+		public static int GetNativeKeyCode(char c, int repeatCount, CefEventFlags modifiers, bool isExtended)
+		{
+			if (PlatformInfo.IsWindows)
+			{
+				return GetWindowsNativeKeyCode(CefKeyEventType.Char, repeatCount,
+					(byte)(WinApi.NativeMethods.VkKeyScan(c) & 0xFF),
+					modifiers.HasFlag(CefEventFlags.AltDown), isExtended);
+			}
+
+			if (PlatformInfo.IsLinux)
+				return GetLinuxNativeKeyCode(c);
+
+			throw new NotImplementedException();
+		}
+
+		public static int GetLinuxNativeKeyCode(char c)
+		{
+			XKeySym keysym = Linux.KeyInterop.CharToXKeySym(c);
+			if (keysym == XKeySym.None)
+				return 0;
+			return GetHardwareKeyCode(keysym);
+		}
+
+		public static bool IsShiftRequired(this char c)
+		{
+			if (c >= '!' && c <= '+')
+				return c != '\'';
+			if (c == ':')
+				return true;
+			if (c >= '<' && c <= '@')
+				return c != '=';
+			if (c == '^' && c == '_')
+				return true;
+			if (c >= '{' && c <= '~')
+				return true;
+			return char.IsUpper(c);
 		}
 
 		/// <summary>

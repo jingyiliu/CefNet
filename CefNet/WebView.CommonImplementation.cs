@@ -1,5 +1,6 @@
 ﻿//using CefNet.DOM;
 using CefNet.Internal;
+using CefNet.WinApi;
 //using CefNet.JSInterop;
 
 
@@ -925,6 +926,169 @@ namespace CefNet
 			CefPoint point = PointToViewport(new CefPoint(x, y));
 			this.BrowserObject?.Host?.DragSourceEndedAt(point.X, point.Y, effects);
 		}
+
+		/// <summary>
+		/// Sends the KeyDown event to the browser.
+		/// </summary>
+		/// <param name="c">The character associated with the key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="repeatCount">The repeat count.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		public void SendKeyDown(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, int repeatCount = 0, bool extendedKey = false)
+		{
+			SendKeyChange(CefKeyEventType.RawKeyDown, c, ctrlKey, altKey, shiftKey, metaKey, repeatCount, extendedKey);
+		}
+
+		/// <summary>
+		/// Sends the KeyDown event to the browser.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="repeatCount">The repeat count.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		public void SendKeyDown(VirtualKeys key, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, int repeatCount = 0, bool extendedKey = false)
+		{
+			SendKeyChange(CefKeyEventType.RawKeyDown, key, ctrlKey, altKey, shiftKey, metaKey, repeatCount, extendedKey);
+		}
+
+		/// <summary>
+		/// Sends the KeyUp event to the browser.
+		/// </summary>
+		/// <param name="c">The character associated with the key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		public void SendKeyUp(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false)
+		{
+			SendKeyChange(CefKeyEventType.KeyUp, c, ctrlKey, altKey, shiftKey, metaKey, 0, extendedKey);
+		}
+
+		/// <summary>
+		/// Sends the KeyUp event to the browser.
+		/// </summary>
+		/// <param name="key">The key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		public void SendKeyUp(VirtualKeys key, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false)
+		{
+			SendKeyChange(CefKeyEventType.KeyUp, key, ctrlKey, altKey, shiftKey, metaKey, 0, extendedKey);
+		}
+
+		private void SendKeyChange(CefKeyEventType eventType, char c, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, int repeatCount, bool extendedKey)
+		{
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null)
+				return;
+
+			CefEventFlags modifiers = CefEventFlags.None;
+			if (CefNetApi.IsShiftRequired(c))
+				shiftKey = !shiftKey;
+			VirtualKeys key = CefNetApi.GetVirtualKey(c);
+
+			if (shiftKey)
+				modifiers |= CefEventFlags.ShiftDown;
+			if (altKey)
+				modifiers |= CefEventFlags.AltDown;
+			if (ctrlKey)
+				modifiers |= CefEventFlags.ControlDown;
+			if (metaKey)
+				modifiers |= CefEventFlags.CommandDown;
+
+			var k = new CefKeyEvent();
+			k.Type = eventType;
+			k.Modifiers = (uint)modifiers;
+			k.IsSystemKey = altKey;
+			k.WindowsKeyCode = (int)key;
+			k.NativeKeyCode = CefNetApi.GetNativeKeyCode(eventType, repeatCount, key, modifiers, extendedKey);
+			k.Character = c;
+			k.UnmodifiedCharacter = c;
+			this.BrowserObject?.Host?.SendKeyEvent(k);
+		}
+
+		private void SendKeyChange(CefKeyEventType eventType, VirtualKeys key, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, int repeatCount, bool extendedKey)
+		{
+			if (key < VirtualKeys.None || key > VirtualKeys.OemClear)
+				throw new ArgumentOutOfRangeException(nameof(key));
+
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null)
+				return;
+
+			CefEventFlags modifiers = CefEventFlags.None;
+
+			if (shiftKey)
+				modifiers |= CefEventFlags.ShiftDown;
+			if (altKey)
+				modifiers |= CefEventFlags.AltDown;
+			if (ctrlKey)
+				modifiers |= CefEventFlags.ControlDown;
+			if (metaKey)
+				modifiers |= CefEventFlags.CommandDown;
+
+			var k = new CefKeyEvent();
+			k.Type = eventType;
+			k.Modifiers = (uint)modifiers;
+			k.IsSystemKey = altKey;
+			k.WindowsKeyCode = (int)key;
+			k.NativeKeyCode = CefNetApi.GetNativeKeyCode(eventType, repeatCount, key, modifiers, extendedKey);
+			k.Character = (char)key;
+			k.UnmodifiedCharacter = (char)key;
+			this.BrowserObject?.Host?.SendKeyEvent(k);
+		}
+
+
+		/// <summary>
+		/// Sends the KeyPress event to the browser.
+		/// </summary>
+		/// <param name="c">The character associated with the key.</param>
+		/// <param name="ctrlKey">The Control key flag.</param>
+		/// <param name="altKey">The Alt key flag.</param>
+		/// <param name="shiftKey">The Shift key flag.</param>
+		/// <param name="metaKey">The Meta key flag.</param>
+		/// <param name="extendedKey">The extended key flag.</param>
+		public void SendKeyPress(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false)
+		{
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null)
+				return;
+
+			CefEventFlags modifiers = CefEventFlags.None;
+			if (CefNetApi.IsShiftRequired(c))
+				shiftKey = !shiftKey;
+			if (shiftKey)
+				modifiers |= CefEventFlags.ShiftDown;
+			if (altKey)
+				modifiers |= CefEventFlags.AltDown;
+			if (ctrlKey)
+				modifiers |= CefEventFlags.ControlDown;
+			if (metaKey)
+				modifiers |= CefEventFlags.CommandDown;
+
+			VirtualKeys key = CefNetApi.GetVirtualKey(c);
+
+			var k = new CefKeyEvent();
+			k.Type = CefKeyEventType.Char;
+			k.Modifiers = (uint)modifiers;
+			k.IsSystemKey = altKey;
+			k.WindowsKeyCode = PlatformInfo.IsWindows ? c : (int)key;
+			k.NativeKeyCode = CefNetApi.GetNativeKeyCode(c, 0, modifiers, extendedKey);
+			k.Character = c;
+			k.UnmodifiedCharacter = c;
+			this.BrowserObject?.Host?.SendKeyEvent(k);
+		}
+
+
 
 
 #if USERAGENTOVERRIDE
