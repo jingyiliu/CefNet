@@ -8,6 +8,7 @@ namespace CefNet.Internal
 	{
 		private bool _isResourceRequestGlueInitialized;
 		private CefResourceRequestHandler _resourceRequestGlue;
+		private bool _partialAvoidResourceRequestGlue;
 
 		private bool _isCookieAccessFilterGlueInitialized;
 		private CefCookieAccessFilter _cookieAccessFilterGlue;
@@ -20,6 +21,11 @@ namespace CefNet.Internal
 
 		private bool _isKeyboardGlueInitialized;
 		private CefKeyboardHandlerGlue _keyboardGlue;
+
+		private bool _isJSDialogGlueInitialized;
+		private CefJSDialogHandlerGlue _jsDialogGlue;
+		private bool _avoidJsDialogGlue;
+
 
 		protected IChromiumWebViewPrivate WebView { get; private set; }
 
@@ -51,6 +57,13 @@ namespace CefNet.Internal
 
 			this.ContextMenuGlue = new CefContextMenuHandlerGlue(this);
 			this.LoadGlue = new CefLoadHandlerGlue(this);
+
+			_partialAvoidResourceRequestGlue = AvoidOverloadOnBeforeResourceLoad() && AvoidGetResourceHandler()
+				&& AvoidOnResourceRedirect() && AvoidOnResourceResponse() && AvoidGetResourceResponseFilter()
+				&& AvoidOnResourceLoadComplete() && AvoidOnProtocolExecution();
+
+			_avoidJsDialogGlue = AvoidOnJSDialog() && AvoidOnBeforeUnloadDialog() && AvoidOnResetDialogState()
+				&& AvoidOnDialogClosed();
 		}
 
 
@@ -61,14 +74,7 @@ namespace CefNet.Internal
 				if (_isResourceRequestGlueInitialized)
 					return _resourceRequestGlue;
 
-				if (AvoidGetCookieAccessFilter()
-					&& AvoidOverloadOnBeforeResourceLoad()
-					&& AvoidGetResourceHandler()
-					&& AvoidOnResourceRedirect()
-					&& AvoidOnResourceResponse()
-					&& AvoidGetResourceResponseFilter()
-					&& AvoidOnResourceLoadComplete()
-					&& AvoidOnProtocolExecution())
+				if (_partialAvoidResourceRequestGlue && AvoidGetCookieAccessFilter())
 				{
 					_resourceRequestGlue = null;
 				}
@@ -154,17 +160,38 @@ namespace CefNet.Internal
 				if (_isKeyboardGlueInitialized)
 					return _keyboardGlue;
 
-				//if (AvoidOnPreKeyEvent() && AvoidOnKeyEvent())
-				//{
-				//	_keyboardGlue = null;
-				//}
-				//else
+				if (AvoidOnPreKeyEvent() && AvoidOnKeyEvent())
+				{
+					_keyboardGlue = null;
+				}
+				else
 				{
 					_keyboardGlue = new CefKeyboardHandlerGlue(this);
 				}
 
 				_isKeyboardGlueInitialized = true;
 				return _keyboardGlue;
+			}
+		}
+
+		private CefJSDialogHandlerGlue JSDialogGlue
+		{
+			get
+			{
+				if (_isJSDialogGlueInitialized)
+					return _jsDialogGlue;
+
+				if (_avoidJsDialogGlue)
+				{
+					_jsDialogGlue = null;
+				}
+				else
+				{
+					_jsDialogGlue = new CefJSDialogHandlerGlue(this);
+				}
+
+				_isJSDialogGlueInitialized = true;
+				return _jsDialogGlue;
 			}
 		}
 

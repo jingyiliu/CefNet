@@ -43,7 +43,7 @@ namespace CefNet.Internal
 
 		internal CefJSDialogHandler GetJSDialogHandler()
 		{
-			return null;
+			return JSDialogGlue;
 		}
 
 		internal CefKeyboardHandler GetKeyboardHandler()

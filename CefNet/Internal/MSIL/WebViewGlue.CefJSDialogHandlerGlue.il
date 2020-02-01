@@ -4,8 +4,8 @@
 	{
 		.maxstack 2
 		ldarg.0
-		ldvirtftn instance bool CefNet.Internal.WebViewGlue::OnJsdialog(class CefNet.CefBrowser, string, valuetype CefNet.CefJSDialogType, string, string, class CefNet.CefJSDialogCallback, int32&)
-		ldftn instance bool CefNet.Internal.WebViewGlue::OnJsdialog(class CefNet.CefBrowser, string, valuetype CefNet.CefJSDialogType, string, string, class CefNet.CefJSDialogCallback, int32&)
+		ldvirtftn instance bool CefNet.Internal.WebViewGlue::OnJSDialog(class CefNet.CefBrowser, string, valuetype CefNet.CefJSDialogType, string, string, class CefNet.CefJSDialogCallback, int32&)
+		ldftn instance bool CefNet.Internal.WebViewGlue::OnJSDialog(class CefNet.CefBrowser, string, valuetype CefNet.CefJSDialogType, string, string, class CefNet.CefJSDialogCallback, int32&)
 		ceq
 		ret
 	}
