@@ -1,4 +1,5 @@
 ﻿using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using CefNet.Internal;
 using CefNet.WinApi;
@@ -6,21 +7,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace CefNet.Avalonia
 {
 	public static class CefNetAvaloniaExtensions
 	{
-
-		//public static void Union(this ref Int32Rect self, CefRect rect)
-		//{
-		//	int x = Math.Min(self.X, rect.X);
-		//	int right = Math.Max(self.X + self.Width, rect.X + rect.Width);
-		//	int y = Math.Min(self.Y, rect.Y);
-		//	int bottom = Math.Max(self.Y + self.Height, rect.Y + rect.Height);
-		//	self = new Int32Rect(x, y, right - x, bottom - y);
-		//}
+#pragma warning disable IDE0060
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static void Invoke<TEventArgs>(this RoutedEvent routedEvent, Interactive sender, TEventArgs e)
+			where TEventArgs : class
+		{
+			sender.RaiseEvent(e as RoutedEventArgs);
+		}
+#pragma warning restore IDE0060
 
 		public static VirtualKeys ToVirtualKey(this Key key)
 		{

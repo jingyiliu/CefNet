@@ -3,7 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:cefnet="clr-namespace:CefNet.Avalonia;assembly=CefNet.Avalonia"
         x:Class="AvaloniaApp.MainWindow"
+        cefnet:WebView.TextFound="WebView_TextFound"
         Title="AvaloniaApp">
 
   <Window.Styles>
@@ -36,6 +38,7 @@
     <Menu VerticalAlignment="Top" DockPanel.Dock="Top" Name="menu">
       <MenuItem Header="File">
         <MenuItem Header="Add Tab" Click="AddTab_Click" />
+        <MenuItem Header="Find i" Click="Find_Click" />
       </MenuItem>
     </Menu>
     <DockPanel DockPanel.Dock="Top" Name="controlsPanel">

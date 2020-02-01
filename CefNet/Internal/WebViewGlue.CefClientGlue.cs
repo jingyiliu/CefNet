@@ -23,7 +23,7 @@ namespace CefNet.Internal
 
 		internal CefDownloadHandler GetDownloadHandler()
 		{
-			return null;
+			return DownloadGlue;
 		}
 
 		internal CefDragHandler GetDragHandler()
@@ -33,7 +33,7 @@ namespace CefNet.Internal
 
 		internal CefFindHandler GetFindHandler()
 		{
-			return null;
+			return FindGlue;
 		}
 
 		internal CefFocusHandler GetFocusHandler()

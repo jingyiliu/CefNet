@@ -11,6 +11,7 @@ using CefNet.Internal;
 using CefNet.WinApi;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace CefNet.Avalonia
@@ -24,7 +25,7 @@ namespace CefNet.Avalonia
 		private PointerPressedEventArgs _lastPointerPressedEventArgs;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
-		public static RoutedEvent StatusTextChangedEvent = RoutedEvent.Register<WebView, RoutedEventArgs>(nameof(StatusTextChanged), RoutingStrategies.Bubble);
+		public static readonly RoutedEvent StatusTextChangedEvent = RoutedEvent.Register<WebView, RoutedEventArgs>(nameof(StatusTextChanged), RoutingStrategies.Bubble);
 
 		public event EventHandler<RoutedEventArgs> StatusTextChanged
 		{
@@ -32,7 +33,7 @@ namespace CefNet.Avalonia
 			remove { RemoveHandler(StatusTextChangedEvent, value); }
 		}
 
-		public static RoutedEvent<StartDraggingEventArgs> StartDraggingEvent = RoutedEvent.Register<WebView, StartDraggingEventArgs>(nameof(StartDragging), RoutingStrategies.Bubble);
+		public static readonly RoutedEvent<StartDraggingEventArgs> StartDraggingEvent = RoutedEvent.Register<WebView, StartDraggingEventArgs>(nameof(StartDragging), RoutingStrategies.Bubble);
 
 		/// <summary>
 		/// Occurs when the user starts dragging content in the web view.
@@ -76,6 +77,21 @@ namespace CefNet.Avalonia
 			AddHandler(DragDrop.DragOverEvent, HandleDragOver);
 			AddHandler(DragDrop.DragLeaveEvent, HandleDragLeave);
 			AddHandler(DragDrop.DropEvent, HandleDrop);
+		}
+
+		/// <summary>
+		/// Identifies the <see cref="TextFound"/> routed event.
+		/// </summary>
+		public static readonly RoutedEvent TextFoundEvent = RoutedEvent.Register<WebView, TextFoundRoutedEventArgs>(nameof(TextFound), RoutingStrategies.Bubble);
+
+		public static void AddTextFoundHandler(IInteractive element, EventHandler<TextFoundRoutedEventArgs> handler)
+		{
+			element?.AddHandler(TextFoundEvent, handler);
+		}
+
+		public static void RemoveTextFoundHandler(IInteractive element, EventHandler<TextFoundRoutedEventArgs> handler)
+		{
+			element?.RemoveHandler(TextFoundEvent, handler);
 		}
 
 		protected bool IsDesignMode
@@ -313,12 +329,34 @@ namespace CefNet.Avalonia
 		}
 
 		protected virtual void RaiseCrossThreadEvent<TEventArgs>(Action<TEventArgs> raiseEvent, TEventArgs e, bool synchronous)
-			where TEventArgs : EventArgs
 		{
 			if (synchronous)
 				Dispatcher.UIThread.InvokeAsync(() => raiseEvent(e)).Wait();
 			else
 				Dispatcher.UIThread.Post(() => raiseEvent(e));
+		}
+
+		/// <summary>
+		/// Adds a routed event handler for a specified routed event, adding the handler
+		/// to the handler collection on the current element.
+		/// </summary>
+		/// <param name="routedEvent">An identifier for the routed event to be handled.</param>
+		/// <param name="handler">A reference to the handler implementation.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void AddHandler(in RoutedEvent routedEvent, Delegate handler)
+		{
+			AddHandler(routedEvent, handler);
+		}
+
+		/// <summary>
+		/// Removes the specified routed event handler from this element.
+		/// </summary>
+		/// <param name="routedEvent">The identifier of the routed event for which the handler is attached.</param>
+		/// <param name="handler">The specific handler implementation to remove from the event handler collection on this element.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void RemoveHandler(in RoutedEvent routedEvent, Delegate handler)
+		{
+			RemoveHandler(routedEvent, handler);
 		}
 
 		protected virtual void OnBrowserCreated(EventArgs e)

@@ -13,4 +13,20 @@
 		ret
 	}
 
+	.method public hidebysig static !!TTo& AsRef<TFrom, TTo>([in] !!TFrom& source) cil managed aggressiveinlining
+	{
+		.param [1]
+		.custom instance void [mscorlib]System.Runtime.CompilerServices.IsReadOnlyAttribute::.ctor() = ( 01 00 00 00 )
+		.maxstack 1
+		ldarg.0
+		ret
+	}
+
+	.method public hidebysig static !!T As<class T>(object o) cil managed aggressiveinlining
+	{
+		.maxstack 1
+		ldarg.0
+		ret
+	}
+
 }

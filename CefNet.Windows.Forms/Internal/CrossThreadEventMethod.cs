@@ -4,7 +4,7 @@ using System.Threading;
 namespace CefNet.Internal
 {
 	public sealed class CrossThreadEventMethod<TEventArgs>
-		where TEventArgs : EventArgs
+		where TEventArgs: class
 	{
 		private readonly SendOrPostCallback _invoke;
 		private readonly Action<TEventArgs> _raiseEventAction;

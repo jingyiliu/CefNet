@@ -28,5 +28,23 @@ namespace CefNet
 		[MethodImpl(MethodImplOptions.ForwardRef)]
 		public static extern void InitBlock(this IntPtr startAddress, byte value, int size);
 
+		/// <summary>
+		/// Reinterprets the given read-only reference as a reference to a value of type <typeparamref name="TTo"/>.
+		/// </summary>
+		/// <typeparam name="TFrom">The type of reference to reinterpret.</typeparam>
+		/// <typeparam name="TTo">The desired type of the reference.</typeparam>
+		/// <param name="source">The read-only reference to reinterpret.</param>
+		/// <returns>A reference to a value of type <typeparamref name="TTo"/>.</returns>
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		public static extern ref TTo AsRef<TFrom, TTo>(in TFrom source);
+
+		/// <summary>
+		/// Casts the given object to the specified type.
+		/// </summary>
+		/// <typeparam name="T">The type which the object will be cast to.</typeparam>
+		/// <param name="o">The object to cast.</param>
+		/// <returns>The original object, casted to the given type..</returns>
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		public static extern T As<T>(object o) where T : class;
 	}
 }

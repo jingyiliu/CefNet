@@ -19,6 +19,8 @@ namespace CefNet.Windows.Forms
 		private IntPtr browserWindowHandle;
 		private ContextMenuStrip _cefmenu;
 
+		private EventHandler<ITextFoundEventArgs> TextFoundEvent;
+
 		/// <summary>
 		/// Occurs when the StatusText property value changes.
 		/// </summary>
@@ -222,7 +224,7 @@ namespace CefNet.Windows.Forms
 		public string StatusText { get; protected set; }
 
 		protected virtual void RaiseCrossThreadEvent<TEventArgs>(Action<TEventArgs> raiseEvent, TEventArgs e, bool synchronous)
-			where TEventArgs : EventArgs
+			where TEventArgs : class
 		{
 			if (UIContext != null)
 			{
@@ -238,6 +240,32 @@ namespace CefNet.Windows.Forms
 				else
 					this.BeginInvoke(new CrossThreadEventMethod<TEventArgs>(raiseEvent, e).Invoke, this);
 			}
+		}
+
+		private void AddHandler<TEventHadler>(in TEventHadler eventKey, TEventHadler handler)
+			where TEventHadler : Delegate
+		{
+			TEventHadler current;
+			TEventHadler key = eventKey;
+			do
+			{
+				current = key;
+				key = CefNetApi.CompareExchange<TEventHadler>(in eventKey, (TEventHadler)Delegate.Combine(current, handler), current);
+			}
+			while (key != current);
+		}
+
+		private void RemoveHandler<TEventHadler>(in TEventHadler eventKey, TEventHadler handler)
+			where TEventHadler : Delegate
+		{
+			TEventHadler current;
+			TEventHadler key = eventKey;
+			do
+			{
+				current = key;
+				key = CefNetApi.CompareExchange<TEventHadler>(in eventKey, (TEventHadler)Delegate.Remove(current, handler), current);
+			}
+			while (key != current);
 		}
 
 		protected virtual void OnBrowserCreated(EventArgs e)

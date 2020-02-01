@@ -23,7 +23,10 @@ namespace CefNet
 		event EventHandler<CefPaintEventArgs> CefPaint;
 		event EventHandler BrowserCreated;
 		event EventHandler<DocumentTitleChangedEventArgs> DocumentTitleChanged;
-
+		/// <summary>
+		/// Occurs to report find results returned by <see cref="Find"/>.
+		/// </summary>
+		event EventHandler<ITextFoundEventArgs> TextFound;
 
 
 		bool CanGoBack { get; }
@@ -45,9 +48,24 @@ namespace CefNet
 		long[] GetFrameIdentifiers();
 		string[] GetFrameNames();
 
-
+		/// <summary>
+		/// Open developer tools.
+		/// </summary>
 		void ShowDevTools();
+
+		/// <summary>
+		/// Open developer tools (DevTools). If the DevTools is already open then it will be focused.
+		/// </summary>
+		/// <param name="inspectElementAt">
+		/// If <paramref name="inspectElementAt"/> is non-empty then the element at the specified (x,y) location will be inspected.
+		/// </param>
 		void ShowDevTools(CefPoint inspectElementAt);
+
+		/// <summary>
+		/// Explicitly close the associated developer tools, if any.
+		/// </summary>
+		void CloseDevTools();
+
 		void NotifyRootMovedOrResized();
 		void Close();
 		void Navigate(string url);
@@ -117,6 +135,26 @@ namespace CefNet
 		/// <param name="metaKey">The Meta key flag.</param>
 		/// <param name="extendedKey">The extended key flag.</param>
 		void SendKeyPress(char c, bool ctrlKey = false, bool altKey = false, bool shiftKey = false, bool metaKey = false, bool extendedKey = false);
+
+		/// <summary>
+		/// Search for <paramref name="searchText"/>. The <see cref="TextFound"/> event
+		/// will be occurred to report find results.
+		/// </summary>
+		/// <param name="identifier">
+		/// An unique ID and these IDs must strictly increase so that newer requests always
+		/// have greater IDs than older requests. If <paramref name="identifier"/> is zero or less than the
+		/// previous ID value then it will be automatically assigned a new valid ID.
+		/// </param>
+		/// <param name="searchText">The string to seek.</param>
+		/// <param name="forward">A value which indicates whether to search forward or backward within the page.</param>
+		/// <param name="matchCase">The true value indicates that the search should be case-sensitive.</param>
+		/// <param name="findNext">A value which indicates whether this is the first request or a follow-up.</param>
+		void Find(int identifier, string searchText, bool forward, bool matchCase, bool findNext);
+
+		/// <summary>
+		/// Cancel all searches that are currently going on.
+		/// </summary>
+		void StopFinding(bool clearSelection);
 
 #if USERAGENTOVERRIDE
 		void SetUserAgentOverride(string useragent);

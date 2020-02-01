@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace CefNet.Internal
 {
 	public partial class WebViewGlue
 	{
-		internal bool AvoidOnBeforeDownload()
-		{
-			return false;
-		}
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		internal extern bool AvoidOnBeforeDownload();
 
 		internal protected virtual void OnBeforeDownload(CefBrowser browser, CefDownloadItem downloadItem, string suggestedName, CefBeforeDownloadCallback callback)
 		{
 
 		}
 
-		internal bool AvoidOnDownloadUpdated()
-		{
-			return false;
-		}
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		internal extern bool AvoidOnDownloadUpdated();
 
 		internal protected virtual void OnDownloadUpdated(CefBrowser browser, CefDownloadItem downloadItem, CefDownloadItemCallback callback)
 		{

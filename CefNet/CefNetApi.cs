@@ -4,6 +4,7 @@ using CefNet.Linux;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace CefNet
 {
@@ -154,6 +155,12 @@ namespace CefNet
 			if (c >= '{' && c <= '~')
 				return true;
 			return char.IsUpper(c);
+		}
+
+		public static T CompareExchange<T>(in T location, T value, T comparand)
+			where T : class
+		{
+			return UtilsExtensions.As<T>(Interlocked.CompareExchange(ref UtilsExtensions.AsRef<T, object>(in location), value, comparand));
 		}
 
 		/// <summary>

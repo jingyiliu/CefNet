@@ -4,17 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfCoreApp"
+        xmlns:cefnet="clr-namespace:CefNet.Wpf;assembly=CefNet.Wpf"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
         Width="800"
         Padding="0"
         UseLayoutRounding="True"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        cefnet:WebView.TextFound="WebView_TextFound">
     <DockPanel>
         <Menu VerticalAlignment="Top" DockPanel.Dock="Top" Name="menu">
             <MenuItem Header="File">
                 <MenuItem Header="Add Tab" Click="AddTab_Click" />
+                <MenuItem Header="Find i" Click="Find_Click" />
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Top" Name="controlsPanel">

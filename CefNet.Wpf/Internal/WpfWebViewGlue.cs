@@ -58,5 +58,9 @@ namespace CefNet.Internal
 			return e.Handled;
 		}
 
+		protected override void OnFindResult(CefBrowser browser, int identifier, int count, CefRect selectionRect, int activeMatchOrdinal, bool finalUpdate)
+		{
+			WebView.RaiseTextFound(new TextFoundRoutedEventArgs(identifier, count, selectionRect, activeMatchOrdinal, finalUpdate));
+		}
 	}
 }

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -26,7 +27,10 @@ namespace CefNet.Wpf
 		private bool _lastKeydownIsExtendedKey;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
-		public static RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusTextChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
+
+		public static readonly RoutedEvent TextFoundEvent = EventManager.RegisterRoutedEvent("TextFound", RoutingStrategy.Bubble, typeof(EventHandler<ITextFoundEventArgs>), typeof(WebView));
+
+		public static readonly RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusTextChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
 
 		public event RoutedEventHandler StatusTextChanged
 		{
@@ -34,7 +38,7 @@ namespace CefNet.Wpf
 			remove { RemoveHandler(StatusTextChangedEvent, value); }
 		}
 
-		public static RoutedEvent StartDraggingEvent = EventManager.RegisterRoutedEvent(nameof(StartDragging), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
+		public static readonly RoutedEvent StartDraggingEvent = EventManager.RegisterRoutedEvent(nameof(StartDragging), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
 
 		/// <summary>
 		/// Occurs when the user starts dragging content in the web view.
@@ -292,12 +296,35 @@ namespace CefNet.Wpf
 		}
 
 		protected virtual void RaiseCrossThreadEvent<TEventArgs>(Action<TEventArgs> raiseEvent, TEventArgs e, bool synchronous)
-			where TEventArgs : EventArgs
+			where TEventArgs : class
 		{
 			if (synchronous)
 				Dispatcher.Invoke(new CrossThreadEventMethod<TEventArgs>(raiseEvent, e).Invoke, this);
 			else
 				Dispatcher.BeginInvoke(new CrossThreadEventMethod<TEventArgs>(raiseEvent, e).Invoke, this);
+		}
+
+		/// <summary>
+		/// Adds a routed event handler for a specified routed event, adding the handler
+		/// to the handler collection on the current element.
+		/// </summary>
+		/// <param name="routedEvent">An identifier for the routed event to be handled.</param>
+		/// <param name="handler">A reference to the handler implementation.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void AddHandler(in RoutedEvent routedEvent, Delegate handler)
+		{
+			AddHandler(routedEvent, handler);
+		}
+
+		/// <summary>
+		/// Removes the specified routed event handler from this element.
+		/// </summary>
+		/// <param name="routedEvent">The identifier of the routed event for which the handler is attached.</param>
+		/// <param name="handler">The specific handler implementation to remove from the event handler collection on this element.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void RemoveHandler(in RoutedEvent routedEvent, Delegate handler)
+		{
+			RemoveHandler(routedEvent, handler);
 		}
 
 		protected virtual void OnBrowserCreated(EventArgs e)

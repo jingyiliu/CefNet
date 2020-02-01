@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -35,7 +36,16 @@ namespace CefNet.Wpf
 			catch { }
 		}
 
-		public static void Union(this ref Int32Rect self, CefRect rect)
+#pragma warning disable IDE0060
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal static void Invoke<TEventArgs>(this RoutedEvent routedEvent, UIElement sender, TEventArgs e)
+			where TEventArgs : class
+		{
+			sender.RaiseEvent(e as RoutedEventArgs);
+		}
+#pragma warning restore IDE0060
+
+			public static void Union(this ref Int32Rect self, CefRect rect)
 		{
 			int x = Math.Min(self.X, rect.X);
 			int right = Math.Max(self.X + self.Width, rect.X + rect.Width);

@@ -141,5 +141,17 @@ namespace WpfCoreApp
 			}
 		}
 
+		private void WebView_TextFound(object sender, ITextFoundEventArgs e)
+		{
+			if (e.FinalUpdate)
+			{
+				SelectedView?.StopFinding(false);
+			}
+		}
+
+		private void Find_Click(object sender, RoutedEventArgs e)
+		{
+			SelectedView?.Find(0, "i", true, true, false);
+		}
 	}
 }

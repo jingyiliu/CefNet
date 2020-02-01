@@ -466,55 +466,34 @@ namespace CefNet
 			AliveBrowserHost.PrintToPdf(path, settings, callback);
 		}
 
-		/// <summary>
-		/// Search for |searchText|. The cef_find_handler_t
-		/// instance, if any, returned via cef_client_t::GetFindHandler will be called
-		/// to report find results.
-		/// </summary>
-		/// <param name="identifier">
-		/// An unique ID and these IDs must strictly increase so that newer requests always
-		/// have greater IDs than older requests. If |identifier| is zero or less than the
-		/// previous ID value then it will be automatically assigned a new valid ID.
-		/// </param>
-		/// <param name="forward">
-		/// Indicates whether to search forward or backward within the page.
-		/// </param>
-		/// <param name="matchCase">
-		/// Indicates whether the search should be case-sensitive.
-		/// </param>
-		/// <param name="findNext">
-		/// Indicates whether this is the first request or a follow-up.
-		/// </param>
-		public Task Find(int identifier, string searchText, bool forward, bool matchCase, bool findNext)
+		public void Find(int identifier, string searchText, bool forward, bool matchCase, bool findNext)
 		{
-			throw new NotImplementedException();
+			if (searchText == null)
+				throw new ArgumentNullException(nameof(searchText));
+			if (searchText.Length == 0)
+				throw new ArgumentOutOfRangeException(nameof(searchText));
+
+			AliveBrowserHost.Find(identifier, searchText, forward, matchCase, findNext);
 		}
 
-		/// <summary>
-		/// Open developer tools.
-		/// </summary>
+		public void StopFinding(bool clearSelection)
+		{
+			AliveBrowserHost.StopFinding(clearSelection);
+		}
+
 		public void ShowDevTools()
 		{
 			ShowDevTools(new CefPoint());
 		}
 
-		/// <summary>
-		/// Open developer tools (DevTools). If the DevTools is already open then it will be focused.
-		/// </summary>
-		/// <param name="inspectElementAt">
-		/// If |inspect_element_at| is non-empty then the element at the specified (x,y) location will be inspected.
-		/// </param>
 		public virtual void ShowDevTools(CefPoint inspectElementAt)
 		{
 			var windowInfo = new CefWindowInfo();
 			windowInfo.SetAsPopup(IntPtr.Zero, "DevTools");
-			BrowserObject?.Host?.ShowDevTools(windowInfo, null, BrowserSettings, inspectElementAt);
+			AliveBrowserHost.ShowDevTools(windowInfo, null, BrowserSettings, inspectElementAt);
 			windowInfo.Dispose();
 		}
 
-		/// <summary>
-		/// Explicitly close the associated developer tools, if any.
-		/// </summary>
 		public void CloseDevTools()
 		{
 			AliveBrowserHost.CloseDevTools();
@@ -795,6 +774,26 @@ namespace CefNet
 			RaiseCrossThreadEvent(OnLoadingStateChange, e, false);
 		}
 
+		void IChromiumWebViewPrivate.RaiseTextFound(ITextFoundEventArgs e)
+		{
+			RaiseCrossThreadEvent(OnTextFound, e, false);
+		}
+
+		public event EventHandler<ITextFoundEventArgs> TextFound
+		{
+			add { AddHandler(in TextFoundEvent, value); }
+			remove { RemoveHandler(in TextFoundEvent, value); }
+		}
+
+		/// <summary>
+		/// Raises the <see cref="TextFound"/> event.
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnTextFound(ITextFoundEventArgs e)
+		{
+			TextFoundEvent?.Invoke(this, e);
+		}
+
 		private void InitMouseEvent(int x, int y, CefEventFlags modifiers)
 		{
 			CefPoint point = PointToViewport(new CefPoint(x, y));
@@ -1046,7 +1045,6 @@ namespace CefNet
 			k.UnmodifiedCharacter = (char)key;
 			this.BrowserObject?.Host?.SendKeyEvent(k);
 		}
-
 
 		/// <summary>
 		/// Sends the KeyPress event to the browser.

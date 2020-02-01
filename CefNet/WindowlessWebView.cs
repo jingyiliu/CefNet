@@ -22,6 +22,8 @@ namespace CefNet
 		private float _devicePixelRatio = 1;
 		private Thread _uiThread;
 
+		private EventHandler<ITextFoundEventArgs> TextFoundEvent;
+
 		public event EventHandler PopupShow;
 
 		public WindowlessWebView()
@@ -125,9 +127,34 @@ namespace CefNet
 		}
 
 		protected virtual void RaiseCrossThreadEvent<TEventArgs>(Action<TEventArgs> raiseEvent, TEventArgs e, bool synchronous)
-			where TEventArgs: EventArgs
 		{
 			raiseEvent(e);
+		}
+
+		private void AddHandler<TEventHadler>(in TEventHadler eventKey, TEventHadler handler)
+			where TEventHadler : Delegate
+		{
+			TEventHadler current;
+			TEventHadler key = eventKey;
+			do
+			{
+				current = key;
+				key = CefNetApi.CompareExchange<TEventHadler>(in eventKey, (TEventHadler)Delegate.Combine(current, handler), current);
+			}
+			while (key != current);
+		}
+
+		private void RemoveHandler<TEventHadler>(in TEventHadler eventKey, TEventHadler handler)
+			where TEventHadler : Delegate
+		{
+			TEventHadler current;
+			TEventHadler key = eventKey;
+			do
+			{
+				current = key;
+				key = CefNetApi.CompareExchange<TEventHadler>(in eventKey, (TEventHadler)Delegate.Combine(current, handler), current);
+			}
+			while (key != current);
 		}
 
 		float IChromiumWebViewPrivate.GetDevicePixelRatio()

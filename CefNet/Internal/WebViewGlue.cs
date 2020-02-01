@@ -26,8 +26,10 @@ namespace CefNet.Internal
 		private CefLifeSpanHandlerGlue LifeSpanGlue { get; }
 		private CefRenderHandlerGlue RenderGlue { get; }
 		private CefDisplayHandlerGlue DisplayGlue { get; }
-		private CefRequestHandler RequestGlue { get; }
-		private CefDialogHandler DialogGlue { get; }
+		private CefRequestHandlerGlue RequestGlue { get; }
+		private CefDialogHandlerGlue DialogGlue { get; }
+		private CefDownloadHandlerGlue DownloadGlue { get; }
+		private CefFindHandlerGlue FindGlue { get; }
 
 		private CefContextMenuHandlerGlue ContextMenuGlue { get; }
 		private CefLoadHandlerGlue LoadGlue { get; }
@@ -41,7 +43,9 @@ namespace CefNet.Internal
 			this.DisplayGlue = new CefDisplayHandlerGlue(this);
 			this.RequestGlue = new CefRequestHandlerGlue(this);
 			this.DialogGlue = new CefDialogHandlerGlue(this);
-			
+			this.DownloadGlue = new CefDownloadHandlerGlue(this);
+			this.FindGlue = new CefFindHandlerGlue(this);
+
 			this.ContextMenuGlue = new CefContextMenuHandlerGlue(this);
 			this.LoadGlue = new CefLoadHandlerGlue(this);
 		}
