@@ -173,8 +173,8 @@ namespace CefNet.CApi
 		/// Clear all scheme handler factories registered with the global request
 		/// context. Returns false (0) on error. This function may be called on any
 		/// thread in the browser process. Using this function is equivalent to calling c
-		/// ef_request_tContext::cef_request_context_get_global_context()-&gt;clear_scheme_h
-		/// andler_factories().
+		/// ef_request_context_t::cef_request_context_get_global_context()-&gt;clear_scheme_
+		/// handler_factories().
 		/// </summary>
 		/// <remarks>
 		/// Defined in include/capi/cef_scheme_capi.h as
@@ -209,8 +209,8 @@ namespace CefNet.CApi
 		/// CefSettings.cache_path if specified or in memory otherwise. If |callback| is
 		/// non-NULL it will be executed asnychronously on the UI thread after the
 		/// manager&apos;s storage has been initialized. Using this function is equivalent to
-		/// calling cef_request_tContext::cef_request_context_get_global_context()-&gt;GetDe
-		/// faultCookieManager().
+		/// calling cef_request_context_t::cef_request_context_get_global_context()-&gt;GetD
+		/// efaultCookieManager().
 		/// </summary>
 		/// <remarks>
 		/// Defined in include/capi/cef_cookie_capi.h as
@@ -393,7 +393,7 @@ namespace CefNet.CApi
 
 		/// <summary>
 		/// Returns true (1) if called on the specified thread. Equivalent to using
-		/// cef_task_tRunner::GetForThread(threadId)-&gt;belongs_to_current_thread().
+		/// cef_task_runner_t::GetForThread(threadId)-&gt;belongs_to_current_thread().
 		/// </summary>
 		/// <remarks>
 		/// Defined in include/capi/cef_task_capi.h as
@@ -766,7 +766,7 @@ namespace CefNet.CApi
 
 		/// <summary>
 		/// Post a task for delayed execution on the specified thread. Equivalent to
-		/// using cef_task_tRunner::GetForThread(threadId)-&gt;PostDelayedTask(task,
+		/// using cef_task_runner_t::GetForThread(threadId)-&gt;PostDelayedTask(task,
 		/// delay_ms).
 		/// </summary>
 		/// <remarks>
@@ -778,7 +778,7 @@ namespace CefNet.CApi
 
 		/// <summary>
 		/// Post a task for execution on the specified thread. Equivalent to using
-		/// cef_task_tRunner::GetForThread(threadId)-&gt;PostTask(task).
+		/// cef_task_runner_t::GetForThread(threadId)-&gt;PostTask(task).
 		/// </summary>
 		/// <remarks>
 		/// Defined in include/capi/cef_task_capi.h as
@@ -901,9 +901,9 @@ namespace CefNet.CApi
 		/// function may be called multiple times to change or remove the factory that
 		/// matches the specified |scheme_name| and optional |domain_name|. Returns false
 		/// (0) if an error occurs. This function may be called on any thread in the
-		/// browser process. Using this function is equivalent to calling cef_request_tCo
-		/// ntext::cef_request_context_get_global_context()-&gt;register_scheme_handler_fact
-		/// ory().
+		/// browser process. Using this function is equivalent to calling cef_request_con
+		/// text_t::cef_request_context_get_global_context()-&gt;register_scheme_handler_fac
+		/// tory().
 		/// </summary>
 		/// <remarks>
 		/// Defined in include/capi/cef_scheme_capi.h as

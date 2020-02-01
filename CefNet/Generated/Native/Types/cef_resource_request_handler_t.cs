@@ -60,7 +60,7 @@ namespace CefNet.CApi
 		/// or change the resource load optionally modify |request|. Modification of
 		/// the request URL will be treated as a redirect. Return RV_CONTINUE to
 		/// continue the request immediately. Return RV_CONTINUE_ASYNC and call
-		/// cef_request_tCallback:: cont() at a later time to continue or cancel the
+		/// cef_request_callback_t:: cont() at a later time to continue or cancel the
 		/// request asynchronously. Return RV_CANCEL to cancel the request immediately.
 		/// </summary>
 		[NativeName("on_before_resource_load")]

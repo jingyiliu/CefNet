@@ -21,7 +21,7 @@ using CefNet.Internal;
 namespace CefNet
 {
 	/// <summary>
-	/// Callback structure for cef_request_tContext::ResolveHost.
+	/// Callback structure for cef_request_context_t::ResolveHost.
 	/// </summary>
 	/// <remarks>
 	/// Role: Proxy

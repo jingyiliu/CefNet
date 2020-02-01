@@ -22,7 +22,7 @@ namespace CefNet
 {
 	/// <summary>
 	/// A simple thread abstraction that establishes a message loop on a new thread.
-	/// The consumer uses cef_task_tRunner to execute code on the thread&apos;s message
+	/// The consumer uses cef_task_runner_t to execute code on the thread&apos;s message
 	/// loop. The thread is terminated when the cef_thread_t object is destroyed or
 	/// stop() is called. All pending tasks queued on the thread&apos;s message loop will
 	/// run to completion before the thread is terminated. cef_thread_create() can be
@@ -47,7 +47,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Gets the cef_task_tRunner that will execute code on this thread&apos;s
+		/// Gets the cef_task_runner_t that will execute code on this thread&apos;s
 		/// message loop. This property is safe to call from any thread.
 		/// </summary>
 		public unsafe virtual CefTaskRunner TaskRunner

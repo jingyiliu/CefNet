@@ -166,7 +166,7 @@ namespace CefNet.CApi
 		/// Tells all renderer processes associated with this context to throw away
 		/// their plugin list cache. If |reload_pages| is true (1) they will also
 		/// reload all pages with plugins.
-		/// cef_request_tContextHandler::OnBeforePluginLoad may be called to rebuild
+		/// cef_request_context_handler_t::OnBeforePluginLoad may be called to rebuild
 		/// the plugin list cache.
 		/// </summary>
 		[NativeName("purge_plugin_list_cache")]
@@ -257,7 +257,7 @@ namespace CefNet.CApi
 
 		/// <summary>
 		/// Clears all certificate exceptions that were added as part of handling
-		/// cef_request_tHandler::on_certificate_error(). If you call this it is
+		/// cef_request_handler_t::on_certificate_error(). If you call this it is
 		/// recommended that you also call close_all_connections() or you risk not
 		/// being prompted again for server certificates if you reconnect quickly. If
 		/// |callback| is non-NULL it will be executed on the UI thread after
@@ -289,7 +289,7 @@ namespace CefNet.CApi
 		/// <summary>
 		/// Clears all active and idle connections that Chromium currently has. This is
 		/// only recommended if you have released all other CEF objects but don&apos;t yet
-		/// want to call Cefshutdown(). If |callback| is non-NULL it will be executed
+		/// want to call cef_shutdown(). If |callback| is non-NULL it will be executed
 		/// on the UI thread after completion.
 		/// </summary>
 		[NativeName("close_all_connections")]
@@ -319,8 +319,8 @@ namespace CefNet.CApi
 		/// If extension resources will be read from disk using the default load
 		/// implementation then |root_directory| should be the absolute path to the
 		/// extension resources directory and |manifest| should be NULL. If extension
-		/// resources will be provided by the client (e.g. via cef_request_tHandler
-		/// and/or cef_extension_tHandler) then |root_directory| should be a path
+		/// resources will be provided by the client (e.g. via cef_request_handler_t
+		/// and/or cef_extension_handler_t) then |root_directory| should be a path
 		/// component unique to the extension (if not absolute this will be internally
 		/// prefixed with the PK_DIR_RESOURCES path) and |manifest| should contain the
 		/// contents that would otherwise be read from the &quot;manifest.json&quot; file on
@@ -328,15 +328,15 @@ namespace CefNet.CApi
 		/// The loaded extension will be accessible in all contexts sharing the same
 		/// storage (HasExtension returns true (1)). However, only the context on which
 		/// this function was called is considered the loader (DidLoadExtension returns
-		/// true (1)) and only the loader will receive cef_request_tContextHandler
+		/// true (1)) and only the loader will receive cef_request_context_handler_t
 		/// callbacks for the extension.
-		/// cef_extension_tHandler::OnExtensionLoaded will be called on load success or
-		/// cef_extension_tHandler::OnExtensionLoadFailed will be called on load
+		/// cef_extension_handler_t::OnExtensionLoaded will be called on load success
+		/// or cef_extension_handler_t::OnExtensionLoadFailed will be called on load
 		/// failure.
 		/// If the extension specifies a background script via the &quot;background&quot;
-		/// manifest key then cef_extension_tHandler::OnBeforeBackgroundBrowser will be
-		/// called to create the background browser. See that function for additional
-		/// information about background scripts.
+		/// manifest key then cef_extension_handler_t::OnBeforeBackgroundBrowser will
+		/// be called to create the background browser. See that function for
+		/// additional information about background scripts.
 		/// For visible extension views the client application should evaluate the
 		/// manifest to determine the correct extension URL to load and then pass that
 		/// URL to the cef_browser_host_t::CreateBrowser* function after the extension

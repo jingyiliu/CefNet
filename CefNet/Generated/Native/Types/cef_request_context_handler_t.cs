@@ -66,7 +66,7 @@ namespace CefNet.CApi
 		/// |plugin_policy| to PLUGIN_POLICY_DISABLED may be cached when
 		/// |top_origin_url| is NULL. To purge the plugin list cache and potentially
 		/// trigger new calls to this function call
-		/// cef_request_tContext::PurgePluginListCache.
+		/// cef_request_context_t::PurgePluginListCache.
 		/// </summary>
 		[NativeName("on_before_plugin_load")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
@@ -92,7 +92,7 @@ namespace CefNet.CApi
 		/// handling return NULL. To specify a handler for the resource return a
 		/// cef_resource_request_handler_t object. This function will not be called if
 		/// the client associated with |browser| returns a non-NULL value from
-		/// cef_request_tHandler::GetResourceRequestHandler for the same request
+		/// cef_request_handler_t::GetResourceRequestHandler for the same request
 		/// (identified by cef_request_t::GetIdentifier).
 		/// </summary>
 		[MethodImpl(MethodImplOptions.ForwardRef)]

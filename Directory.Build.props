@@ -10,10 +10,10 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup>
-    <CefVersion>79.1.10</CefVersion>
-    <VersionBuild>$([System.DateTime]::UtcNow.ToString(yy))</VersionBuild>
-    <VersionRevision>$([System.DateTime]::UtcNow.DayOfYear.ToString(000))$([System.DateTime]::UtcNow.ToString(HH))</VersionRevision>
-    <VersionPrefix>$(CefVersion)$(VersionBuild).$(VersionRevision)</VersionPrefix>
+    <CefVersion>79.1</CefVersion>
+    <VersionBuild>$([System.DateTime]::UtcNow.ToString(yy))$([System.DateTime]::UtcNow.DayOfYear.ToString(000))</VersionBuild>
+    <VersionRevision>$([System.DateTime]::UtcNow.ToString(HHmm))</VersionRevision>
+    <VersionPrefix>$(CefVersion).$(VersionBuild).$(VersionRevision)</VersionPrefix>
     <AssemblyOriginatorKeyFile>../cefnet.snk</AssemblyOriginatorKeyFile>
     <SignAssembly Condition="Exists($(AssemblyOriginatorKeyFile))">true</SignAssembly>
   </PropertyGroup>
@@ -24,5 +24,10 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/cefnet/cefnet</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
+    <PackageReleaseNotes>
+      CEF v.$(CefVersion).*.
+      Binary packages are available for download at:
+      http://opensource.spotify.com/cefbuilds/index.html
+    </PackageReleaseNotes>
   </PropertyGroup>
 </Project>

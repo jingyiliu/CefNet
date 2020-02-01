@@ -199,7 +199,7 @@ namespace CefNet
 
 		/// <summary>
 		/// Gets the extension hosted in this browser or NULL if no extension is
-		/// hosted. See cef_request_tContext::LoadExtension for details.
+		/// hosted. See cef_request_context_t::LoadExtension for details.
 		/// </summary>
 		public unsafe virtual CefExtension Extension
 		{
@@ -212,7 +212,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets a value indicating whether this browser is hosting an extension background script.
 		/// Background hosts do not have a window and are not displayable. See
-		/// cef_request_tContext::LoadExtension for details.
+		/// cef_request_context_t::LoadExtension for details.
 		/// </summary>
 		public unsafe virtual bool IsBackgroundHost
 		{

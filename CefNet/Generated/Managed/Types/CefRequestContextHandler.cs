@@ -100,7 +100,7 @@ namespace CefNet
 		/// |plugin_policy| to PLUGIN_POLICY_DISABLED may be cached when
 		/// |top_origin_url| is NULL. To purge the plugin list cache and potentially
 		/// trigger new calls to this function call
-		/// cef_request_tContext::PurgePluginListCache.
+		/// cef_request_context_t::PurgePluginListCache.
 		/// </summary>
 		public unsafe virtual bool OnBeforePluginLoad(string mimeType, string pluginUrl, bool isMainFrame, string topOriginUrl, CefWebPluginInfo pluginInfo, ref CefPluginPolicy pluginPolicy)
 		{
@@ -140,7 +140,7 @@ namespace CefNet
 		/// handling return NULL. To specify a handler for the resource return a
 		/// cef_resource_request_handler_t object. This function will not be called if
 		/// the client associated with |browser| returns a non-NULL value from
-		/// cef_request_tHandler::GetResourceRequestHandler for the same request
+		/// cef_request_handler_t::GetResourceRequestHandler for the same request
 		/// (identified by cef_request_t::GetIdentifier).
 		/// </summary>
 		public unsafe virtual CefResourceRequestHandler GetResourceRequestHandler(CefBrowser browser, CefFrame frame, CefRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref int disableDefaultHandling)

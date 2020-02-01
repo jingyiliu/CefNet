@@ -22,7 +22,7 @@ namespace CefNet
 {
 	/// <summary>
 	/// Callback structure used for asynchronous continuation of
-	/// cef_extension_tHandler::GetExtensionResource.
+	/// cef_extension_handler_t::GetExtensionResource.
 	/// </summary>
 	/// <remarks>
 	/// Role: Proxy

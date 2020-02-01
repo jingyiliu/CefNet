@@ -873,7 +873,7 @@ namespace CefNet.CApi
 
 		/// <summary>
 		/// Returns the extension hosted in this browser or NULL if no extension is
-		/// hosted. See cef_request_tContext::LoadExtension for details.
+		/// hosted. See cef_request_context_t::LoadExtension for details.
 		/// </summary>
 		[NativeName("get_extension")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
@@ -887,7 +887,7 @@ namespace CefNet.CApi
 		/// <summary>
 		/// Returns true (1) if this browser is hosting an extension background script.
 		/// Background hosts do not have a window and are not displayable. See
-		/// cef_request_tContext::LoadExtension for details.
+		/// cef_request_context_t::LoadExtension for details.
 		/// </summary>
 		[NativeName("is_background_host")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]

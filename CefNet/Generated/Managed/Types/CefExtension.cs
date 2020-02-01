@@ -56,7 +56,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets the absolute path to the extension directory on disk. This value
 		/// will be prefixed with PK_DIR_RESOURCES if a relative path was passed to
-		/// cef_request_tContext::LoadExtension.
+		/// cef_request_context_t::LoadExtension.
 		/// The resulting string must be freed by calling cef_string_userfree_free().
 		/// </summary>
 		public unsafe virtual string Path
@@ -82,7 +82,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets the handler for this extension. Will return NULL for internal
 		/// extensions or if no handler was passed to
-		/// cef_request_tContext::LoadExtension.
+		/// cef_request_context_t::LoadExtension.
 		/// </summary>
 		public unsafe virtual CefExtensionHandler Handler
 		{
@@ -95,7 +95,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets the request context that loaded this extension. Will return NULL
 		/// for internal extensions or if the extension has been unloaded. See the
-		/// cef_request_tContext::LoadExtension documentation for more information
+		/// cef_request_context_t::LoadExtension documentation for more information
 		/// about loader contexts. Must be called on the browser process UI thread.
 		/// </summary>
 		public unsafe virtual CefRequestContext LoaderContext
@@ -131,7 +131,7 @@ namespace CefNet
 		/// <summary>
 		/// Unload this extension if it is not an internal extension and is currently
 		/// loaded. Will result in a call to
-		/// cef_extension_tHandler::OnExtensionUnloaded on success.
+		/// cef_extension_handler_t::OnExtensionUnloaded on success.
 		/// </summary>
 		public unsafe virtual void Unload()
 		{

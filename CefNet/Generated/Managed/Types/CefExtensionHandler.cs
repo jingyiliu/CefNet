@@ -23,7 +23,7 @@ namespace CefNet
 	/// <summary>
 	/// Implement this structure to handle events related to browser extensions. The
 	/// functions of this structure will be called on the UI thread. See
-	/// cef_request_tContext::LoadExtension for information about extension loading.
+	/// cef_request_context_t::LoadExtension for information about extension loading.
 	/// </summary>
 	/// <remarks>
 	/// Role: Handler
@@ -73,7 +73,7 @@ namespace CefNet
 		extern bool ICefExtensionHandlerPrivate.AvoidOnExtensionLoadFailed();
 
 		/// <summary>
-		/// Called if the cef_request_tContext::LoadExtension request fails. |result|
+		/// Called if the cef_request_context_t::LoadExtension request fails. |result|
 		/// will be the error code.
 		/// </summary>
 		public unsafe virtual void OnExtensionLoadFailed(CefErrorCode result)
@@ -98,7 +98,7 @@ namespace CefNet
 		extern bool ICefExtensionHandlerPrivate.AvoidOnExtensionLoaded();
 
 		/// <summary>
-		/// Called if the cef_request_tContext::LoadExtension request succeeds.
+		/// Called if the cef_request_context_t::LoadExtension request succeeds.
 		/// |extension| is the loaded extension.
 		/// </summary>
 		public unsafe virtual void OnExtensionLoaded(CefExtension extension)
@@ -239,7 +239,7 @@ namespace CefNet
 		/// tabId parameter (e.g. chrome.tabs.*). |extension| and |browser| are the
 		/// source of the API call. Return the browser that will be acted on by the API
 		/// call or return NULL to act on |browser|. The returned browser must share
-		/// the same cef_request_tContext as |browser|. Incognito browsers should not
+		/// the same cef_request_context_t as |browser|. Incognito browsers should not
 		/// be considered unless the source extension has incognito access enabled, in
 		/// which case |include_incognito| will be true (1).
 		/// </summary>

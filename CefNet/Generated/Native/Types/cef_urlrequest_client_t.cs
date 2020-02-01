@@ -100,7 +100,7 @@ namespace CefNet.CApi
 		/// the request and call cef_auth_callback_t::cont() when the authentication
 		/// information is available. If the request has an associated browser/frame
 		/// then returning false (0) will result in a call to GetAuthCredentials on the
-		/// cef_request_tHandler associated with that browser, if any. Otherwise,
+		/// cef_request_handler_t associated with that browser, if any. Otherwise,
 		/// returning false (0) will cancel the request immediately. This function will
 		/// only be called for requests initiated from the browser process.
 		/// </summary>

@@ -20,7 +20,7 @@ namespace CefNet.CApi
 {
 	/// <summary>
 	/// Callback structure used for asynchronous continuation of
-	/// cef_extension_tHandler::GetExtensionResource.
+	/// cef_extension_handler_t::GetExtensionResource.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public unsafe partial struct cef_get_extension_resource_callback_t
