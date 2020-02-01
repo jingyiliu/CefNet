@@ -168,6 +168,8 @@ namespace CefNet.Internal
 				return;
 
 			IntPtr hwnd = new WindowInteropHelper(window).Handle;
+			if (hwnd == IntPtr.Zero)
+				return;
 
 			if (_HookedWindows.ContainsKey(hwnd))
 				return;

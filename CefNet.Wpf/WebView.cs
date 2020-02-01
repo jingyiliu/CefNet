@@ -62,7 +62,7 @@ namespace CefNet.Wpf
 
 		public WebView(WebView opener)
 		{
-			if (IsDesignMode)
+			if (DesignMode)
 			{
 				//BackColor = System.Drawing.Color.White;
 				return;
@@ -75,7 +75,10 @@ namespace CefNet.Wpf
 			Initialize();
 		}
 
-		protected bool IsDesignMode
+		/// <summary>
+		/// Gets a value that indicates whether the <see cref="WebView"/> is currently in design mode.
+		/// </summary>
+		protected bool DesignMode
 		{
 			get
 			{
@@ -284,7 +287,7 @@ namespace CefNet.Wpf
 		protected override Size ArrangeOverride(Size arrangeBounds)
 		{
 			arrangeBounds = base.ArrangeOverride(arrangeBounds);
-			if (!IsDesignMode)
+			if (!DesignMode)
 			{
 				if (OffscreenGraphics == null)
 				{

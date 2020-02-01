@@ -80,6 +80,10 @@ namespace CefNet.Windows.Forms
 
 			UIContext = SynchronizationContext.Current;
 			base.CreateHandle();
+
+			if (this.DesignMode)
+				return;
+
 			OnCreateBrowser();
 		}
 
@@ -88,7 +92,10 @@ namespace CefNet.Windows.Forms
 			if (GetState(State.Created) && !GetState(State.Closing))
 			{
 				SetState(State.Closing, true);
-				ViewGlue.BrowserObject?.Host.CloseBrowser(true);
+				if (!this.DesignMode)
+				{
+					ViewGlue.BrowserObject?.Host.CloseBrowser(true);
+				}
 			}
 			base.DestroyHandle();
 		}
@@ -221,6 +228,7 @@ namespace CefNet.Windows.Forms
 		/// </summary>
 		public ToolTip ToolTip { get; set; }
 
+		[Browsable(false)]
 		public string StatusText { get; protected set; }
 
 		protected virtual void RaiseCrossThreadEvent<TEventArgs>(Action<TEventArgs> raiseEvent, TEventArgs e, bool synchronous)

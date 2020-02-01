@@ -124,6 +124,7 @@ namespace CefNet
 		/// leaving already created browsers unaffected.
 		/// </summary>
 		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public CefBrowserSettings BrowserSettings
 		{
 			get
@@ -139,6 +140,7 @@ namespace CefNet
 		}
 
 		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public CefRequestContext RequestContext
 		{
 			get
@@ -167,6 +169,7 @@ namespace CefNet
 			}
 		}
 
+		[Browsable(false)]
 		public CefBrowser BrowserObject
 		{
 			get
@@ -175,6 +178,7 @@ namespace CefNet
 			}
 		}
 
+		[Browsable(false)]
 		public CefClient Client
 		{
 			get
@@ -215,6 +219,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets a value indicating whether a previous page in navigation history is available, which allows the GoBack() method to succeed.
 		/// </summary>
+		[Browsable(false)]
 		public bool CanGoBack
 		{
 			get
@@ -242,6 +247,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets a value indicating whether a subsequent page in navigation history is available, which allows the GoForward() method to succeed.
 		/// </summary>
+		[Browsable(false)]
 		public bool CanGoForward
 		{
 			get
@@ -269,6 +275,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets a value indicating whether the WebView control is currently loading.
 		/// </summary>
+		[Browsable(false)]
 		public bool IsBusy
 		{
 			get
@@ -305,6 +312,7 @@ namespace CefNet
 		/// Get the globally unique identifier for this browser. This value is also
 		/// used as the tabId for extension APIs.
 		/// </summary>
+		[Browsable(false)]
 		public int Identifier
 		{
 			get { return AliveBrowserObject.Identifier; }
@@ -313,6 +321,7 @@ namespace CefNet
 		/// <summary>
 		/// Gets a value indicating whether a document has been loaded in the browser.
 		/// </summary>
+		[Browsable(false)]
 		public bool HasDocument
 		{
 			get
@@ -392,6 +401,8 @@ namespace CefNet
 		/// <summary>
 		/// Get and set the current zoom level. The default zoom level is 0.
 		/// </summary>
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public double ZoomLevel
 		{
 			get
@@ -499,6 +510,8 @@ namespace CefNet
 			AliveBrowserHost.CloseDevTools();
 		}
 
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public bool MouseCursorChangeDisabled
 		{
 			get { return AliveBrowserHost.MouseCursorChangeDisabled; }
@@ -542,6 +555,8 @@ namespace CefNet
 		/// frames at the requested rate. The minimum value is 1 and the maximum value is 60
 		/// (default 30).
 		/// </summary>
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public int WindowlessFrameRate
 		{
 			get
@@ -560,6 +575,8 @@ namespace CefNet
 		/// <summary>
 		/// Gets and sets a value indicating whether the browser&apos;s audio is muted.
 		/// </summary>
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public bool AudioMuted
 		{
 			get

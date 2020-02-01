@@ -288,6 +288,12 @@ namespace CefNet.Windows.Forms
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
+			if (this.DesignMode)
+			{
+				e.Graphics.DrawString(this.GetType().Name, Font, Brushes.Black, new PointF(2, 2));
+				return;
+			}
+
 			SetDevicePixelRatio(e.Graphics.DpiX / 96f);
 			if (WindowlessRenderingEnabled)
 			{
@@ -307,7 +313,6 @@ namespace CefNet.Windows.Forms
 					}
 				}
 			}
-			//e.Graphics.DrawRectangle(Pens.Red, popupRect);
 			base.OnPaint(e);
 		}
 
