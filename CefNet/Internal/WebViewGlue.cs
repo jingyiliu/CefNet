@@ -18,6 +18,9 @@ namespace CefNet.Internal
 		private bool _isDragGlueInitialized;
 		private CefDragHandlerGlue _dragGlue;
 
+		private bool _isKeyboardGlueInitialized;
+		private CefKeyboardHandlerGlue _keyboardGlue;
+
 		protected IChromiumWebViewPrivate WebView { get; private set; }
 
 		public CefBrowser BrowserObject { get; protected set; }
@@ -143,6 +146,28 @@ namespace CefNet.Internal
 				return _dragGlue;
 			}
 		}
+
+		private CefKeyboardHandlerGlue KeyboardGlue
+		{
+			get
+			{
+				if (_isKeyboardGlueInitialized)
+					return _keyboardGlue;
+
+				//if (AvoidOnPreKeyEvent() && AvoidOnKeyEvent())
+				//{
+				//	_keyboardGlue = null;
+				//}
+				//else
+				{
+					_keyboardGlue = new CefKeyboardHandlerGlue(this);
+				}
+
+				_isKeyboardGlueInitialized = true;
+				return _keyboardGlue;
+			}
+		}
+
 
 		internal void NotifyPopupBrowserCreating()
 		{

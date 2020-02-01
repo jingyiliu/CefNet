@@ -48,7 +48,7 @@ namespace CefNet.Internal
 
 		internal CefKeyboardHandler GetKeyboardHandler()
 		{
-			return null;
+			return KeyboardGlue;
 		}
 
 		internal CefLifeSpanHandler GetLifeSpanHandler()

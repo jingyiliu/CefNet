@@ -248,7 +248,14 @@ namespace CefGen
 				CppFunctionType fnType = fieldType.FunctionTypeRef;
 				TypeDesc retType = GetTypeDesc(fnType.ReturnType);
 				caller = new CodeMethod(field.Name.ToUpperCamel(fnType.Parameters.Count).EscapeName());
-				caller.RetVal = new CodeMethodParameter(null) { Type = ResolveCefType(retType.ToString()) };
+				var rvtype = new CodeMethodParameter(null);
+				rvtype.Type = ResolveCefType(retType.ToString());
+				if (retType.Name == "char16" || retType.Name == "wchar")
+				{
+					rvtype.CustomAttributes.Add(new CustomCodeAttribute("return: MarshalAs(UnmanagedType.U2)"));
+					throw new NotImplementedException(); // TODO: check it
+				}
+				caller.RetVal = rvtype;
 				caller.Attributes = CodeAttributes.Public | CodeAttributes.External | CodeAttributes.Unsafe;
 				caller.CustomAttributes.AddMethodImplForwardRefAttribute();
 				caller.CustomAttributes.Add(new CustomCodeAttribute("NativeName") { Parameters = { "\"" + field.Name + "\"" } });
@@ -280,7 +287,11 @@ namespace CefGen
 					{
 						param.CustomAttributes.Add(new CustomCodeAttribute("Immutable"));
 					}
-
+					if (argType == "char16" || argType == "wchar")
+					{
+						param.CustomAttributes.Add(new CustomCodeAttribute("MarshalAs(UnmanagedType.U2)"));
+						throw new NotImplementedException(); // TODO: check it
+					}
 					param.Type = ResolveCefType(argType);
 					caller.Parameters.Add(param);
 				}
@@ -289,6 +300,10 @@ namespace CefGen
 			{
 				fld.Comments.AddVSDocComment(field.Comment, "summary");
 				fld.Attributes = CodeAttributes.Public;
+				if (fieldType.Name == "char16" || fieldType.Name == "wchar")
+				{
+					fld.CustomAttributes.Add(new CustomCodeAttribute("MarshalAs(UnmanagedType.U2)"));
+				}
 			}
 			typeDecl.Members.Add(fld);
 			if (caller != null)
