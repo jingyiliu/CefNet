@@ -3,7 +3,7 @@
     <VersionSuffix>m-$([System.DateTime]::UtcNow.ToString(mmss))</VersionSuffix>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Nuget_Release'">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>

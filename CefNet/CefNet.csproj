@@ -16,6 +16,10 @@
     <PackageTags>CefNet, CEF, browser, chromium</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)'=='Nuget_Release'">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
     <DebugType>pdbonly</DebugType>
