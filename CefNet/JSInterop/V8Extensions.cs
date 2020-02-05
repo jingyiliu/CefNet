@@ -119,15 +119,6 @@ namespace CefNet.JSInterop
 			}
 		}
 
-		public static bool SetValue(this CefV8Value obj, string key, string value, CefV8PropertyAttribute attribute)
-		{
-			using (CefV8Value str = new CefV8Value(value))
-			{
-				return obj.SetValueByKey(key, str, attribute);
-			}
-
-		}
-
 		public static Task<ScriptableObject> GetScriptableObjectAsync(this CefFrame self, CancellationToken cancellationToken)
 		{
 			if (self is null)

@@ -180,10 +180,155 @@ namespace CefNet
 			return new CefV8Value(CefNativeApi.cef_v8value_create_null());
 		}
 
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void SetValue(string key, CefV8Value value, CefV8PropertyAttribute attributes)
+		public bool SetValue(string key, CefV8Value value, CefV8PropertyAttribute attributes)
 		{
-			SetValueByKey(key, value, attributes);
+			return SetValueByKey(key, value, attributes);
+		}
+
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool SetValue(string key, int value, CefV8PropertyAttribute attributes)
+		{
+			using (var aValue = new CefV8Value(value))
+			{
+				return SetValueByKey(key, aValue, attributes);
+			}
+		}
+
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool SetValue(string key, double value, CefV8PropertyAttribute attributes)
+		{
+			using (var aValue = new CefV8Value(value))
+			{
+				return SetValueByKey(key, aValue, attributes);
+			}
+		}
+
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool SetValue(string key, bool value, CefV8PropertyAttribute attributes)
+		{
+			using (var aValue = new CefV8Value(value))
+			{
+				return SetValueByKey(key, aValue, attributes);
+			}
+		}
+
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool SetValue(string key, uint value, CefV8PropertyAttribute attributes)
+		{
+			using (var aValue = new CefV8Value(value))
+			{
+				return SetValueByKey(key, aValue, attributes);
+			}
+		}
+
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool SetValue(string key, DateTime value, CefV8PropertyAttribute attributes)
+		{
+			using (var aValue = new CefV8Value(value))
+			{
+				return SetValueByKey(key, aValue, attributes);
+			}
+		}
+
+		/// <summary>
+		/// Assign a value to a property of an object.
+		/// </summary>
+		/// <param name="key">The name of the property to be defined or modified.</param>
+		/// <param name="value">The new value for the specified property.</param>
+		/// <param name="attributes">The property attributes.</param>
+		/// <returns>
+		/// Returns true on success. Returns false if this function is called incorrectly or an
+		/// exception is thrown.
+		/// </returns>
+		/// <remarks>
+		/// For read-only values this function will return true even though assignment failed.
+		/// </remarks>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool SetValue(string key, string value, CefV8PropertyAttribute attribute)
+		{
+			using (CefV8Value str = new CefV8Value(value))
+			{
+				return SetValueByKey(key, str, attribute);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
