@@ -37,5 +37,15 @@ namespace CefNet
 			}
 		}
 
+		public unsafe byte[] ToArray()
+		{
+			var buffer = new byte[(int)Size];
+			fixed (byte* buf = buffer)
+			{
+				if (GetData(new IntPtr(buf), buffer.Length, 0) != buffer.Length)
+					throw new InvalidOperationException();
+			}
+			return buffer;
+		}
 	}
 }
