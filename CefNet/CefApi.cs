@@ -27,18 +27,23 @@ namespace CefNet
 
 		/// <summary>
 		/// Create a new browser window using the window parameters specified by
-		/// |windowInfo|. All values will be copied internally and the actual window will
-		/// be created on the UI thread. This function can be called on any browser process
-		/// thread and will not block.
+		/// <paramref name="windowInfo"/>. All values will be copied internally and
+		/// the actual window will be created on the UI thread. This function can be
+		/// called on any browser process thread and will not block.
 		/// </summary>
+		/// <param name="windowInfo">The CefWindowInfo instance.</param>
+		/// <param name="client">The CefClient instance.</param>
+		/// <param name="url">The initial url.</param>
+		/// <param name="settings">Provides browser initialization settings.</param>
 		/// <param name="requestContext">
-		/// If |requestContext| is NULL the global request context will be used.
+		/// If <paramref name="requestContext"/> is null the global request context will be used.
 		/// </param>
 		/// <param name="extraInfo">
-		/// The optional |extraInfo| parameter provides an opportunity to specify extra
-		/// information specific to the created browser that will be passed to
-		/// CefRenderProcessHandler.OnBrowserCreated() in the render process.
+		/// Provides an opportunity to specify extra information specific to the created browser
+		/// that will be passed to <see cref="CefRenderProcessHandler.OnBrowserCreated"/>
+		/// in the render process.
 		/// </param>
+		/// <returns>Returns true on success.</returns>
 		public static bool CreateBrowser(CefWindowInfo windowInfo, CefClient client, string url, CefBrowserSettings settings, CefDictionaryValue extraInfo, CefRequestContext requestContext)
 		{
 			if (windowInfo == null)
@@ -66,18 +71,23 @@ namespace CefNet
 
 		/// <summary>
 		/// Create a new browser window using the window parameters specified by
-		/// |windowInfo|. If |request_context| is NULL the global request context will be
-		/// used. This function can only be called on the browser process UI thread.
+		/// <paramref name="windowInfo"/>. This function can only be called on
+		/// the browser process UI thread.
 		/// </summary>
+		/// <param name="windowInfo">The CefWindowInfo instance.</param>
+		/// <param name="client">The CefClient instance.</param>
+		/// <param name="url">The initial url.</param>
+		/// <param name="settings">Provides browser initialization settings.</param>
 		/// <param name="requestContext">
-		/// If |request_context| is NULL the global request context will be used.
+		/// If <paramref name="requestContext"/> is null the global request context will be used.
 		/// </param>
-		/// <param name="extra_info">
-		/// The optional |extra_info| parameter provides an opportunity to specify extra
-		/// information specific to the created browser that will be passed to
-		/// CefRenderProcessHandler.OnBrowserCreated() in the render process.
+		/// <param name="extraInfo">
+		/// Provides an opportunity to specify extra information specific to the created browser
+		/// that will be passed to <see cref="CefRenderProcessHandler.OnBrowserCreated"/>
+		/// in the render process.
 		/// </param>
-		public static CefBrowser CreateBrowserSync(CefWindowInfo windowInfo, CefClient client, string url, CefBrowserSettings settings, CefDictionaryValue extra_info, CefRequestContext requestContext)
+		/// <returns>A new CefBrowser object.</returns>
+		public static CefBrowser CreateBrowserSync(CefWindowInfo windowInfo, CefClient client, string url, CefBrowserSettings settings, CefDictionaryValue extraInfo, CefRequestContext requestContext)
 		{
 			if (windowInfo == null)
 				throw new ArgumentNullException(nameof(windowInfo));
@@ -93,7 +103,7 @@ namespace CefNet
 					client != null ? client.GetNativeInstance() : null,
 					&aUrl,
 					settings.GetNativeInstance(),
-					extra_info != null ? extra_info.GetNativeInstance() : null,
+					extraInfo != null ? extraInfo.GetNativeInstance() : null,
 					requestContext != null ? requestContext.GetNativeInstance() : null
 				);
 			}
@@ -104,6 +114,8 @@ namespace CefNet
 		/// <summary>
 		/// Returns True if called on the specified thread.
 		/// </summary>
+		/// <param name="threadId">The specified thread id.</param>
+		/// <returns>Returns true if called on the specified thread.</returns>
 		public static bool CurrentlyOn(CefThreadId threadId)
 		{
 			return CefNativeApi.cef_currently_on(threadId) != 0;
@@ -114,6 +126,11 @@ namespace CefNet
 		/// called on any thread. It is an error to request a thread from the wrong
 		/// process.
 		/// </summary>
+		/// <param name="threadId">The specified thread id.</param>
+		/// <param name="task">
+		/// A <see cref="CefTask"/> that contains a method to be called on the thread.
+		/// </param>
+		/// <returns>Returns true on success.</returns>
 		public static bool PostTask(CefThreadId threadId, CefTask task)
 		{
 			if (task == null)
@@ -122,24 +139,40 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Post a task for execution on the specified thread. This function may be
+		/// Post a task for delayed execution on the specified thread. This function may be
 		/// called on any thread. It is an error to request a thread from the wrong
-		/// process.
+		/// process. Execution will occur asynchronously. Delayed tasks are not
+		/// supported on V8 WebWorker threads and will be executed without the
+		/// specified delay.
 		/// </summary>
-		public static bool PostTask(CefThreadId threadId, CefTask task, long delay)
+		/// <param name="threadId">The specified thread id.</param>
+		/// <param name="millisecondsDelay">
+		/// The number of milliseconds to wait before executing the posted task.
+		/// </param>
+		/// <param name="task">A <see cref="CefTask"/> instance.</param>
+		/// <returns>Returns true on success.</returns>
+		public static bool PostTask(CefThreadId threadId, CefTask task, long millisecondsDelay)
 		{
 			if (task == null)
 				throw new ArgumentNullException(nameof(task));
-			return CefNativeApi.cef_post_delayed_task(threadId, task.GetNativeInstance(), delay) != 0;
+			return CefNativeApi.cef_post_delayed_task(threadId, task.GetNativeInstance(), millisecondsDelay) != 0;
 		}
 
 		/// <summary>
 		/// Register a new V8 extension with the specified JavaScript extension code and
-		/// handler. Functions implemented by the handler are prototyped using the
-		/// keyword &apos;native&apos;. The calling of a native function is restricted to the scope
-		/// in which the prototype of the native function is defined. This function may
-		/// only be called on the render process main thread.
+		/// handler. This function may only be called on the render process main thread.
 		/// </summary>
+		/// <param name="name">An extension name.</param>
+		/// <param name="jscode">
+		/// An extension source code. Functions implemented by the <paramref name="handler"/>
+		/// are prototyped using the keyword &apos;native&apos;.
+		/// </param>
+		/// <param name="handler">A <see cref="CefV8Handler"/> instance.</param>
+		/// <returns>Returns true on success.</returns>
+		/// <remarks>
+		/// The calling of a native function is restricted to the scope
+		/// in which the prototype of the native function is defined.
+		/// </remarks>
 		public static bool RegisterExtension(string name, string jscode, CefV8Handler handler)
 		{
 			if (name == null)
@@ -160,20 +193,22 @@ namespace CefNet
 		/// <summary>
 		/// Register a scheme handler factory with the global request context. This
 		/// function may be called multiple times to change or remove the factory that
-		/// matches the specified |schemeName| and optional |domainName|. Returns False
-		/// if an error occurs. This function may be called on any thread in the
+		/// matches the specified <paramref name="schemeName"/> and optional
+		/// <paramref name="domainName"/>. This function may be called on any thread in the
 		/// browser process.
 		/// </summary>
 		/// <param name="schemeName">
-		/// If |schemeName| is a built-in scheme and no handler is returned by
-		/// |factory| then the built-in scheme handler factory will be called. If
-		/// |schemeName| is a custom scheme then you must also implement the
-		/// CefApp::OnRegisterCustomSchemes() function in all processes.
+		/// If <paramref name="schemeName"/> is a built-in scheme and no handler is returned by
+		/// <paramref name="factory"/> then the built-in scheme handler factory will be called. If
+		/// <paramref name="schemeName"/> is a custom scheme then you must also implement the
+		/// <see cref="CefApp.OnRegisterCustomSchemes"/> function in all processes.
 		/// </param>
 		/// <param name="domainName">
-		/// An NULL value for a standard scheme will cause the factory to match all
-		/// domain names. The domainName value will be ignored for non-standard schemes.
+		/// A null value for a standard scheme will cause the factory to match all domain names.
+		/// The <paramref name="domainName"/> value will be ignored for non-standard schemes.
 		/// </param>
+		/// <param name="factory">A <see cref="CefSchemeHandlerFactory"/> instance.</param>
+		/// <returns>Returns false if an error occurs.</returns>
 		public static bool RegisterSchemeHandlerFactory(string schemeName, string domainName, CefSchemeHandlerFactory factory)
 		{
 			if (string.IsNullOrWhiteSpace(schemeName))
@@ -192,9 +227,9 @@ namespace CefNet
 
 		/// <summary>
 		/// Clear all scheme handler factories registered with the global request
-		/// context. Returns False on error. This function may be called on any
-		/// thread in the browser process.
+		/// context. This function may be called on any thread in the browser process.
 		/// </summary>
+		/// <returns>Returns false on error.</returns>
 		public static bool ClearSchemeHandlerFactories()
 		{
 			return CefNativeApi.cef_clear_scheme_handler_factories() != 0;
@@ -204,17 +239,17 @@ namespace CefNet
 		/// This function should be called from the application entry point function to
 		/// execute a secondary process. It can be used to run secondary processes from
 		/// the browser client executable (default behavior) or from a separate
-		/// executable specified by the CefSettings.BrowserSubprocessPath value. If
+		/// executable specified by the <see cref="CefSettings.BrowserSubprocessPath"/> value. If
 		/// called for the browser process (identified by no &quot;type&quot; command-line value)
 		/// it will return immediately with a value of -1. If called for a recognized
 		/// secondary process it will block until the process should exit and then return
 		/// the process exit code.
 		/// </summary>
 		/// <param name="application">
-		/// The |application| parameter may be NULL. 
+		/// The <paramref name="application"/> parameter may be null. 
 		/// </param>
 		/// <param name="windowsSandboxInfo">
-		/// This parameter is only used on Windows and may be NULL (see cef_sandbox_win.h for details).
+		/// This parameter is only used on Windows and may be null (see cef_sandbox_win.h for details).
 		/// </param>
 		public static int ExecuteProcess(CefMainArgs args, CefApp application, IntPtr windowsSandboxInfo)
 		{
@@ -223,15 +258,17 @@ namespace CefNet
 
 		/// <summary>
 		/// This function should be called on the main application thread to initialize
-		/// the CEF browser process. A return value of True indicates that it succeeded
-		/// and False indicates that it failed.
+		/// the CEF browser process. 
 		/// </summary>
 		/// <param name="application">
-		/// The |application| parameter may be NULL.
+		/// The <paramref name="application"/> parameter may be null.
 		/// </param>
 		/// <param name="windowsSandboxInfo">
-		/// This parameter is only used on Windows and may be NULL (see cef_sandbox_win.h for details).
+		/// This parameter is only used on Windows and may be null (see cef_sandbox_win.h for details).
 		/// </param>
+		/// <returns>
+		/// A return value of true indicates that it succeeded and false indicates that it failed.
+		/// </returns>
 		public static bool Initialize(CefMainArgs args, CefSettings settings, CefApp application, IntPtr windowsSandboxInfo)
 		{
 			if (settings == null)
@@ -252,41 +289,45 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Perform a single iteration of CEF message loop processing. This function is
-		/// provided for cases where the CEF message loop must be integrated into an
-		/// existing application message loop. Use of this function is not recommended
-		/// for most users; use either the CefRunMessageLoop() function or
-		/// CefSettings.MultiThreadedMessageLoop if possible. When using this function
-		/// care must be taken to balance performance against excessive CPU usage. It is
-		/// recommended to enable the CefSettings.ExternalMessagePump option when using
-		/// this function so that CefBrowserProcessHandler::OnScheduleMessagePumpWork()
-		/// callbacks can facilitate the scheduling process. This function should only be
-		/// called on the main application thread and only if CefInitialize() is called
-		/// with a CefSettings.MultiThreadedMessageLoop value of False. This function
-		/// will not block.
+		/// Perform a single iteration of CEF message loop processing.<para/>
+		/// This function should only be called on the main application thread and only if
+		/// <see cref="Initialize"/> is called with a <see cref="CefSettings.MultiThreadedMessageLoop"/>
+		/// value of false. This function will not block.
 		/// </summary>
+		/// <remarks>
+		/// This function is provided for cases where the CEF message loop must be integrated
+		/// into an existing application message loop. Use of this function is not recommended
+		/// for most users; use either the <see cref="RunMessageLoop"/> function or
+		/// <see cref="CefSettings.MultiThreadedMessageLoop"/> if possible. When using this function
+		/// care must be taken to balance performance against excessive CPU usage. It is
+		/// recommended to enable the <see cref="CefSettings.ExternalMessagePump"/> option when using
+		/// this function so that <see cref="CefBrowserProcessHandler.OnScheduleMessagePumpWork"/> 
+		/// callbacks can facilitate the scheduling process.
+		/// </remarks>
 		public static void DoMessageLoopWork()
 		{
 			CefNativeApi.cef_do_message_loop_work();
 		}
 
 		/// <summary>
-		/// Run the CEF message loop. Use this function instead of an application-
-		/// provided message loop to get the best balance between performance and CPU
-		/// usage. This function should only be called on the main application thread and
-		/// only if CefInitialize() is called with a CefSettings.MultiThreadedMessageLoop
-		/// value of False. This function will block until a quit message is received by
-		/// the system.
+		/// Run the CEF message loop.<para/>
+		/// This function should only be called on the main application thread and only if
+		/// <see cref="Initialize"/> is called with a <see cref="CefSettings.MultiThreadedMessageLoop"/>
+		/// value of false. This function will block until a quit message is received by the system.
 		/// </summary>
+		/// <remarks>
+		/// Use this function instead of an application-provided message loop to get the best
+		/// balance between performance and CPU usage. 
+		/// </remarks>
 		public static void RunMessageLoop()
 		{
 			CefNativeApi.cef_run_message_loop();
 		}
 
 		/// <summary>
-		/// Quit the CEF message loop that was started by calling CefRunMessageLoop().
+		/// Quit the CEF message loop that was started by calling <see cref="RunMessageLoop"/>.
 		/// This function should only be called on the main application thread and only
-		/// if CefRunMessageLoop() was used.
+		/// if <see cref="RunMessageLoop"/> was used.
 		/// </summary>
 		public static void QuitMessageLoop()
 		{
@@ -294,8 +335,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Set to True before calling Windows APIs like TrackPopupMenu that enter a
-		/// modal message loop. Set to False after exiting the modal message loop.
+		/// Set to true before calling Windows APIs like TrackPopupMenu that enter a
+		/// modal message loop. Set to false after exiting the modal message loop.
 		/// </summary>
 		public static void SetOSModalLoop(bool osModalLoop)
 		{
@@ -313,20 +354,26 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Returns True if the certificate status has any error, major or minor.
+		/// Returns true if the certificate status has any error, major or minor.
 		/// </summary>
+		/// <returns>
+		/// Returns true if the certificate status has any error.
+		/// </returns>
 		public static bool IsCertStatusError(CefCertStatus status)
 		{
 			return CefNativeApi.cef_is_cert_status_error(status) != 0;
 		}
 
 		/// <summary>
-		/// Crash reporting is configured using an INI-style config file named
-		/// &quot;crash_reporter.cfg&quot;. On Windows and Linux this file must be placed next to
-		/// the main application executable. On macOS this file must be placed in the
-		/// top-level app bundle Resources directory
-		/// (e.g. &quot;&lt;appname&gt;.app/Contents/Resources&quot;).
+		/// Get a value wchich indicates that crash reporting is configured using an
+		/// INI-style config file named &quot;crash_reporter.cfg&quot;.
 		/// </summary>
+		/// <remarks>
+		/// On Windows and Linux this file must be placed next to the main application executable.
+		/// On macOS this file must be placed in the top-level app bundle Resources directory
+		/// (e.g. &quot;&lt;appname&gt;.app/Contents/Resources&quot;).<para/>
+		/// See <see cref="https://bitbucket.org/chromiumembedded/cef/wiki/CrashReporting"/> for details.
+		/// </remarks>
 		public static bool CrashReportingEnabled
 		{
 			get { return CefNativeApi.cef_crash_reporting_enabled() != 0; }
@@ -335,6 +382,8 @@ namespace CefNet
 		/// <summary>
 		/// Sets or clears a specific key-value pair from the crash metadata.
 		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
 		public static void SetCrashKeyValue(string key, string value)
 		{
 			if (string.IsNullOrWhiteSpace(key))
@@ -368,12 +417,13 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Get the temporary directory provided by the system.
+		/// Get the temporary directory provided by the system.<para/>
 		/// WARNING: In general, you should use the temp directory variants below instead
 		/// of this function. Those variants will ensure that the proper permissions are
 		/// set so that other users on the system can&apos;t edit them while they&apos;re open
-		/// (which could lead to security issues). Returns null if an error occurs.
+		/// (which could lead to security issues). 
 		/// </summary>
+		/// <returns>Returns null if an error occurs.</returns>
 		public static string GetTempDirectory()
 		{
 			var path = new cef_string_t();
@@ -385,12 +435,19 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Creates a new directory. On Windows if |prefix| is provided the new directory
-		/// name is in the format of &quot;prefixyyyy&quot;. Returns the full path of the
-		/// directory that was created or null if an error occurs. The directory is only
-		/// readable by the current user. Calling this function on the browser process UI
+		/// Creates a new directory.  Calling this function on the browser process UI
 		/// or IO threads is not allowed.
 		/// </summary>
+		/// <param name="prefix">
+		/// On Windows if this value is provided the new directory name is in the format
+		/// of &quot;prefixyyyy&quot;.
+		/// </param>
+		/// <returns>
+		/// Returns the full path of the directory that was created or null if an error occurs.
+		/// </returns>
+		/// <remarks>
+		/// The directory is only readable by the current user.
+		/// </remarks>
 		public static string CreateNewTempDirectory(string prefix)
 		{
 			fixed (char* s0 = prefix)
@@ -406,13 +463,19 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Creates a directory within another directory. Extra characters will be
-		/// appended to |prefix| to ensure that the new directory does not have the same
-		/// name as an existing directory. Returns the full path of the directory that
-		/// was created or null if an error occurs. The directory is only readable by the
-		/// current user. Calling this function on the browser process UI or IO threads
-		/// is not allowed.
+		/// Creates a directory within another directory. Calling this function on the browser
+		/// process UI or IO threads is not allowed.
 		/// </summary>
+		/// <param name="prefix">
+		/// Extra characters will be appended to <paramref name="prefix"/> to ensure that
+		/// the new directory does not have the same name as an existing directory.
+		/// </param>
+		/// <returns>
+		/// Returns the full path of the directory that was created or null if an error occurs.
+		/// </returns>
+		/// <remarks>
+		/// The directory is only readable by the current user.
+		/// </remarks>
 		public static string CreateTempDirectoryInDirectory(string basePath, string prefix)
 		{
 			if (string.IsNullOrWhiteSpace(basePath))
@@ -433,9 +496,13 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Returns True if the given path exists and is a directory. Calling this
-		/// function on the browser process UI or IO threads is not allowed.
+		/// Determines whether the given path refers to an existing directory on disk.
+		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
+		/// <param name="path">The path to test.</param>
+		/// <returns>
+		/// Returns true if the given path exists and is a directory.
+		/// </returns>
 		public static bool DirectoryExists(string path)
 		{
 			if (string.IsNullOrWhiteSpace(path))
@@ -448,18 +515,21 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Deletes the given path whether it&apos;s a file or a directory. Returns True on successful
-		/// deletion or if |path| does not exist. Calling this function on the browser process UI or
+		/// Deletes the given path whether it&apos;s a file or a directory. Calling this function on the browser process UI or
 		/// IO threads is not allowed.
 		/// </summary>
 		/// <param name="path">
-		/// If |path| is a directory all contents will be deleted.
+		/// If <paramref name="path"/> is a directory all contents will be deleted.
+		/// On POSIX environments if <paramref name="path"/> is a symbolic link then
+		/// only the symlink will be deleted.
 		/// </param>
 		/// <param name="recursive">
-		/// If True any sub directories and their contents will also be deleted (equivalent to executing
-		/// &quot;rm -rf&quot;, so use with caution). On POSIX environments if |path| is a symbolic
-		/// link then only the symlink will be deleted.
+		/// If true any sub directories and their contents will also be deleted (equivalent to executing
+		/// &quot;rm -rf&quot;, so use with caution).
 		/// </param>
+		/// <returns>
+		/// Returns true on successful deletion or if <paramref name="path"/> does not exist. 
+		/// </returns>
 		public static bool DeleteFile(string path, bool recursive)
 		{
 			if (path == null)
@@ -472,13 +542,18 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Writes the contents of |sourceDirectory| into a zip archive at |destinationFile|.
-		/// Returns True on success. Calling this function on the browser process UI
+		/// Writes the contents of <paramref name="sourceDirectory"/> into a zip archive at
+		/// <paramref name="destinationFile"/>. Calling this function on the browser process UI
 		/// or IO threads is not allowed.
 		/// </summary>
+		/// <param name="sourceDirectory">The source directory.</param>
+		/// <param name="destinationFile">The file to write to.</param>
 		/// <param name="includeHiddenFiles">
-		/// If True then files starting with &quot;.&quot; will be included.
+		/// If true then files starting with &quot;.&quot; will be included.
 		/// </param>
+		/// <returns>
+		/// Returns true on success.
+		/// </returns>
 		public static bool ZipDirectory(string sourceDirectory, string destinationFile, bool includeHiddenFiles)
 		{
 			if (string.IsNullOrWhiteSpace(sourceDirectory))
@@ -497,13 +572,16 @@ namespace CefNet
 
 		/// <summary>
 		/// Loads the existing &quot;Certificate Revocation Lists&quot; file that is managed
-		/// by Google Chrome. This file can generally be found in Chrome&apos;s User Data
-		/// directory (e.g. &quot;%LOCALAPPDATA%\Google\Chrome\User Data&quot; on Windows)
-		/// and is updated periodically by Chrome&apos;s component updater service.
-		/// Must be called in the browser process after the context has been initialized.
-		/// See https://dev.chromium.org/Home/chromium-security/crlsets for background.
+		/// by Google Chrome. Should be called in the browser process after the context has been
+		/// initialized.
 		/// </summary>
-		public static void LoadClrlSetsFile(string path)
+		/// <remarks>
+		/// The &quot;Certificate Revocation Lists&quot; file can generally be found in Chrome&apos;s
+		/// User Data directory (e.g. &quot;%LOCALAPPDATA%\Google\Chrome\User Data&quot; on Windows)
+		/// and is updated periodically by Chrome&apos;s component updater service.<para/>
+		/// See <see cref="https://dev.chromium.org/Home/chromium-security/crlsets"/> for background.
+		/// </remarks>
+		public static void LoadCrlSetsFile(string path)
 		{
 			if (!File.Exists(path))
 				throw new FileNotFoundException(null, path);
@@ -516,38 +594,51 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Add an entry to the cross-origin access whitelist.
+		/// Add an entry to the cross-origin access whitelist. This function may be called on any thread. 
+		/// </summary>
+		/// <param name="sourceOrigin">
+		/// The origin allowed to be accessed by the target protocol/domain.
+		/// </param>
+		/// <param name="targetProtocol">
+		/// The target protocol allowed to access the source origin.
+		/// </param>
+		/// <param name="targetDomain">
+		/// The optional target domain allowed to access the source origin.
+		/// </param>
+		/// <param name="allowTargetSubdomains">
+		/// If <paramref name="targetDomain"/> is non-null and this value is false then
+		/// only exact domain matches will be allowed. If <paramref name="targetDomain"/>
+		/// contains a top-level domain component (like &quot;example.com&quot;) and
+		/// this value is true sub-domain matches will be allowed.
+		/// If <paramref name="targetDomain"/> is null and <paramref name="allowTargetSubdomains"/>
+		/// is true all domains and IP addresses will be allowed.
+		/// </param>
+		/// <returns>
+		/// Returns false if <paramref name="sourceOrigin"/> is invalid or the whitelist
+		/// cannot be accessed.
+		/// </returns>
+		/// <remarks>
 		/// The same-origin policy restricts how scripts hosted from different origins
 		/// (scheme + domain + port) can communicate. By default, scripts can only access
 		/// resources with the same origin. Scripts hosted on the HTTP and HTTPS schemes
 		/// (but no other schemes) can use the &quot;Access-Control-Allow-Origin&quot; header to
-		/// allow cross-origin requests. For example, https://source.example.com can make
+		/// allow cross-origin requests.<para/>For example, https://source.example.com can make
 		/// XMLHttpRequest requests on http://target.example.com if the
 		/// http://target.example.com request returns an &quot;Access-Control-Allow-Origin:
-		/// https://source.example.com&quot; response header.
+		/// https://source.example.com&quot; response header.<para/>
 		/// Scripts in separate frames or iframes and hosted from the same protocol and
 		/// domain suffix can execute cross-origin JavaScript if both pages set the
-		/// document.domain value to the same domain suffix. For example,
+		/// document.domain value to the same domain suffix.<para/>For example,
 		/// scheme://foo.example.com and scheme://bar.example.com can communicate using
-		/// JavaScript if both domains set document.domain=&quot;example.com&quot;.
+		/// JavaScript if both domains set document.domain=&quot;example.com&quot;.<para/>
 		/// This function is used to allow access to origins that would otherwise violate
 		/// the same-origin policy. Scripts hosted underneath the fully qualified
-		/// |sourceOrigin| URL (like http://www.example.com) will be allowed access to
-		/// all resources hosted on the specified |targetProtocol| and |targetDomain|.
+		/// <paramref name="sourceOrigin"/> URL (like http://www.example.com) will be allowed
+		/// access to all resources hosted on the specified <paramref name="targetProtocol"/>
+		/// and <paramref name="targetDomain"/>.
 		/// This function cannot be used to bypass the restrictions on local or display
-		/// isolated schemes. See the comments on CefRegisterCustomScheme for more
-		/// information.
-		/// This function may be called on any thread. Returns False if
-		/// |sourceOrigin| is invalid or the whitelist cannot be accessed.
-		/// </summary>
-		/// <param name="targetDomain">
-		/// If |targetDomain| is non-NULL and |allowTargetSubdomains| if False
-		/// only exact domain matches will be allowed. If |targetDomain| contains a top-
-		/// level domain component (like &quot;example.com&quot;) and |allowTargetSubdomains| is
-		/// True sub-domain matches will be allowed. If |targetDomain| is NULL and
-		/// |allowTargetSubdomains| if True all domains and IP addresses will be
-		/// allowed.
-		/// </param>
+		/// isolated schemes.
+		/// </remarks>
 		public static bool AddCrossOriginWhitelistEntry(string sourceOrigin, string targetProtocol, string targetDomain, bool allowTargetSubdomains)
 		{
 			if (sourceOrigin == null)
@@ -567,9 +658,15 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Remove an entry from the cross-origin access whitelist. Returns False if
-		/// |source_origin| is invalid or the whitelist cannot be accessed.
+		/// Remove an entry from the cross-origin access whitelist. 
 		/// </summary>
+		/// <param name="sourceOrigin">The origin allowed to be accessed by the target protocol/domain.</param>
+		/// <param name="targetProtocol">The target protocol allowed to access the source origin.</param>
+		/// <param name="targetDomain">The optional target domain allowed to access the source origin.</param>
+		/// <param name="allowTargetSubdomains">Indicates that target subdomains allowed to access the source origin.</param>
+		/// <returns>
+		/// Returns false if <paramref name="sourceOrigin"/> is invalid or the whitelist cannot be accessed.
+		/// </returns>
 		public static bool RemoveCrossOriginWhitelistEntry(string sourceOrigin, string targetProtocol, string targetDomain, bool allowTargetSubdomains)
 		{
 			if (sourceOrigin == null)
@@ -588,18 +685,18 @@ namespace CefNet
 			}
 		}
 
-		/// <summary>
-		/// Remove all entries from the cross-origin access whitelist. Returns False
-		/// if the whitelist cannot be accessed.
-		/// </summary>
+		/// <summary>Remove all entries from the cross-origin access whitelist.</summary>
+		/// <returns>Returns flase if the whitelist cannot be accessed.</returns>
 		public static bool ClearCrossOriginWhitelist()
 		{
 			return CefNativeApi.cef_clear_cross_origin_whitelist() != 0;
 		}
 
 		/// <summary>
-		/// Parse the specified |url| into its component parts.
+		/// Parse the specified <paramref name="url"/> into its component parts.
 		/// </summary>
+		/// <param name="url">The string representing the url.</param>
+		/// <returns>The <see cref="CefUrlParts"/> instance.</returns>
 		public static CefUrlParts ParseUrl(string url)
 		{
 			if (url == null)
@@ -618,10 +715,15 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Creates a URL from the specified |parts|, which must contain a non-NULL spec
-		/// or a non-NULL host and path (at a minimum), but not both. Returns NULL if
-		/// |parts| isn&apos;t initialized as described.
+		/// Creates a URL from the specified <paramref name="parts"/>. 
 		/// </summary>
+		/// <param name="parts">
+		/// The <see cref="CefUrlParts"/> instance which must contain a non-null spec
+		/// or a non-null host and path (at a minimum), but not both.
+		/// </param>
+		/// <returns>
+		/// Returns null if <paramref name="parts"/> isn&apos;t initialized as described.
+		/// </returns>
 		public static string CreateUrl(CefUrlParts parts)
 		{
 			var s = new cef_string_t();
@@ -630,15 +732,18 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// This is a convenience function for formatting a URL in a concise and human-
-		/// friendly way to help users make security-related decisions (or in other
-		/// circumstances when people need to distinguish sites, origins, or otherwise-
-		/// simplified URLs from each other). Internationalized domain names (IDN) may be
-		/// presented in Unicode if the conversion is considered safe. The returned value
-		/// will (a) omit the path for standard schemes, excepting file and filesystem,
-		/// and (b) omit the port if it is the default for the scheme. Do not use this
+		/// This is a convenience function for formatting a URL in a concise and
+		/// human-friendly way to help users make security-related decisions (or in other
+		/// circumstances when people need to distinguish sites, origins, or
+		/// otherwise-simplified URLs from each other). Internationalized domain names (IDN) may be
+		/// presented in Unicode if the conversion is considered safe. Do not use this
 		/// for URLs which will be parsed or sent to other applications.
 		/// </summary>
+		/// <param name="originUrl">An origin url.</param>
+		/// <returns>
+		/// The returned value will (a) omit the path for standard schemes, excepting file
+		/// and filesystem, and (b) omit the port if it is the default for the scheme.
+		/// </returns>
 		public static string FormatUrlForSecurityDisplay(string originUrl)
 		{
 			fixed (char* s0 = originUrl)
@@ -649,8 +754,12 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Returns the mime type for the specified file extension or an NULL string if unknown.
+		/// Returns the mime type for the specified file extension.
 		/// </summary>
+		/// <param name="extension">The file extension.</param>
+		/// <returns>
+		/// Returns the mime type for the specified file extension or null if unknown.
+		/// </returns>
 		public static string GetMimeType(string extension)
 		{
 			fixed (char* s0 = extension)
@@ -661,12 +770,12 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Get the extensions associated with the given mime type. This should be passed
-		/// in lower case. There could be multiple extensions for a given mime type, like
-		/// &quot;html,htm&quot; for &quot;text/html&quot;, or &quot;txt,text,html,...&quot;
-		/// for &quot;text/*&quot;. Any existing elements in the provided vector will not
-		/// be erased.
+		/// Get the file extensions associated with the given mime type.
 		/// </summary>
+		/// <param name="mimeType">The MIME type. This should be passed in lower case.</param>
+		/// <returns>
+		/// Returns an array that contains the file extensions associated with the given mime type.
+		/// </returns>
 		public static string[] GetExtensionsForMimeType(string mimeType)
 		{
 			using (var list = new CefStringList())
@@ -681,14 +790,16 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Escapes characters in |text| which are unsuitable for use as a query
+		/// Escapes characters in <paramref name="text"/> which are unsuitable for use as a query
 		/// parameter value. Everything except alphanumerics and -_.!~*&apos;()
 		/// will be converted to &quot;%XX&quot;. The result is basically the same
 		/// as encodeURIComponent in Javacript.
 		/// </summary>
+		/// <param name="text">The string to be encoded.</param>
 		/// <param name="usePlus">
-		/// If |use_plus| is True spaces will change to &quot;+&quot;.
+		/// If <paramref name="usePlus"/> is true spaces will change to &quot;+&quot;.
 		/// </param>
+		/// <returns>A new string representing the provided string encoded as a URI component.</returns>
 		public static string UriEncode(string text, bool usePlus)
 		{
 			if (text == null)
@@ -702,19 +813,19 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Unescapes |text| and returns the result. Unescaping consists of looking for
-		/// the exact pattern &quot;%XX&quot; where each X is a hex digit and converting to the
-		/// character with the numerical value of those digits (e.g. &quot;i%20=%203%3b&quot;
-		/// unescapes to &quot;i = 3;&quot;).
+		/// Decodes any &quot;%XX&quot; encoding in the given string. Plus symbols ('+')
+		/// are decoded to a space character.
 		/// </summary>
+		/// <param name="text">The string to be decoded.</param>
 		/// <param name="convertToUtf8">
-		/// If |convertToUtf8| is True this function will attempt to interpret the initial
+		/// If <paramref name="convertToUtf8"/> is true this function will attempt to interpret the initial
 		/// decoded result as UTF-8. If the result is convertable into UTF-8 it will be
 		/// returned as converted. Otherwise the initial decoded result will be returned.
 		/// </param>
-		/// <param name="unescapeRule">
-		/// The |rule| parameter supports further customization the decoding process.
+		/// <param name="rule">
+		/// Supports further customization the decoding process.
 		/// </param>
+		/// <returns>Returns the decoded string.</returns>
 		public static string UriDecode(string text, bool convertToUtf8, CefUriUnescapeRule rule)
 		{
 			if (text == null)
@@ -728,9 +839,13 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Parses the specified |json| string and returns a dictionary or list
-		/// representation. If JSON parsing fails this function returns NULL.
+		/// Parses the specified <paramref name="json"/> string.
 		/// </summary>
+		/// <param name="json">The JSON string to parse.</param>
+		/// <param name="options"></param>
+		/// <returns>
+		/// Returns a dictionary or list representation. If JSON parsing fails this function returns NULL.
+		/// </returns>
 		public static CefValue CefParseJSON(string json, CefJsonParserOptions options)
 		{
 			if (json == null)
@@ -744,11 +859,17 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Parses the specified |json| string and returns a dictionary or list
-		/// representation. If JSON parsing fails this function returns NULL and
-		/// populates |errorCode| and |errorMessage| with an error code and a
-		/// formatted error message respectively.
+		/// Parses the specified <paramref name="json"/> string.
 		/// </summary>
+		/// <param name="json">The JSON string to parse.</param>
+		/// <param name="options"></param>
+		/// <param name="errorCode">The error code.</param>
+		/// <param name="errorMessage">The error message.</param>
+		/// <returns>
+		/// Returns a dictionary or list representation. If JSON parsing fails returns null and
+		/// populates <paramref name="errorCode"/> and <paramref name="errorMessage"/> with an
+		/// error code and a formatted error message respectively.
+		/// </returns>
 		public static CefValue CefParseJSON(string json, CefJsonParserOptions options, out CefJsonParserError errorCode, out string errorMessage)
 		{
 			if (json == null)
@@ -770,10 +891,16 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Generates a JSON string from the specified root |node| which should be a
-		/// dictionary or list value. Returns an NULL string on failure. This function
-		/// requires exclusive access to |node| including any underlying data.
+		/// Generates a JSON string from the specified root <paramref name="node"/>.
 		/// </summary>
+		/// <param name="node">A dictionary or list value.</param>
+		/// <param name="options"></param>
+		/// <returns>
+		/// Returns a JSON encoded string on success or null on failure.
+		/// </returns>
+		/// <remarks>
+		/// This function requires exclusive access to <paramref name="node"/> including any underlying data.
+		/// </remarks>
 		public static string CefWriteJSON(CefValue node, CefJsonWriterOptions options)
 		{
 			if (node == null)
@@ -783,9 +910,13 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Retrieve the path associated with the specified |key|. Returns an NULL string
-		/// on failure. Can be called on any thread in the browser process.
+		/// Retrieve the path associated with the specified <paramref name="key"/>.
+		/// Can be called on any thread in the browser process.
 		/// </summary>
+		/// <param name="key">The path key value.</param>
+		/// <returns>
+		/// Returns the path associated with the specified <paramref name="key"/> or null on failure.
+		/// </returns>
 		public static string GetPath(CefPathKey key)
 		{
 			var path = new cef_string_t();
@@ -797,14 +928,28 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Launches the process specified via |command_line|. Returns True upon
-		/// success. Must be called on the browser process TID_PROCESS_LAUNCHER thread.
-		/// Unix-specific notes: - All file descriptors open in the parent process will
-		/// be closed in the
-		/// child process except for stdin, stdout, and stderr.
-		/// - If the first argument on the command line does not contain a slash,
-		/// PATH will be searched. (See man execvp.)
+		/// Launches the process specified via <paramref name="commandLine"/>.
+		/// Must be called on the browser process TID_PROCESS_LAUNCHER thread.
 		/// </summary>
+		/// <param name="commandLine">The command line arguments.</param>
+		/// <returns>Returns true upon success.</returns>
+		/// <remarks>
+		/// Unix-specific notes:
+		/// <list type="bullet">
+		///		<item>
+		///			<description>
+		/// All file descriptors open in the parent process will be closed in the
+		/// child process except for stdin, stdout, and stderr.
+		///			</description>
+		///		</item>
+		///		<item>
+		///			<description>
+		/// If the first argument on the command line does not contain a slash,
+		/// PATH will be searched. (See man execvp.)
+		///			</description>
+		///		</item>
+		/// </list>
+		/// </remarks>
 		public static bool CefLaunchProcess(CefCommandLine commandLine)
 		{
 			if (commandLine == null)
@@ -817,6 +962,7 @@ namespace CefNet
 		/// Visit web plugin information. Can be called on any thread in the browser
 		/// process.
 		/// </summary>
+		/// <param name="visitor"></param>
 		public static void VisitWebPluginInfo(CefWebPluginInfoVisitor visitor)
 		{
 			if (visitor == null)
@@ -836,9 +982,9 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Unregister an internal plugin. This may be undone the next time
-		/// RefreshWebPlugins() is called. Can be called on any thread in the
-		/// browser process.
+		/// Unregister an internal plugin. This may be undone the next time 
+		/// <see cref="RefreshWebPlugins"/> is called. Can be called on any
+		/// thread in the browser process.
 		/// </summary>
 		public static void UnregisterInternalWebPlugin(string path)
 		{
@@ -856,6 +1002,7 @@ namespace CefNet
 		/// Register a plugin crash. Can be called on any thread in the browser process
 		/// but will be executed on the IO thread.
 		/// </summary>
+		/// <param name="path"></param>
 		public static void RegisterWebPluginCrash(string path)
 		{
 			if (path == null)
@@ -872,6 +1019,8 @@ namespace CefNet
 		/// Query if a plugin is unstable. Can be called on any thread in the browser
 		/// process.
 		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="callback"></param>
 		public static void IsWebPluginUnstable(string path, CefWebPluginUnstableCallback callback)
 		{
 			if (path == null)
@@ -887,32 +1036,36 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Register the Widevine CDM plugin.
-		/// The client application is responsible for downloading an appropriate
-		/// platform-specific CDM binary distribution from Google, extracting the
-		/// contents, and building the required directory structure on the local machine.
-		/// The CefBrowserHost::StartDownload function and CefZipArchive structure
-		/// can be used to implement this functionality in CEF. Contact Google via
-		/// https://www.widevine.com/contact.html for details on CDM download.
+		/// Register the Widevine CDM plugin. On Linux this function must be called
+		/// before <see cref="Initialize"/> and the registration cannot be changed during runtime.
 		/// </summary>
 		/// <param name="path">
 		/// Is a directory that must contain the following files:
-		/// 1. manifest.json file from the CDM binary distribution.
-		/// 2. widevinecdm file from the CDM binary distribution (e.g.
+		/// <list type="number">
+		/// <item><description>manifest.json file from the CDM binary distribution.</description></item>
+		/// <item><description>widevinecdm file from the CDM binary distribution (e.g.
 		/// widevinecdm.dll on on Windows, libwidevinecdm.dylib on OS X,
-		/// libwidevinecdm.so on Linux).
+		/// libwidevinecdm.so on Linux).</description></item>
+		/// </list>
 		/// If any of these files are missing or if the manifest file has incorrect
-		/// contents the registration will fail and |callback| will receive a |result|
-		/// value of CEF_CDM_REGISTRATION_ERROR_INCORRECT_CONTENTS.
+		/// contents the registration will fail and <paramref name="callback"/> will receive
+		/// a result value of <see cref="CefCDMRegistrationError.IncorrectContents"/>.
 		/// </param>
 		/// <param name="callback">
-		/// |callback| will be executed asynchronously once registration is complete.
-		/// On Linux this function must be called before CefInitialize() and the
-		/// registration cannot be changed during runtime. If registration is not
-		/// supported at the time that RegisterWidevineCDM() is called then
-		/// |callback| will receive a |result| value of
-		/// CEF_CDM_REGISTRATION_ERROR_NOT_SUPPORTED.
+		/// Will be executed asynchronously once registration is complete.<para/>
+		///  If registration is not
+		/// supported at the time that <see cref="RegisterWidevineCDM"/> is called then
+		/// <paramref name="callback"/> will receive a result value of
+		/// <see cref="CefCDMRegistrationError.NotSupported"/>.
 		/// </param>
+		/// <remarks>
+		/// The client application is responsible for downloading an appropriate
+		/// platform-specific CDM binary distribution from Google, extracting the
+		/// contents, and building the required directory structure on the local machine.
+		/// The <see cref="CefBrowserHost.StartDownload"/> function and CefZipArchive structure
+		/// can be used to implement this functionality in CEF. Contact Google via
+		/// <see cref="https://www.widevine.com/contact.html"/> for details on CDM download.
+		/// </remarks>
 		public static void RegisterWidevineCDM(string path, CefRegisterCDMCallback callback)
 		{
 			if (path == null)
@@ -928,6 +1081,7 @@ namespace CefNet
 		/// <summary>
 		/// Returns the current platform thread ID.
 		/// </summary>
+		/// <returns>Returns the current platform thread ID.</returns>
 		public static uint GetCurrentPlatformThreadId()
 		{
 			return CefNativeApi.cef_get_current_platform_thread_id();
@@ -936,6 +1090,7 @@ namespace CefNet
 		/// <summary>
 		/// Returns the current platform thread handle.
 		/// </summary>
+		/// <returns>Returns the current platform thread handle.</returns>
 		public static IntPtr GetCurrentPlatformThreadHandle()
 		{
 			if (PlatformInfo.IsWindows)
@@ -947,21 +1102,26 @@ namespace CefNet
 
 		/// <summary>
 		/// Start tracing events on all processes.
-		/// If CefBeginTracing was called previously, or if a CefEndTracingAsync call is
-		/// pending, CefBeginTracing will fail and return False.
 		/// This function must be called on the browser process UI thread.
 		/// </summary>
 		/// <param name="categories">
 		/// A comma-delimited list of category wildcards. A category can
 		/// have an optional &apos;-&apos; prefix to make it an excluded category. Having both
-		/// included and excluded categories in the same list is not supported.
-		/// Example: &quot;test_MyTest*&quot; Example: &quot;test_MyTest*,test_OtherStuff&quot;
-		/// Example: &quot;-excluded_category1,-excluded_category2&quot;
+		/// included and excluded categories in the same list is not supported.<para/>
+		/// Examples:
+		/// <list type="bullet">
+		/// <item><description>&quot;test_MyTest*,test_OtherStuff&quot;</description></item>
+		/// <item><description>&quot;-excluded_category1,-excluded_category2&quot;</description></item>
+		/// </list>
 		/// </param>
 		/// <param name="callback">
-		/// Tracing is initialized asynchronously and |callback| will be executed on the
-		/// UI thread after initialization is complete.
+		/// Tracing is initialized asynchronously and <paramref name="callback"/> will be executed
+		/// on the UI thread after initialization is complete.
 		/// </param>
+		/// <returns>
+		/// If <see cref="CefBeginTracing"/> was called previously, or if a CefEndTracingAsync call is
+		/// pending, <see cref="CefBeginTracing"/> will fail and return false.
+		/// </returns>
 		public static bool CefBeginTracing(string categories, CefCompletionCallback callback)
 		{
 			if (categories == null)
@@ -977,19 +1137,21 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Stop tracing events on all processes.
-		/// This function will fail and return False if a previous call to
-		/// CefEndTracingAsync is already pending or if CefBeginTracing was not called.
-		/// This function must be called on the browser process UI thread.
+		/// Stop tracing events on all processes. This function must be called on the browser process UI thread.
 		/// </summary>
 		/// <param name="path">
-		/// The path at which tracing data will be written. If |path| is NULL
+		/// The path at which tracing data will be written. If <paramref name="path"/> is null
 		/// a new temporary file path will be used.
 		/// </param>
 		/// <param name="callback">
 		/// The callback that will be executed once all processes have sent their trace data.
-		/// If |callback| is NULL no trace data will be written.
+		/// If <paramref name="callback"/> is no trace data will be written.
 		/// </param>
+		/// <returns>
+		/// This function will fail and return false if a previous call to
+		/// CefEndTracingAsync is already pending or if <see cref="CefBeginTracing"/>
+		/// was not called.
+		/// </returns>
 		public static bool CefEndTracing(string path, CefEndTracingCallback callback)
 		{
 			if (callback == null)
@@ -1007,6 +1169,10 @@ namespace CefNet
 		/// high-res time. Can be used by clients to synchronize with the time
 		/// information in trace events.
 		/// </summary>
+		/// <returns>
+		/// Returns the current system trace time or, if none is defined, the current
+		/// high-res time.
+		/// </returns>
 		public static long CefNowFromSystemTraceTime()
 		{
 			return CefNativeApi.cef_now_from_system_trace_time();
@@ -1016,7 +1182,7 @@ namespace CefNet
 		/// Returns CEF version information for the libcef library.
 		/// </summary>
 		/// <param name="component">
-		/// The |component| parameter describes which version component will be returned.
+		/// Describes which version component will be returned.
 		/// </param>
 		public static int CefVersionInfo(CefVersionComponent component)
 		{
@@ -1027,7 +1193,7 @@ namespace CefNet
 		/// Returns CEF API hashes for the libcef library.
 		/// </summary>
 		/// <param name="type">
-		/// The |type| parameter describes which hash value will be returned.
+		/// Describes which hash value will be returned.
 		/// </param>
 		public static string CefApiHash(CefApiHashType type)
 		{

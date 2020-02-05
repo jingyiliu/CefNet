@@ -164,7 +164,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Create a new cef_v8value_t object of type undefined.
+		/// Create a new CefV8Value object of type undefined.
 		/// </summary>
 		public static CefV8Value CreateUndefined()
 		{
@@ -172,9 +172,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Create a new cef_v8value_t object of type null.
+		/// Create a new CefV8Value object of type null.
 		/// </summary>
-		/// <remarks>
 		public static CefV8Value CreateNull()
 		{
 			return new CefV8Value(CefNativeApi.cef_v8value_create_null());
