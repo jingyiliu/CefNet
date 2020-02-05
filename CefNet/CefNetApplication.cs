@@ -389,11 +389,21 @@ namespace CefNet
 
 		}
 
+		/// <summary>
+		/// Called after a browser has been created.
+		/// </summary>
+		/// <param name="browser">The browser instance.</param>
+		/// <param name="extraInfo">A read-only value originating from the browser creator or null.</param>
 		protected internal virtual void OnBrowserCreated(CefBrowser browser, CefDictionaryValue extraInfo)
 		{
 
 		}
 
+		/// <summary>
+		/// Called before a browser is destroyed. Release all references to the browser object
+		/// and do not attempt to execute any methods on the browser object after this method returns.
+		/// </summary>
+		/// <param name="browser">The browser instance.</param>
 		protected internal virtual void OnBrowserDestroyed(CefBrowser browser)
 		{
 
