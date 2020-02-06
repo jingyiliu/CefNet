@@ -13,7 +13,6 @@ namespace CefNet.JSInterop
 	{
 		private readonly CefFrame _frame;
 		private readonly long _frameId;
-		private static int _corsIndex;
 
 		public ScriptableObjectProvider(CefFrame frame)
 		{
@@ -217,21 +216,7 @@ namespace CefNet.JSInterop
 			}
 			else
 			{
-				object rv = SendRequest(XrayAction.Get, self, name);
-				if (rv is XrayHandle handle && handle.dataType == XrayDataType.CorsRedirect)
-				{
-					CefFrame frame = Browser.GetFrameByIdent(CefNetApplication.GetCorsQueryFrame(handle.iRaw));
-					if (frame is null)
-						throw new InvalidOperationException();
-					var provider = new ScriptableObjectProvider(frame);
-					var globalObj = new ScriptableObject(provider.GetGlobal(), provider);
-					if (name == "contentDocument")
-					{
-						return globalObj["document"];
-					}
-					return globalObj;
-				}
-				return rv;
+				return SendRequest(XrayAction.Get, self, name);
 			}
 		}
 
@@ -482,15 +467,6 @@ namespace CefNet.JSInterop
 			return target?.Value ?? context.GetGlobal();
 		}
 
-		private static long GetCorsId()
-		{
-			using (var p = Process.GetCurrentProcess())
-			{
-				long pid = p.Id;
-				return (pid << 32) | (long)Interlocked.Increment(ref _corsIndex);
-			}
-		}
-
 		public static long Get(CefV8Context context, XrayObject target, CefListValue args, out CefV8Value value)
 		{
 			CefV8Value thisArg = GetSafeThisArg(context, target);
@@ -504,39 +480,9 @@ namespace CefNet.JSInterop
 			}
 
 			string name = arg3.GetString();
-
-			if ((name == "contentWindow" || name == "contentDocument")
-				&& thisArg.ValidateNodeName("IFRAME", "FRAME"))
-			{
-				value = null;
-				return SendCrossFrameIdentifier(context, thisArg);
-			}
 			value = thisArg.GetValue(name);
 			return 0;
 		}
-
-
-
-		private static long SendCrossFrameIdentifier(CefV8Context context, CefV8Value frameObj)
-		{
-			long corsid = GetCorsId();
-
-			CefV8Value obj = context.CreateObject();
-			obj.SetValue("type", "frameid-query", CefV8PropertyAttribute.None);
-			obj.SetValue("id", corsid.ToString(), CefV8PropertyAttribute.None);
-
-			CefV8Value contentWindow = frameObj.GetValue("contentWindow");
-			CefV8Value fnPostMessage = contentWindow.GetValue("postMessage");
-
-			CefV8Value host = new CefV8Value("*");
-			CefV8Value rv = fnPostMessage.ExecuteFunction(contentWindow, new[] { obj, host });
-			fnPostMessage.Dispose();
-			contentWindow.Dispose();
-			host.Dispose();
-			obj.Dispose();
-			return corsid;
-		}
-
 
 		public static void Set(CefV8Context context, XrayObject target, CefListValue args)
 		{
