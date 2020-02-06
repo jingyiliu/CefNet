@@ -10,6 +10,9 @@ using System.Net.Sockets;
 
 namespace CefNet
 {
+	/// <summary>
+	/// Provides global methods.
+	/// </summary>
 	public static unsafe class CefApi
 	{
 		internal static bool UseUnsafeImplementation = true;
@@ -27,9 +30,9 @@ namespace CefNet
 
 		/// <summary>
 		/// Create a new browser window using the window parameters specified by
-		/// <paramref name="windowInfo"/>. All values will be copied internally and
-		/// the actual window will be created on the UI thread. This function can be
-		/// called on any browser process thread and will not block.
+		/// <paramref name="windowInfo"/>.<para/>
+		/// All values will be copied internally and the actual window will be created on the UI thread.
+		/// This function can be called on any browser process thread and will not block.
 		/// </summary>
 		/// <param name="windowInfo">The CefWindowInfo instance.</param>
 		/// <param name="client">The CefClient instance.</param>
@@ -71,8 +74,8 @@ namespace CefNet
 
 		/// <summary>
 		/// Create a new browser window using the window parameters specified by
-		/// <paramref name="windowInfo"/>. This function can only be called on
-		/// the browser process UI thread.
+		/// <paramref name="windowInfo"/>.<para/>
+		/// This function can only be called on the browser process UI thread.
 		/// </summary>
 		/// <param name="windowInfo">The CefWindowInfo instance.</param>
 		/// <param name="client">The CefClient instance.</param>
@@ -122,15 +125,15 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Post a task for execution on the specified thread. This function may be
-		/// called on any thread. It is an error to request a thread from the wrong
-		/// process.
+		/// Post a task for execution on the specified thread.<para/>
+		/// This function may be called on any thread.
 		/// </summary>
 		/// <param name="threadId">The specified thread id.</param>
 		/// <param name="task">
 		/// A <see cref="CefTask"/> that contains a method to be called on the thread.
 		/// </param>
 		/// <returns>Returns true on success.</returns>
+		/// <remarks>It is an error to request a thread from the wrong process.</remarks>
 		public static bool PostTask(CefThreadId threadId, CefTask task)
 		{
 			if (task == null)
@@ -139,11 +142,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Post a task for delayed execution on the specified thread. This function may be
-		/// called on any thread. It is an error to request a thread from the wrong
-		/// process. Execution will occur asynchronously. Delayed tasks are not
-		/// supported on V8 WebWorker threads and will be executed without the
-		/// specified delay.
+		/// Post a task for delayed execution on the specified thread.<para/>
+		/// This function may be called on any thread. 
 		/// </summary>
 		/// <param name="threadId">The specified thread id.</param>
 		/// <param name="millisecondsDelay">
@@ -151,6 +151,12 @@ namespace CefNet
 		/// </param>
 		/// <param name="task">A <see cref="CefTask"/> instance.</param>
 		/// <returns>Returns true on success.</returns>
+		/// <remarks>
+		/// It is an error to request a thread from the wrong
+		/// process. Execution will occur asynchronously. Delayed tasks are not
+		/// supported on V8 WebWorker threads and will be executed without the
+		/// specified delay.
+		/// </remarks>
 		public static bool PostTask(CefThreadId threadId, CefTask task, long millisecondsDelay)
 		{
 			if (task == null)
@@ -159,8 +165,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Register a new V8 extension with the specified JavaScript extension code and
-		/// handler. This function may only be called on the render process main thread.
+		/// Register a new V8 extension with the specified JavaScript extension code and handler.<para/>
+		/// This function may only be called on the render process main thread.
 		/// </summary>
 		/// <param name="name">An extension name.</param>
 		/// <param name="jscode">
@@ -194,8 +200,8 @@ namespace CefNet
 		/// Register a scheme handler factory with the global request context. This
 		/// function may be called multiple times to change or remove the factory that
 		/// matches the specified <paramref name="schemeName"/> and optional
-		/// <paramref name="domainName"/>. This function may be called on any thread in the
-		/// browser process.
+		/// <paramref name="domainName"/>.<para/>
+		/// This function may be called on any thread in the browser process.
 		/// </summary>
 		/// <param name="schemeName">
 		/// If <paramref name="schemeName"/> is a built-in scheme and no handler is returned by
@@ -226,8 +232,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Clear all scheme handler factories registered with the global request
-		/// context. This function may be called on any thread in the browser process.
+		/// Clear all scheme handler factories registered with the global request context.<para/>
+		/// This function may be called on any thread in the browser process.
 		/// </summary>
 		/// <returns>Returns false on error.</returns>
 		public static bool ClearSchemeHandlerFactories()
@@ -239,18 +245,20 @@ namespace CefNet
 		/// This function should be called from the application entry point function to
 		/// execute a secondary process. It can be used to run secondary processes from
 		/// the browser client executable (default behavior) or from a separate
-		/// executable specified by the <see cref="CefSettings.BrowserSubprocessPath"/> value. If
-		/// called for the browser process (identified by no &quot;type&quot; command-line value)
-		/// it will return immediately with a value of -1. If called for a recognized
-		/// secondary process it will block until the process should exit and then return
-		/// the process exit code.
+		/// executable specified by the <see cref="CefSettings.BrowserSubprocessPath"/> value. 
 		/// </summary>
+		/// <param name="args">Command-line arguments.</param>
 		/// <param name="application">
 		/// The <paramref name="application"/> parameter may be null. 
 		/// </param>
 		/// <param name="windowsSandboxInfo">
 		/// This parameter is only used on Windows and may be null (see cef_sandbox_win.h for details).
 		/// </param>
+		/// <returns>
+		/// If called for the browser process (identified by no &quot;type&quot; command-line value)
+		/// it will return immediately with a value of -1. If called for a recognized secondary process
+		/// it will block until the process should exit and then return the process exit code.
+		/// </returns>
 		public static int ExecuteProcess(CefMainArgs args, CefApp application, IntPtr windowsSandboxInfo)
 		{
 			return CefNativeApi.cef_execute_process((cef_main_args_t*)&args, application != null ? application.GetNativeInstance() : null, (void*)windowsSandboxInfo);
@@ -260,6 +268,8 @@ namespace CefNet
 		/// This function should be called on the main application thread to initialize
 		/// the CEF browser process. 
 		/// </summary>
+		/// <param name="args">Command-line arguments.</param>
+		/// <param name="settings">CEF configuration settings.</param>
 		/// <param name="application">
 		/// The <paramref name="application"/> parameter may be null.
 		/// </param>
@@ -325,7 +335,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Quit the CEF message loop that was started by calling <see cref="RunMessageLoop"/>.
+		/// Quit the CEF message loop that was started by calling <see cref="RunMessageLoop"/>.<para/>
 		/// This function should only be called on the main application thread and only
 		/// if <see cref="RunMessageLoop"/> was used.
 		/// </summary>
@@ -335,9 +345,12 @@ namespace CefNet
 		}
 
 		/// <summary>
+		/// Notifies CEF that a modal loop has been entered/exited.
+		/// </summary>
+		/// <param name="osModalLoop">
 		/// Set to true before calling Windows APIs like TrackPopupMenu that enter a
 		/// modal message loop. Set to false after exiting the modal message loop.
-		/// </summary>
+		/// </param>
 		public static void SetOSModalLoop(bool osModalLoop)
 		{
 			CefNativeApi.cef_set_osmodal_loop(osModalLoop ? 1 : 0);
@@ -356,6 +369,7 @@ namespace CefNet
 		/// <summary>
 		/// Returns true if the certificate status has any error, major or minor.
 		/// </summary>
+		/// <param name="status">A status code.</param>
 		/// <returns>
 		/// Returns true if the certificate status has any error.
 		/// </returns>
@@ -365,14 +379,14 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Get a value wchich indicates that crash reporting is configured using an
+		/// Get a value which indicates that crash reporting is configured using an
 		/// INI-style config file named &quot;crash_reporter.cfg&quot;.
 		/// </summary>
 		/// <remarks>
-		/// On Windows and Linux this file must be placed next to the main application executable.
+		/// On Windows and Linux .cfg file must be placed next to the main application executable.
 		/// On macOS this file must be placed in the top-level app bundle Resources directory
 		/// (e.g. &quot;&lt;appname&gt;.app/Contents/Resources&quot;).<para/>
-		/// See <see cref="https://bitbucket.org/chromiumembedded/cef/wiki/CrashReporting"/> for details.
+		/// See <see href="https://bitbucket.org/chromiumembedded/cef/wiki/CrashReporting"/> for details.
 		/// </remarks>
 		public static bool CrashReportingEnabled
 		{
@@ -382,8 +396,8 @@ namespace CefNet
 		/// <summary>
 		/// Sets or clears a specific key-value pair from the crash metadata.
 		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
+		/// <param name="key">The key of the element to add.</param>
+		/// <param name="value">The value of the element to add. The value can be null.</param>
 		public static void SetCrashKeyValue(string key, string value)
 		{
 			if (string.IsNullOrWhiteSpace(key))
@@ -399,11 +413,12 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Creates a directory and all parent directories if they don&apos;t already exist.
-		/// Returns True on successful creation or if the directory already exists.
-		/// The directory is only readable by the current user. Calling this function on
-		/// the browser process UI or IO threads is not allowed.
+		/// Creates a directory and all parent directories if they don&apos;t already exist.<para/>
+		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
+		/// <param name="fullPath">The directory to create.</param>
+		/// <returns>Returns true on successful creation or if the directory already exists.</returns>
+		/// <remarks>The directory is only readable by the current user.</remarks>
 		public static bool CreateDirectory(string fullPath)
 		{
 			if (string.IsNullOrWhiteSpace(fullPath))
@@ -435,8 +450,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Creates a new directory.  Calling this function on the browser process UI
-		/// or IO threads is not allowed.
+		/// Creates a new directory.<para/>
+		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
 		/// <param name="prefix">
 		/// On Windows if this value is provided the new directory name is in the format
@@ -463,9 +478,10 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Creates a directory within another directory. Calling this function on the browser
-		/// process UI or IO threads is not allowed.
+		/// Creates a directory within another directory.<para/>
+		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
+		/// <param name="basePath">The path to base directory.</param>
 		/// <param name="prefix">
 		/// Extra characters will be appended to <paramref name="prefix"/> to ensure that
 		/// the new directory does not have the same name as an existing directory.
@@ -496,7 +512,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Determines whether the given path refers to an existing directory on disk.
+		/// Determines whether the given path refers to an existing directory on disk.<para/>
 		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
 		/// <param name="path">The path to test.</param>
@@ -515,8 +531,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Deletes the given path whether it&apos;s a file or a directory. Calling this function on the browser process UI or
-		/// IO threads is not allowed.
+		/// Deletes the given path whether it&apos;s a file or a directory.<para/>
+		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
 		/// <param name="path">
 		/// If <paramref name="path"/> is a directory all contents will be deleted.
@@ -543,8 +559,8 @@ namespace CefNet
 
 		/// <summary>
 		/// Writes the contents of <paramref name="sourceDirectory"/> into a zip archive at
-		/// <paramref name="destinationFile"/>. Calling this function on the browser process UI
-		/// or IO threads is not allowed.
+		/// <paramref name="destinationFile"/>.<para/>
+		/// Calling this function on the browser process UI or IO threads is not allowed.
 		/// </summary>
 		/// <param name="sourceDirectory">The source directory.</param>
 		/// <param name="destinationFile">The file to write to.</param>
@@ -572,14 +588,15 @@ namespace CefNet
 
 		/// <summary>
 		/// Loads the existing &quot;Certificate Revocation Lists&quot; file that is managed
-		/// by Google Chrome. Should be called in the browser process after the context has been
-		/// initialized.
+		/// by Google Chrome.<para/>
+		/// Should be called in the browser process after the context has been initialized.
 		/// </summary>
+		/// <param name="path">The path to file.</param>
 		/// <remarks>
 		/// The &quot;Certificate Revocation Lists&quot; file can generally be found in Chrome&apos;s
 		/// User Data directory (e.g. &quot;%LOCALAPPDATA%\Google\Chrome\User Data&quot; on Windows)
 		/// and is updated periodically by Chrome&apos;s component updater service.<para/>
-		/// See <see cref="https://dev.chromium.org/Home/chromium-security/crlsets"/> for background.
+		/// See <see href="https://dev.chromium.org/Home/chromium-security/crlsets"/> for background.
 		/// </remarks>
 		public static void LoadCrlSetsFile(string path)
 		{
@@ -594,7 +611,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Add an entry to the cross-origin access whitelist. This function may be called on any thread. 
+		/// Add an entry to the cross-origin access whitelist.<para/>
+		/// This function may be called on any thread in the browser process. 
 		/// </summary>
 		/// <param name="sourceOrigin">
 		/// The origin allowed to be accessed by the target protocol/domain.
@@ -658,7 +676,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Remove an entry from the cross-origin access whitelist. 
+		/// Remove an entry from the cross-origin access whitelist.<para/>
+		/// This function may be called on any thread in the browser process.
 		/// </summary>
 		/// <param name="sourceOrigin">The origin allowed to be accessed by the target protocol/domain.</param>
 		/// <param name="targetProtocol">The target protocol allowed to access the source origin.</param>
@@ -685,7 +704,10 @@ namespace CefNet
 			}
 		}
 
-		/// <summary>Remove all entries from the cross-origin access whitelist.</summary>
+		/// <summary>
+		/// Remove all entries from the cross-origin access whitelist.<para/>
+		/// This function may be called on any thread in the browser process.
+		/// </summary>
 		/// <returns>Returns flase if the whitelist cannot be accessed.</returns>
 		public static bool ClearCrossOriginWhitelist()
 		{
@@ -910,7 +932,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Retrieve the path associated with the specified <paramref name="key"/>.
+		/// Retrieve the path associated with the specified <paramref name="key"/>.<para/>
 		/// Can be called on any thread in the browser process.
 		/// </summary>
 		/// <param name="key">The path key value.</param>
@@ -928,7 +950,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Launches the process specified via <paramref name="commandLine"/>.
+		/// Launches the process specified via <paramref name="commandLine"/>.<para/>
 		/// Must be called on the browser process TID_PROCESS_LAUNCHER thread.
 		/// </summary>
 		/// <param name="commandLine">The command line arguments.</param>
@@ -959,10 +981,10 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Visit web plugin information. Can be called on any thread in the browser
-		/// process.
+		/// Visit web plugin information.<para/>
+		/// Can be called on any thread in the browser process.
 		/// </summary>
-		/// <param name="visitor"></param>
+		/// <param name="visitor">A <see cref="	CefWebPluginInfoVisitor"/> instance.</param>
 		public static void VisitWebPluginInfo(CefWebPluginInfoVisitor visitor)
 		{
 			if (visitor == null)
@@ -973,8 +995,8 @@ namespace CefNet
 
 		/// <summary>
 		/// Cause the plugin list to refresh the next time it is accessed regardless of
-		/// whether it has already been loaded. Can be called on any thread in the
-		/// browser process.
+		/// whether it has already been loaded.<para/>
+		/// Can be called on any thread in the browser process.
 		/// </summary>
 		public static void RefreshWebPlugins()
 		{
@@ -983,9 +1005,10 @@ namespace CefNet
 
 		/// <summary>
 		/// Unregister an internal plugin. This may be undone the next time 
-		/// <see cref="RefreshWebPlugins"/> is called. Can be called on any
-		/// thread in the browser process.
+		/// <see cref="RefreshWebPlugins"/> is called.<para/>
+		/// Can be called on any thread in the browser process.
 		/// </summary>
+		/// <param name="path">The plugin file path.</param>
 		public static void UnregisterInternalWebPlugin(string path)
 		{
 			if (path == null)
@@ -999,10 +1022,10 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Register a plugin crash. Can be called on any thread in the browser process
-		/// but will be executed on the IO thread.
+		/// Register a plugin crash.<para/>
+		/// Can be called on any thread in the browser process but will be executed on the IO thread.
 		/// </summary>
-		/// <param name="path"></param>
+		/// <param name="path">The plugin file path.</param>
 		public static void RegisterWebPluginCrash(string path)
 		{
 			if (path == null)
@@ -1016,11 +1039,14 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Query if a plugin is unstable. Can be called on any thread in the browser
-		/// process.
+		/// Query if a plugin is unstable.<para/>
+		/// Can be called on any thread in the browser process.
 		/// </summary>
-		/// <param name="path"></param>
-		/// <param name="callback"></param>
+		/// <param name="path">The plugin file path.</param>
+		/// <param name="callback">
+		/// A <see cref="CefWebPluginUnstableCallback"/> instance to receiving unstable
+		/// plugin information.
+		/// </param>
 		public static void IsWebPluginUnstable(string path, CefWebPluginUnstableCallback callback)
 		{
 			if (path == null)
@@ -1036,8 +1062,9 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Register the Widevine CDM plugin. On Linux this function must be called
-		/// before <see cref="Initialize"/> and the registration cannot be changed during runtime.
+		/// Register the Widevine CDM plugin.<para/>
+		/// On Linux this function must be called before <see cref="Initialize"/> and
+		/// the registration cannot be changed during runtime.
 		/// </summary>
 		/// <param name="path">
 		/// Is a directory that must contain the following files:
@@ -1064,7 +1091,7 @@ namespace CefNet
 		/// contents, and building the required directory structure on the local machine.
 		/// The <see cref="CefBrowserHost.StartDownload"/> function and CefZipArchive structure
 		/// can be used to implement this functionality in CEF. Contact Google via
-		/// <see cref="https://www.widevine.com/contact.html"/> for details on CDM download.
+		/// <see href="https://www.widevine.com/contact.html"/> for details on CDM download.
 		/// </remarks>
 		public static void RegisterWidevineCDM(string path, CefRegisterCDMCallback callback)
 		{
@@ -1101,7 +1128,7 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Start tracing events on all processes.
+		/// Start tracing events on all processes.<para/>
 		/// This function must be called on the browser process UI thread.
 		/// </summary>
 		/// <param name="categories">
@@ -1137,7 +1164,8 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Stop tracing events on all processes. This function must be called on the browser process UI thread.
+		/// Stop tracing events on all processes.<para/>
+		/// This function must be called on the browser process UI thread.
 		/// </summary>
 		/// <param name="path">
 		/// The path at which tracing data will be written. If <paramref name="path"/> is null
@@ -1184,6 +1212,7 @@ namespace CefNet
 		/// <param name="component">
 		/// Describes which version component will be returned.
 		/// </param>
+		/// <returns>Returns CEF version component.</returns>
 		public static int CefVersionInfo(CefVersionComponent component)
 		{
 			return CefNativeApi.cef_version_info((int)component);
@@ -1195,6 +1224,7 @@ namespace CefNet
 		/// <param name="type">
 		/// Describes which hash value will be returned.
 		/// </param>
+		/// <returns>Returns CEF API hash.</returns>
 		public static string CefApiHash(CefApiHashType type)
 		{
 			return Marshal.PtrToStringAnsi(CefNativeApi.cef_api_hash((int)type));

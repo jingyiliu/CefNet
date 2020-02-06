@@ -87,6 +87,10 @@ namespace CefNet
 	[UnmanagedFunctionPointer(CallingConvention.Winapi)]
 	internal unsafe delegate int CefIntFunctionDelegate(cef_base_ref_counted_t* self);
 
+	/// <summary>
+	/// Base class for all wrapper classes for ref counted CEF structs.
+	/// </summary>
+	/// <typeparam name="T">A ref counted CEF struct.</typeparam>
 	public abstract class CefBaseRefCounted<T> : CefBaseRefCounted
 		where T : unmanaged
 	{
@@ -127,6 +131,13 @@ namespace CefNet
 			return RefCountedWrapperStruct.FromRefCounted(instance);
 		}
 
+		/// <summary>
+		/// Returns a wrapper for the specified pointer.
+		/// </summary>
+		/// <typeparam name="TClass">The type of wrapper.</typeparam>
+		/// <param name="create">Represents a method that create a new wrapper.</param>
+		/// <param name="instance">The poiter to ref-counted CEF struct.</param>
+		/// <returns>Returns an existing or new wrapper for the specified pointer.</returns>
 		public unsafe static TClass Wrap<TClass>(Func<IntPtr, TClass> create, T* instance)
 			where TClass : CefBaseRefCounted<T>
 		{
@@ -188,6 +199,9 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of <see cref="CefBaseRefCounted{T}"/>.
+		/// </summary>
 		public unsafe CefBaseRefCounted()
 			: base(Allocate(sizeof(T)))
 		{
@@ -203,6 +217,11 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of <see cref="CefBaseRefCounted{T}"/> using
+		/// the specified pointer to a specified CEF struct.
+		/// </summary>
+		/// <param name="instance">The pointer to a specified CEF struct.</param>
 		public unsafe CefBaseRefCounted(cef_base_ref_counted_t* instance)
 			: base(instance)
 		{
@@ -243,6 +262,9 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Gets an unsafe pointer to a specified CEF struct.
+		/// </summary>
 		public new unsafe T* NativeInstance
 		{
 			get
@@ -251,11 +273,26 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Returns a pointer to a specified CEF struct and increments the reference count.
+		/// </summary>
+		/// <returns>
+		/// A pointer to a specified CEF struct.
+		/// </returns>
 		public new unsafe T* GetNativeInstance()
 		{
 			return (T*)base.GetNativeInstance();
 		}
 
+		/// <summary>
+		/// Returns an instance of a type that represents a <see cref="CefBaseRefCounted"/>
+		/// object by an unspecified pointer.
+		/// </summary>
+		/// <param name="ptr">A pointer to a ref-counted struct.</param>
+		/// <returns>
+		/// A <see cref="CefBaseRefCounted"/>-based object that corresponds to the pointer
+		/// or null if wrapper not found.
+		/// </returns>
 		public static CefBaseRefCounted GetInstance(IntPtr ptr)
 		{
 			RefCountedReference reference;
@@ -352,20 +389,35 @@ namespace CefNet
 		}
 	}
 
+	/// <summary>
+	/// Base class for all wrapper classes for ref counted CEF structs.
+	/// </summary>
 	public unsafe abstract class CefBaseRefCounted : IDisposable//, IAsyncDisposable
 	{
 		private protected IntPtr _instance;
 
+		/// <summary>
+		/// Initializes a new instance of <see cref="CefBaseRefCounted"/> using
+		/// the pointer to ref-counted CEF struct.
+		/// </summary>
+		/// <param name="instance">The pointer to a ref-counted CEF struct.</param>
 		public CefBaseRefCounted(cef_base_ref_counted_t* instance)
 		{
 			_instance = new IntPtr(instance);
 		}
 
+		/// <summary>
+		/// Allows an object to try to free resources and perform other cleanup operations
+		/// before it is reclaimed by garbage collection.
+		/// </summary>
 		~CefBaseRefCounted()
 		{
 			Dispose(false);
 		}
 
+		/// <summary>
+		/// Gets an unsafe pointer to a ref-counted struct.
+		/// </summary>
 		public unsafe cef_base_ref_counted_t* NativeInstance
 		{
 			get
@@ -377,6 +429,10 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Returns a pointer to a ref-counted struct and increments the reference count.
+		/// </summary>
+		/// <returns>A pointer to a ref-counted struct.</returns>
 		public unsafe cef_base_ref_counted_t* GetNativeInstance()
 		{
 			cef_base_ref_counted_t* instance = (cef_base_ref_counted_t*)Volatile.Read(ref _instance);
@@ -386,31 +442,56 @@ namespace CefNet
 			return instance;
 		}
 
+		/// <summary>
+		/// Gets a value that indicates whether the object has been disposed.
+		/// </summary>
 		public bool IsDisposed
 		{
 			get { return _instance == IntPtr.Zero; }
 		}
 
+		/// <summary>
+		/// Increments the reference count for the object.
+		/// </summary>
 		public void AddRef()
 		{
 			NativeInstance->AddRef();
 		}
 
+		/// <summary>
+		/// Decrements the reference count for the object.
+		/// </summary>
+		/// <returns>
+		/// Returns true if the resulting reference count is 0.
+		/// </returns>
 		public bool Release()
 		{
 			return NativeInstance->Release() != 0;
 		}
 
+		/// <summary>
+		/// Returns a value which indicates that the current reference count is 1.
+		/// </summary>
+		/// <returns>
+		/// Returns true if the current reference count is 1.
+		/// </returns>
 		public bool HasOneRef()
 		{
 			return NativeInstance->HasOneRef() != 0;
 		}
 
+		/// <summary>
+		/// Returns a value which indicates that the current reference count is at least 1.
+		/// </summary>
+		/// <returns>
+		/// Returns true if the current reference count is at least 1.
+		/// </returns>
 		public bool HasAtLeastOneRef()
 		{
 			return NativeInstance->HasAtLeastOneRef() != 0;
 		}
 
+#pragma warning disable CS1591 // Missing comments
 		protected virtual void Dispose(bool disposing)
 		{
 			ReleaseIfNonNull((cef_base_ref_counted_t*)Interlocked.Exchange(ref _instance, IntPtr.Zero));
@@ -421,6 +502,7 @@ namespace CefNet
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+#pragma warning restore CS1591 // Missing comments
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal static void ReleaseIfNonNull(cef_base_ref_counted_t* instance)
