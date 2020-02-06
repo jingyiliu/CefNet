@@ -136,7 +136,7 @@ namespace CefNet
 		/// </summary>
 		/// <typeparam name="TClass">The type of wrapper.</typeparam>
 		/// <param name="create">Represents a method that create a new wrapper.</param>
-		/// <param name="instance">The poiter to ref-counted CEF struct.</param>
+		/// <param name="instance">The pointer to ref-counted CEF struct.</param>
 		/// <returns>Returns an existing or new wrapper for the specified pointer.</returns>
 		public unsafe static TClass Wrap<TClass>(Func<IntPtr, TClass> create, T* instance)
 			where TClass : CefBaseRefCounted<T>
@@ -401,8 +401,11 @@ namespace CefNet
 		/// the pointer to ref-counted CEF struct.
 		/// </summary>
 		/// <param name="instance">The pointer to a ref-counted CEF struct.</param>
+		/// <exception cref="NullReferenceException"><paramref name="instance"/> is null.</exception>
 		public CefBaseRefCounted(cef_base_ref_counted_t* instance)
 		{
+			if (instance == null)
+				throw new ArgumentNullException(nameof(instance));
 			_instance = new IntPtr(instance);
 		}
 
