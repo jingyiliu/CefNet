@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Runtime.InteropServices;
 
 namespace CefNet
 {
@@ -8,26 +8,27 @@ namespace CefNet
 	{
 		private static Dictionary<IntPtr, ArrayBuffer> Root = new Dictionary<IntPtr, ArrayBuffer>();
 
-		private byte[] _buffer;
+		private GCHandle? _handle;
 
 		public ArrayBuffer(byte[] buffer)
 		{
-			_buffer = buffer;
+			if (buffer == null)
+				throw new ArgumentNullException(nameof(buffer));
+
+			Length = new UIntPtr((ulong)buffer.LongLength);
+			_handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
 			lock (Root)
 			{
-				Root.Add((IntPtr)this.GetBuffer(), this);
+				Root.Add(new IntPtr(this.GetBuffer()), this);
 			}
 		}
 
 		public void* GetBuffer()
 		{
-			return null;
+			return (void*)_handle?.AddrOfPinnedObject();
 		}
 
-		public UIntPtr Length
-		{
-			get { return new UIntPtr(unchecked((uint)_buffer.Length)); }
-		}
+		public UIntPtr Length { get; }
 
 		public override void ReleaseBuffer(IntPtr buffer)
 		{
@@ -36,15 +37,18 @@ namespace CefNet
 			{
 				Root.Remove(buffer, out instance);
 			}
-			if (instance != null)
-			{
-				Dispose();
-			}
+
+			if (instance is null)
+				return;
+
+			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-
+			_handle?.Free();
+			_handle = null;
 		}
 	}
 }
