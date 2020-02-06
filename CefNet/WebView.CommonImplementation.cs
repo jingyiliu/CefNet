@@ -155,13 +155,34 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Gets and sets an extra information specific to the created browser
+		/// that will be passed to <see cref="CefNetApplication.OnBrowserCreated"/>
+		/// in the render process.
+		/// </summary>
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public CefDictionaryValue ExtraInfo
+		{
+			get
+			{
+				if (GetState(State.Created))
+					return null;
+				return GetInitProperty<CefDictionaryValue>(InitialPropertyKeys.ExtraInfo);
+			}
+			set
+			{
+				SetInitProperty(InitialPropertyKeys.ExtraInfo, value);
+			}
+		}
+
 		public string InitialUrl
 		{
 			get
 			{
 				if (GetState(State.Created))
 					return "about:blank";
-				return GetInitProperty<string>(InitialPropertyKeys.Url);
+				return GetInitProperty<string>(InitialPropertyKeys.Url) ?? "about:blank";
 			}
 			set
 			{
