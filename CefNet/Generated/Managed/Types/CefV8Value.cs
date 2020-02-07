@@ -309,21 +309,21 @@ namespace CefNet
 		/// <summary>
 		/// Returns true (1) if the object has a value with the specified identifier.
 		/// </summary>
-		public unsafe virtual bool HasValueBykey(string key)
+		public unsafe virtual bool HasValueByKey(string key)
 		{
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->HasValueBykey(&cstr0) != 0;
+				return NativeInstance->HasValueByKey(&cstr0) != 0;
 			}
 		}
 
 		/// <summary>
 		/// Returns true (1) if the object has a value with the specified identifier.
 		/// </summary>
-		public unsafe virtual bool HasValueByindex(int index)
+		public unsafe virtual bool HasValueByIndex(int index)
 		{
-			return NativeInstance->HasValueByindex(index) != 0;
+			return NativeInstance->HasValueByIndex(index) != 0;
 		}
 
 		/// <summary>
@@ -332,12 +332,12 @@ namespace CefNet
 		/// exception is thrown. For read-only and don&apos;t-delete values this function
 		/// will return true (1) even though deletion failed.
 		/// </summary>
-		public unsafe virtual bool DeleteValueBykey(string key)
+		public unsafe virtual bool DeleteValueByKey(string key)
 		{
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->DeleteValueBykey(&cstr0) != 0;
+				return NativeInstance->DeleteValueByKey(&cstr0) != 0;
 			}
 		}
 
@@ -347,9 +347,9 @@ namespace CefNet
 		/// fails or an exception is thrown. For read-only and don&apos;t-delete values this
 		/// function will return true (1) even though deletion failed.
 		/// </summary>
-		public unsafe virtual bool DeleteValueByindex(int index)
+		public unsafe virtual bool DeleteValueByIndex(int index)
 		{
-			return NativeInstance->DeleteValueByindex(index) != 0;
+			return NativeInstance->DeleteValueByIndex(index) != 0;
 		}
 
 		/// <summary>

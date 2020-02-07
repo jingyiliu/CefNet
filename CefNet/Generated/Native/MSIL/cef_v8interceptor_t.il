@@ -15,7 +15,7 @@
 	.class public cef_v8interceptor_t
 	{
 		// int (*)(_cef_v8interceptor_t* self, const cef_string_t* name, _cef_v8value_t* object, _cef_v8value_t** retval, cef_string_t* exception)*
-		.method public hidebysig int32 GetByname(valuetype CefNet.CApi.cef_string_t* name, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t** retval, valuetype CefNet.CApi.cef_string_t* exception)
+		.method public hidebysig int32 GetByName(valuetype CefNet.CApi.cef_string_t* name, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t** retval, valuetype CefNet.CApi.cef_string_t* exception)
 		{
 			.maxstack 6
 			ldarg.0
@@ -36,7 +36,7 @@
 		}
 
 		// int (*)(_cef_v8interceptor_t* self, int index, _cef_v8value_t* object, _cef_v8value_t** retval, cef_string_t* exception)*
-		.method public hidebysig int32 GetByindex(int32 index, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t** retval, valuetype CefNet.CApi.cef_string_t* exception)
+		.method public hidebysig int32 GetByIndex(int32 index, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t** retval, valuetype CefNet.CApi.cef_string_t* exception)
 		{
 			.maxstack 6
 			ldarg.0
@@ -57,7 +57,7 @@
 		}
 
 		// int (*)(_cef_v8interceptor_t* self, const cef_string_t* name, _cef_v8value_t* object, _cef_v8value_t* value, cef_string_t* exception)*
-		.method public hidebysig int32 SetByname(valuetype CefNet.CApi.cef_string_t* name, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t* 'value', valuetype CefNet.CApi.cef_string_t* exception)
+		.method public hidebysig int32 SetByName(valuetype CefNet.CApi.cef_string_t* name, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t* 'value', valuetype CefNet.CApi.cef_string_t* exception)
 		{
 			.maxstack 6
 			ldarg.0
@@ -78,7 +78,7 @@
 		}
 
 		// int (*)(_cef_v8interceptor_t* self, int index, _cef_v8value_t* object, _cef_v8value_t* value, cef_string_t* exception)*
-		.method public hidebysig int32 SetByindex(int32 index, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t* 'value', valuetype CefNet.CApi.cef_string_t* exception)
+		.method public hidebysig int32 SetByIndex(int32 index, valuetype CefNet.CApi.cef_v8value_t* @object, valuetype CefNet.CApi.cef_v8value_t* 'value', valuetype CefNet.CApi.cef_string_t* exception)
 		{
 			.maxstack 6
 			ldarg.0

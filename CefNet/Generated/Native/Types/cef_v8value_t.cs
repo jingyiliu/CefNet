@@ -366,7 +366,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("has_value_bykey")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int HasValueBykey([Immutable]cef_string_t* key);
+		public unsafe extern int HasValueByKey([Immutable]cef_string_t* key);
 
 		/// <summary>
 		/// int (*)(_cef_v8value_t* self, int index)*
@@ -378,7 +378,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("has_value_byindex")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int HasValueByindex(int index);
+		public unsafe extern int HasValueByIndex(int index);
 
 		/// <summary>
 		/// int (*)(_cef_v8value_t* self, const cef_string_t* key)*
@@ -393,7 +393,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("delete_value_bykey")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int DeleteValueBykey([Immutable]cef_string_t* key);
+		public unsafe extern int DeleteValueByKey([Immutable]cef_string_t* key);
 
 		/// <summary>
 		/// int (*)(_cef_v8value_t* self, int index)*
@@ -408,7 +408,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("delete_value_byindex")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int DeleteValueByindex(int index);
+		public unsafe extern int DeleteValueByIndex(int index);
 
 		/// <summary>
 		/// _cef_v8value_t* (*)(_cef_v8value_t* self, const cef_string_t* key)*

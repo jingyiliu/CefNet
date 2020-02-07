@@ -304,7 +304,7 @@
 		}
 
 		// cef_string_userfree_t (*)(_cef_xml_reader_t* self, int index)*
-		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetAttributeByindex(int32 index)
+		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetAttributeByIndex(int32 index)
 		{
 			.maxstack 3
 			ldarg.0
@@ -322,7 +322,7 @@
 		}
 
 		// cef_string_userfree_t (*)(_cef_xml_reader_t* self, const cef_string_t* qualifiedName)*
-		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetAttributeByqname(valuetype CefNet.CApi.cef_string_t* qualifiedName)
+		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetAttributeByQName(valuetype CefNet.CApi.cef_string_t* qualifiedName)
 		{
 			.maxstack 3
 			ldarg.0
@@ -340,7 +340,7 @@
 		}
 
 		// cef_string_userfree_t (*)(_cef_xml_reader_t* self, const cef_string_t* localName, const cef_string_t* namespaceURI)*
-		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetAttributeBylname(valuetype CefNet.CApi.cef_string_t* localName, valuetype CefNet.CApi.cef_string_t* namespaceURI)
+		.method public hidebysig valuetype CefNet.CApi.cef_string_userfree_t GetAttributeByLName(valuetype CefNet.CApi.cef_string_t* localName, valuetype CefNet.CApi.cef_string_t* namespaceURI)
 		{
 			.maxstack 4
 			ldarg.0
@@ -410,7 +410,7 @@
 		}
 
 		// int (*)(_cef_xml_reader_t* self, int index)*
-		.method public hidebysig int32 MoveToAttributeByindex(int32 index)
+		.method public hidebysig int32 MoveToAttributeByIndex(int32 index)
 		{
 			.maxstack 3
 			ldarg.0
@@ -428,7 +428,7 @@
 		}
 
 		// int (*)(_cef_xml_reader_t* self, const cef_string_t* qualifiedName)*
-		.method public hidebysig int32 MoveToAttributeByqname(valuetype CefNet.CApi.cef_string_t* qualifiedName)
+		.method public hidebysig int32 MoveToAttributeByQName(valuetype CefNet.CApi.cef_string_t* qualifiedName)
 		{
 			.maxstack 3
 			ldarg.0
@@ -446,7 +446,7 @@
 		}
 
 		// int (*)(_cef_xml_reader_t* self, const cef_string_t* localName, const cef_string_t* namespaceURI)*
-		.method public hidebysig int32 MoveToAttributeBylname(valuetype CefNet.CApi.cef_string_t* localName, valuetype CefNet.CApi.cef_string_t* namespaceURI)
+		.method public hidebysig int32 MoveToAttributeByLName(valuetype CefNet.CApi.cef_string_t* localName, valuetype CefNet.CApi.cef_string_t* namespaceURI)
 		{
 			.maxstack 4
 			ldarg.0

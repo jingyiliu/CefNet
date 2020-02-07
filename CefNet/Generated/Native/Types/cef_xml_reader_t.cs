@@ -264,7 +264,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("get_attribute_byindex")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern cef_string_userfree_t GetAttributeByindex(int index);
+		public unsafe extern cef_string_userfree_t GetAttributeByIndex(int index);
 
 		/// <summary>
 		/// cef_string_userfree_t (*)(_cef_xml_reader_t* self, const cef_string_t* qualifiedName)*
@@ -277,7 +277,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("get_attribute_byqname")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern cef_string_userfree_t GetAttributeByqname([Immutable]cef_string_t* qualifiedName);
+		public unsafe extern cef_string_userfree_t GetAttributeByQName([Immutable]cef_string_t* qualifiedName);
 
 		/// <summary>
 		/// cef_string_userfree_t (*)(_cef_xml_reader_t* self, const cef_string_t* localName, const cef_string_t* namespaceURI)*
@@ -291,7 +291,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("get_attribute_bylname")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern cef_string_userfree_t GetAttributeBylname([Immutable]cef_string_t* localName, [Immutable]cef_string_t* namespaceURI);
+		public unsafe extern cef_string_userfree_t GetAttributeByLName([Immutable]cef_string_t* localName, [Immutable]cef_string_t* namespaceURI);
 
 		/// <summary>
 		/// cef_string_userfree_t (*)(_cef_xml_reader_t* self)*
@@ -342,7 +342,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("move_to_attribute_byindex")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int MoveToAttributeByindex(int index);
+		public unsafe extern int MoveToAttributeByIndex(int index);
 
 		/// <summary>
 		/// int (*)(_cef_xml_reader_t* self, const cef_string_t* qualifiedName)*
@@ -355,7 +355,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("move_to_attribute_byqname")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int MoveToAttributeByqname([Immutable]cef_string_t* qualifiedName);
+		public unsafe extern int MoveToAttributeByQName([Immutable]cef_string_t* qualifiedName);
 
 		/// <summary>
 		/// int (*)(_cef_xml_reader_t* self, const cef_string_t* localName, const cef_string_t* namespaceURI)*
@@ -369,7 +369,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("move_to_attribute_bylname")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int MoveToAttributeBylname([Immutable]cef_string_t* localName, [Immutable]cef_string_t* namespaceURI);
+		public unsafe extern int MoveToAttributeByLName([Immutable]cef_string_t* localName, [Immutable]cef_string_t* namespaceURI);
 
 		/// <summary>
 		/// int (*)(_cef_xml_reader_t* self)*

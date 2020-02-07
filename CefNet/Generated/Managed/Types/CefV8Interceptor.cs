@@ -52,7 +52,7 @@ namespace CefNet
 		/// accessor, it will be called only if you don&apos;t set |retval|. Return true (1)
 		/// if interceptor retrieval was handled, false (0) otherwise.
 		/// </summary>
-		public unsafe virtual bool GetByname(string name, CefV8Value @object, ref CefV8Value retval, ref string exception)
+		public unsafe virtual bool GetByName(string name, CefV8Value @object, ref CefV8Value retval, ref string exception)
 		{
 			fixed (char* s0 = name)
 			fixed (char* s3 = exception)
@@ -61,7 +61,7 @@ namespace CefNet
 				cef_v8value_t* p2 = (retval != null) ? retval.GetNativeInstance() : null;
 				cef_v8value_t** pp2 = &p2;
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->GetByname(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
+				var rv = NativeInstance->GetByName(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
 				retval = CefV8Value.Wrap(CefV8Value.Create, p2);
 				exception = CefString.ReadAndFree(&cstr3);
 				return rv;
@@ -76,14 +76,14 @@ namespace CefNet
 		/// |exception| to the exception that will be thrown. Return true (1) if
 		/// interceptor retrieval was handled, false (0) otherwise.
 		/// </summary>
-		public unsafe virtual bool GetByindex(int index, CefV8Value @object, ref CefV8Value retval, ref string exception)
+		public unsafe virtual bool GetByIndex(int index, CefV8Value @object, ref CefV8Value retval, ref string exception)
 		{
 			fixed (char* s3 = exception)
 			{
 				cef_v8value_t* p2 = (retval != null) ? retval.GetNativeInstance() : null;
 				cef_v8value_t** pp2 = &p2;
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->GetByindex(index, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
+				var rv = NativeInstance->GetByIndex(index, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
 				retval = CefV8Value.Wrap(CefV8Value.Create, p2);
 				exception = CefString.ReadAndFree(&cstr3);
 				return rv;
@@ -98,14 +98,14 @@ namespace CefNet
 		/// be called, even when the property has an associated accessor. Return true
 		/// (1) if interceptor assignment was handled, false (0) otherwise.
 		/// </summary>
-		public unsafe virtual bool SetByname(string name, CefV8Value @object, CefV8Value value, ref string exception)
+		public unsafe virtual bool SetByName(string name, CefV8Value @object, CefV8Value value, ref string exception)
 		{
 			fixed (char* s0 = name)
 			fixed (char* s3 = exception)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->SetByname(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
+				var rv = NativeInstance->SetByName(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
 				exception = CefString.ReadAndFree(&cstr3);
 				return rv;
 			}
@@ -118,12 +118,12 @@ namespace CefNet
 		/// |exception| to the exception that will be thrown. Return true (1) if
 		/// interceptor assignment was handled, false (0) otherwise.
 		/// </summary>
-		public unsafe virtual bool SetByindex(int index, CefV8Value @object, CefV8Value value, ref string exception)
+		public unsafe virtual bool SetByIndex(int index, CefV8Value @object, CefV8Value value, ref string exception)
 		{
 			fixed (char* s3 = exception)
 			{
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->SetByindex(index, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
+				var rv = NativeInstance->SetByIndex(index, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
 				exception = CefString.ReadAndFree(&cstr3);
 				return rv;
 			}

@@ -256,21 +256,21 @@ namespace CefNet
 		/// Returns the value of the attribute at the specified 0-based index.
 		/// The resulting string must be freed by calling cef_string_userfree_free().
 		/// </summary>
-		public unsafe virtual string GetAttributeByindex(int index)
+		public unsafe virtual string GetAttributeByIndex(int index)
 		{
-			return CefString.ReadAndFree(NativeInstance->GetAttributeByindex(index));
+			return CefString.ReadAndFree(NativeInstance->GetAttributeByIndex(index));
 		}
 
 		/// <summary>
 		/// Returns the value of the attribute with the specified qualified name.
 		/// The resulting string must be freed by calling cef_string_userfree_free().
 		/// </summary>
-		public unsafe virtual string GetAttributeByqname(string qualifiedName)
+		public unsafe virtual string GetAttributeByQName(string qualifiedName)
 		{
 			fixed (char* s0 = qualifiedName)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = qualifiedName != null ? qualifiedName.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetAttributeByqname(&cstr0));
+				return CefString.ReadAndFree(NativeInstance->GetAttributeByQName(&cstr0));
 			}
 		}
 
@@ -279,14 +279,14 @@ namespace CefNet
 		/// namespace URI.
 		/// The resulting string must be freed by calling cef_string_userfree_free().
 		/// </summary>
-		public unsafe virtual string GetAttributeBylname(string localName, string namespaceURI)
+		public unsafe virtual string GetAttributeByLName(string localName, string namespaceURI)
 		{
 			fixed (char* s0 = localName)
 			fixed (char* s1 = namespaceURI)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = localName != null ? localName.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = namespaceURI != null ? namespaceURI.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetAttributeBylname(&cstr0, &cstr1));
+				return CefString.ReadAndFree(NativeInstance->GetAttributeByLName(&cstr0, &cstr1));
 			}
 		}
 
@@ -294,21 +294,21 @@ namespace CefNet
 		/// Moves the cursor to the attribute at the specified 0-based index. Returns
 		/// true (1) if the cursor position was set successfully.
 		/// </summary>
-		public unsafe virtual bool MoveToAttributeByindex(int index)
+		public unsafe virtual bool MoveToAttributeByIndex(int index)
 		{
-			return NativeInstance->MoveToAttributeByindex(index) != 0;
+			return NativeInstance->MoveToAttributeByIndex(index) != 0;
 		}
 
 		/// <summary>
 		/// Moves the cursor to the attribute with the specified qualified name.
 		/// Returns true (1) if the cursor position was set successfully.
 		/// </summary>
-		public unsafe virtual bool MoveToAttributeByqname(string qualifiedName)
+		public unsafe virtual bool MoveToAttributeByQName(string qualifiedName)
 		{
 			fixed (char* s0 = qualifiedName)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = qualifiedName != null ? qualifiedName.Length : 0 };
-				return NativeInstance->MoveToAttributeByqname(&cstr0) != 0;
+				return NativeInstance->MoveToAttributeByQName(&cstr0) != 0;
 			}
 		}
 
@@ -317,14 +317,14 @@ namespace CefNet
 		/// namespace URI. Returns true (1) if the cursor position was set
 		/// successfully.
 		/// </summary>
-		public unsafe virtual bool MoveToAttributeBylname(string localName, string namespaceURI)
+		public unsafe virtual bool MoveToAttributeByLName(string localName, string namespaceURI)
 		{
 			fixed (char* s0 = localName)
 			fixed (char* s1 = namespaceURI)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = localName != null ? localName.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = namespaceURI != null ? namespaceURI.Length : 0 };
-				return NativeInstance->MoveToAttributeBylname(&cstr0, &cstr1) != 0;
+				return NativeInstance->MoveToAttributeByLName(&cstr0, &cstr1) != 0;
 			}
 		}
 

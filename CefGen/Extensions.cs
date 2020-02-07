@@ -173,6 +173,18 @@ namespace CefGen
 					t += "V8Context";
 				else if (part == "uint")
 					t += "UInt";
+				else if (part == "bykey")
+					t += "ByKey";
+				else if (part == "byindex")
+					t += "ByIndex";
+				else if (part == "byaccessor")
+					t += "ByAccessor";
+				else if (part == "byname")
+					t += "ByName";
+				else if (part == "byqname")
+					t += "ByQName";
+				else if (part == "bylname")
+					t += "ByLName";
 				else
 					t += char.ToUpper(part[0]) + part.Substring(1);
 			}

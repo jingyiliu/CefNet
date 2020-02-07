@@ -50,7 +50,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("get_byname")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int GetByname([Immutable]cef_string_t* name, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception);
+		public unsafe extern int GetByName([Immutable]cef_string_t* name, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception);
 
 		/// <summary>
 		/// int (*)(_cef_v8interceptor_t* self, int index, _cef_v8value_t* object, _cef_v8value_t** retval, cef_string_t* exception)*
@@ -67,7 +67,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("get_byindex")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int GetByindex(int index, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception);
+		public unsafe extern int GetByIndex(int index, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception);
 
 		/// <summary>
 		/// int (*)(_cef_v8interceptor_t* self, const cef_string_t* name, _cef_v8value_t* object, _cef_v8value_t* value, cef_string_t* exception)*
@@ -84,7 +84,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("set_byname")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int SetByname([Immutable]cef_string_t* name, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception);
+		public unsafe extern int SetByName([Immutable]cef_string_t* name, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception);
 
 		/// <summary>
 		/// int (*)(_cef_v8interceptor_t* self, int index, _cef_v8value_t* object, _cef_v8value_t* value, cef_string_t* exception)*
@@ -100,7 +100,7 @@ namespace CefNet.CApi
 		/// </summary>
 		[NativeName("set_byindex")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
-		public unsafe extern int SetByindex(int index, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception);
+		public unsafe extern int SetByIndex(int index, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception);
 	}
 }
 

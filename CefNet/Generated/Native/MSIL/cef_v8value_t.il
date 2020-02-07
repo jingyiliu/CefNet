@@ -459,7 +459,7 @@
 		}
 
 		// int (*)(_cef_v8value_t* self, const cef_string_t* key)*
-		.method public hidebysig int32 HasValueBykey(valuetype CefNet.CApi.cef_string_t* key)
+		.method public hidebysig int32 HasValueByKey(valuetype CefNet.CApi.cef_string_t* key)
 		{
 			.maxstack 3
 			ldarg.0
@@ -477,7 +477,7 @@
 		}
 
 		// int (*)(_cef_v8value_t* self, int index)*
-		.method public hidebysig int32 HasValueByindex(int32 index)
+		.method public hidebysig int32 HasValueByIndex(int32 index)
 		{
 			.maxstack 3
 			ldarg.0
@@ -495,7 +495,7 @@
 		}
 
 		// int (*)(_cef_v8value_t* self, const cef_string_t* key)*
-		.method public hidebysig int32 DeleteValueBykey(valuetype CefNet.CApi.cef_string_t* key)
+		.method public hidebysig int32 DeleteValueByKey(valuetype CefNet.CApi.cef_string_t* key)
 		{
 			.maxstack 3
 			ldarg.0
@@ -513,7 +513,7 @@
 		}
 
 		// int (*)(_cef_v8value_t* self, int index)*
-		.method public hidebysig int32 DeleteValueByindex(int32 index)
+		.method public hidebysig int32 DeleteValueByIndex(int32 index)
 		{
 			.maxstack 3
 			ldarg.0
