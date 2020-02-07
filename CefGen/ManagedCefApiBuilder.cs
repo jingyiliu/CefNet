@@ -1191,7 +1191,7 @@ namespace CefGen
 						}
 						else
 						{
-							wrappers.AppendFormat("{2} p{0} = {1}.GetNativeInstance();\r\n", index, arg.Parameter.Name, arg.NativeTypeName.Replace("**", "*"));
+							wrappers.AppendFormat("{2} p{0} = ({1} != null) ? {1}.GetNativeInstance() : null;\r\n", index, arg.Parameter.Name, arg.NativeTypeName.Replace("**", "*"));
 							wrappers.AppendFormat("{2} pp{0} = &p{0};\r\n", index, arg.Parameter.Name, arg.NativeTypeName);
 							disposers.AppendFormat("{1} = {2}.Wrap({2}.Create, p{0});\r\n", index, arg.Parameter.Name, arg.Parameter.Type);
 							args.Add("pp" + index.ToString());

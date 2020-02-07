@@ -58,7 +58,7 @@ namespace CefNet
 			fixed (char* s3 = exception)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				cef_v8value_t* p2 = retval.GetNativeInstance();
+				cef_v8value_t* p2 = (retval != null) ? retval.GetNativeInstance() : null;
 				cef_v8value_t** pp2 = &p2;
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
 				var rv = NativeInstance->GetByname(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
@@ -80,7 +80,7 @@ namespace CefNet
 		{
 			fixed (char* s3 = exception)
 			{
-				cef_v8value_t* p2 = retval.GetNativeInstance();
+				cef_v8value_t* p2 = (retval != null) ? retval.GetNativeInstance() : null;
 				cef_v8value_t** pp2 = &p2;
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
 				var rv = NativeInstance->GetByindex(index, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;

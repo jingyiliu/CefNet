@@ -146,9 +146,9 @@ namespace CefNet
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = code != null ? code.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = scriptUrl != null ? scriptUrl.Length : 0 };
-				cef_v8value_t* p3 = retval.GetNativeInstance();
+				cef_v8value_t* p3 = (retval != null) ? retval.GetNativeInstance() : null;
 				cef_v8value_t** pp3 = &p3;
-				cef_v8exception_t* p4 = exception.GetNativeInstance();
+				cef_v8exception_t* p4 = (exception != null) ? exception.GetNativeInstance() : null;
 				cef_v8exception_t** pp4 = &p4;
 				var rv = NativeInstance->Eval(&cstr0, &cstr1, startLine, pp3, pp4) != 0;
 				retval = CefV8Value.Wrap(CefV8Value.Create, p3);
