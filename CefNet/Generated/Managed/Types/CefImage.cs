@@ -50,7 +50,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsEmpty() != 0;
+				return SafeCall(NativeInstance->IsEmpty() != 0);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetWidth();
+				return SafeCall((long)NativeInstance->GetWidth());
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetHeight();
+				return SafeCall((long)NativeInstance->GetHeight());
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefImage that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int AddBitmap(float scaleFactor, int pixelWidth, int pixelHeight, CefColorType colorType, CefAlphaType alphaType, IntPtr pixelData, long pixelDataSize)
 		{
-			return NativeInstance->AddBitmap(scaleFactor, pixelWidth, pixelHeight, colorType, alphaType, (void*)pixelData, new UIntPtr((ulong)pixelDataSize));
+			return SafeCall(NativeInstance->AddBitmap(scaleFactor, pixelWidth, pixelHeight, colorType, alphaType, (void*)pixelData, new UIntPtr((ulong)pixelDataSize)));
 		}
 
 		/// <summary>
@@ -104,7 +104,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int AddPng(float scaleFactor, IntPtr pngData, long pngDataSize)
 		{
-			return NativeInstance->AddPng(scaleFactor, (void*)pngData, new UIntPtr((ulong)pngDataSize));
+			return SafeCall(NativeInstance->AddPng(scaleFactor, (void*)pngData, new UIntPtr((ulong)pngDataSize)));
 		}
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int AddJpeg(float scaleFactor, IntPtr jpegData, long jpegDataSize)
 		{
-			return NativeInstance->AddJpeg(scaleFactor, (void*)jpegData, new UIntPtr((ulong)jpegDataSize));
+			return SafeCall(NativeInstance->AddJpeg(scaleFactor, (void*)jpegData, new UIntPtr((ulong)jpegDataSize)));
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool HasRepresentation(float scaleFactor)
 		{
-			return NativeInstance->HasRepresentation(scaleFactor) != 0;
+			return SafeCall(NativeInstance->HasRepresentation(scaleFactor) != 0);
 		}
 
 		/// <summary>
@@ -131,7 +131,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool RemoveRepresentation(float scaleFactor)
 		{
-			return NativeInstance->RemoveRepresentation(scaleFactor) != 0;
+			return SafeCall(NativeInstance->RemoveRepresentation(scaleFactor) != 0);
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace CefNet
 			fixed (int* p2 = &pixelWidth)
 			fixed (int* p3 = &pixelHeight)
 			{
-				return NativeInstance->GetRepresentationInfo(scaleFactor, p1, p2, p3) != 0;
+				return SafeCall(NativeInstance->GetRepresentationInfo(scaleFactor, p1, p2, p3) != 0);
 			}
 		}
 
@@ -163,7 +163,7 @@ namespace CefNet
 			fixed (int* p3 = &pixelWidth)
 			fixed (int* p4 = &pixelHeight)
 			{
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetAsBitmap(scaleFactor, colorType, alphaType, p3, p4));
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetAsBitmap(scaleFactor, colorType, alphaType, p3, p4)));
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace CefNet
 			fixed (int* p2 = &pixelWidth)
 			fixed (int* p3 = &pixelHeight)
 			{
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetAsPng(scaleFactor, withTransparency ? 1 : 0, p2, p3));
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetAsPng(scaleFactor, withTransparency ? 1 : 0, p2, p3)));
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace CefNet
 			fixed (int* p2 = &pixelWidth)
 			fixed (int* p3 = &pixelHeight)
 			{
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetAsJpeg(scaleFactor, quality ? 1 : 0, p2, p3));
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetAsJpeg(scaleFactor, quality ? 1 : 0, p2, p3)));
 			}
 		}
 	}

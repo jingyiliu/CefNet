@@ -51,7 +51,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefTaskRunner.Wrap(CefTaskRunner.Create, NativeInstance->GetTaskRunner());
+				return SafeCall(CefTaskRunner.Wrap(CefTaskRunner.Create, NativeInstance->GetTaskRunner()));
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefBrowser.Wrap(CefBrowser.Create, NativeInstance->GetBrowser());
+				return SafeCall(CefBrowser.Wrap(CefBrowser.Create, NativeInstance->GetBrowser()));
 			}
 		}
 
@@ -88,7 +88,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFrame());
+				return SafeCall(CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFrame()));
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefV8Value GetGlobal()
 		{
-			return CefV8Value.Wrap(CefV8Value.Create, NativeInstance->GetGlobal());
+			return SafeCall(CefV8Value.Wrap(CefV8Value.Create, NativeInstance->GetGlobal()));
 		}
 
 		/// <summary>
@@ -110,7 +110,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Enter()
 		{
-			return NativeInstance->Enter() != 0;
+			return SafeCall(NativeInstance->Enter() != 0);
 		}
 
 		/// <summary>
@@ -119,7 +119,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Exit()
 		{
-			return NativeInstance->Exit() != 0;
+			return SafeCall(NativeInstance->Exit() != 0);
 		}
 
 		/// <summary>
@@ -128,7 +128,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefV8Context that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -153,6 +153,7 @@ namespace CefNet
 				var rv = NativeInstance->Eval(&cstr0, &cstr1, startLine, pp3, pp4) != 0;
 				retval = CefV8Value.Wrap(CefV8Value.Create, p3);
 				exception = CefV8Exception.Wrap(CefV8Exception.Create, p4);
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}

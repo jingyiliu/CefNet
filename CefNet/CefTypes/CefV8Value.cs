@@ -509,7 +509,7 @@ namespace CefNet
 				if (CefApi.UseUnsafeImplementation)
 				{
 					RefCountedWrapperStruct* ws = RefCountedWrapperStruct.FromRefCounted(this.NativeInstance);
-					return ((V8ValueImplLayout*)(ws->cppObject))->Type;
+					return SafeCall(((V8ValueImplLayout*)(ws->cppObject))->Type);
 				}
 
 				if (NativeInstance->IsUndefined() != 0) // TYPE_UNDEFINED
@@ -530,6 +530,7 @@ namespace CefNet
 					return CefV8ValueType.Object;
 				if (NativeInstance->IsUInt() != 0) // TYPE_INT, TYPE_UINT
 					return CefV8ValueType.UInt;
+				GC.KeepAlive(this);
 				return CefV8ValueType.Invalid;
 			}
 		}
@@ -551,7 +552,7 @@ namespace CefNet
 		/// </returns>
 		public unsafe virtual CefV8Value ExecuteFunction(CefV8Value thisArg)
 		{
-			return CefV8Value.Wrap(CefV8Value.Create, NativeInstance->ExecuteFunction(thisArg != null ? thisArg.GetNativeInstance() : null, new UIntPtr(), null));
+			return SafeCall(CefV8Value.Wrap(CefV8Value.Create, NativeInstance->ExecuteFunction(thisArg != null ? thisArg.GetNativeInstance() : null, new UIntPtr(), null)));
 		}
 
 		/// <summary>
@@ -619,6 +620,7 @@ namespace CefNet
 					throw new InvalidOperationException();
 				self = value;
 			}
+			GC.KeepAlive(this);
 			return CefV8Value.Wrap(CefV8Value.Create, value);
 		}
 

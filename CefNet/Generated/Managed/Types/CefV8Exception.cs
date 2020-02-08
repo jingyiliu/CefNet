@@ -47,7 +47,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetMessage());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetMessage()));
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetSourceLine());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSourceLine()));
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetScriptResourceName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetScriptResourceName()));
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetLineNumber();
+				return SafeCall(NativeInstance->GetLineNumber());
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetStartPosition();
+				return SafeCall(NativeInstance->GetStartPosition());
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetEndPosition();
+				return SafeCall(NativeInstance->GetEndPosition());
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetStartColumn();
+				return SafeCall(NativeInstance->GetStartColumn());
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetEndColumn();
+				return SafeCall(NativeInstance->GetEndColumn());
 			}
 		}
 	}

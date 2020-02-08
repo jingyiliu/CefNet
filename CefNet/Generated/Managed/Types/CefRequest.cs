@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetUrl()));
 			}
 			set
 			{
@@ -67,6 +67,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetUrl(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -79,7 +80,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetMethod());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetMethod()));
 			}
 			set
 			{
@@ -88,6 +89,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetMethod(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -99,7 +101,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetReferrerUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetReferrerUrl()));
 			}
 		}
 
@@ -110,7 +112,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetReferrerPolicy();
+				return SafeCall(NativeInstance->GetReferrerPolicy());
 			}
 		}
 
@@ -121,11 +123,12 @@ namespace CefNet
 		{
 			get
 			{
-				return CefPostData.Wrap(CefPostData.Create, NativeInstance->GetPostData());
+				return SafeCall(CefPostData.Wrap(CefPostData.Create, NativeInstance->GetPostData()));
 			}
 			set
 			{
 				NativeInstance->SetPostData((value != null) ? value.GetNativeInstance() : null);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -137,11 +140,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetFlags();
+				return SafeCall(NativeInstance->GetFlags());
 			}
 			set
 			{
 				NativeInstance->SetFlags(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -154,7 +158,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFirstPartyForCookies());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFirstPartyForCookies()));
 			}
 			set
 			{
@@ -163,6 +167,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetFirstPartyForCookies(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -174,7 +179,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetResourceType();
+				return SafeCall(NativeInstance->GetResourceType());
 			}
 		}
 
@@ -187,7 +192,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetTransitionType();
+				return SafeCall(NativeInstance->GetTransitionType());
 			}
 		}
 
@@ -200,7 +205,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetIdentifier();
+				return SafeCall(NativeInstance->GetIdentifier());
 			}
 		}
 
@@ -216,6 +221,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = referrerUrl != null ? referrerUrl.Length : 0 };
 				NativeInstance->SetReferrer(&cstr0, policy);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -224,6 +230,7 @@ namespace CefNet
 		public unsafe virtual void GetHeaderMap(CefStringMultimap headerMap)
 		{
 			NativeInstance->GetHeaderMap(headerMap);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -237,7 +244,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetHeaderByName(&cstr0));
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetHeaderByName(&cstr0)));
 			}
 		}
 
@@ -256,6 +263,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
 				NativeInstance->SetHeaderByName(&cstr0, &cstr1, overwrite ? 1 : 0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -270,6 +278,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = method != null ? method.Length : 0 };
 				NativeInstance->Set(&cstr0, &cstr1, (postData != null) ? postData.GetNativeInstance() : null, headerMap);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -279,6 +288,7 @@ namespace CefNet
 		public unsafe virtual void SetHeaderMap(CefStringMultimap headerMap)
 		{
 			NativeInstance->SetHeaderMap(headerMap);
+			GC.KeepAlive(this);
 		}
 	}
 }

@@ -51,6 +51,7 @@ namespace CefNet
 		public unsafe virtual void SetSupportedSchemes(CefStringList schemes, bool includeDefaults, CefCompletionCallback callback)
 		{
 			NativeInstance->SetSupportedSchemes(schemes.GetNativeInstance(), includeDefaults ? 1 : 0, (callback != null) ? callback.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -60,7 +61,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool VisitAllCookies(CefCookieVisitor visitor)
 		{
-			return NativeInstance->VisitAllCookies((visitor != null) ? visitor.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->VisitAllCookies((visitor != null) ? visitor.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -75,7 +76,7 @@ namespace CefNet
 			fixed (char* s0 = url)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = url != null ? url.Length : 0 };
-				return NativeInstance->VisitUrlCookies(&cstr0, includeHttpOnly ? 1 : 0, (visitor != null) ? visitor.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->VisitUrlCookies(&cstr0, includeHttpOnly ? 1 : 0, (visitor != null) ? visitor.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -93,7 +94,7 @@ namespace CefNet
 			fixed (char* s0 = url)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = url != null ? url.Length : 0 };
-				return NativeInstance->SetCookie(&cstr0, (cef_cookie_t*)&cookie, (callback != null) ? callback.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->SetCookie(&cstr0, (cef_cookie_t*)&cookie, (callback != null) ? callback.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -115,7 +116,7 @@ namespace CefNet
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = url != null ? url.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = cookieName != null ? cookieName.Length : 0 };
-				return NativeInstance->DeleteCookies(&cstr0, &cstr1, (callback != null) ? callback.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->DeleteCookies(&cstr0, &cstr1, (callback != null) ? callback.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -126,7 +127,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool FlushStore(CefCompletionCallback callback)
 		{
-			return NativeInstance->FlushStore((callback != null) ? callback.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->FlushStore((callback != null) ? callback.GetNativeInstance() : null) != 0);
 		}
 	}
 }

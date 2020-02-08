@@ -47,7 +47,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefX509CertPrincipal.Wrap(CefX509CertPrincipal.Create, NativeInstance->GetSubject());
+				return SafeCall(CefX509CertPrincipal.Wrap(CefX509CertPrincipal.Create, NativeInstance->GetSubject()));
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefX509CertPrincipal.Wrap(CefX509CertPrincipal.Create, NativeInstance->GetIssuer());
+				return SafeCall(CefX509CertPrincipal.Wrap(CefX509CertPrincipal.Create, NativeInstance->GetIssuer()));
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetSerialNumber());
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetSerialNumber()));
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetValidStart();
+				return SafeCall(NativeInstance->GetValidStart());
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetValidExpiry();
+				return SafeCall(NativeInstance->GetValidExpiry());
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetDEREncoded());
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetDEREncoded()));
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetPEMEncoded());
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetPEMEncoded()));
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetIssuerChainSize();
+				return SafeCall((long)NativeInstance->GetIssuerChainSize());
 			}
 		}
 
@@ -154,6 +154,7 @@ namespace CefNet
 				chain[i] = CefBinaryValue.Wrap(CefBinaryValue.Create, *(arr1 + i)); 
 			}
 			Marshal.FreeHGlobal((IntPtr)arr1);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -178,6 +179,7 @@ namespace CefNet
 				chain[i] = CefBinaryValue.Wrap(CefBinaryValue.Create, *(arr1 + i)); 
 			}
 			Marshal.FreeHGlobal((IntPtr)arr1);
+			GC.KeepAlive(this);
 		}
 	}
 }

@@ -51,7 +51,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetScriptName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetScriptName()));
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetScriptNameOrSourceUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetScriptNameOrSourceUrl()));
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFunctionName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFunctionName()));
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetLineNumber();
+				return SafeCall(NativeInstance->GetLineNumber());
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetColumn();
+				return SafeCall(NativeInstance->GetColumn());
 			}
 		}
 
@@ -125,7 +125,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsEval() != 0;
+				return SafeCall(NativeInstance->IsEval() != 0);
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsConstructor() != 0;
+				return SafeCall(NativeInstance->IsConstructor() != 0);
 			}
 		}
 	}

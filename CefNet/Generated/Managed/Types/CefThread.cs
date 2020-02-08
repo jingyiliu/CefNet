@@ -54,7 +54,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefTaskRunner.Wrap(CefTaskRunner.Create, NativeInstance->GetTaskRunner());
+				return SafeCall(CefTaskRunner.Wrap(CefTaskRunner.Create, NativeInstance->GetTaskRunner()));
 			}
 		}
 
@@ -66,7 +66,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetPlatformThreadId();
+				return SafeCall(NativeInstance->GetPlatformThreadId());
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsRunning() != 0;
+				return SafeCall(NativeInstance->IsRunning() != 0);
 			}
 		}
 
@@ -90,6 +90,7 @@ namespace CefNet
 		public unsafe virtual void Stop()
 		{
 			NativeInstance->Stop();
+			GC.KeepAlive(this);
 		}
 	}
 }

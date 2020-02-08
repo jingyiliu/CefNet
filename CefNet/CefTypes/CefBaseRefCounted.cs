@@ -8,6 +8,7 @@ using CefNet.CApi;
 using CefNet.Unsafe;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -514,6 +515,20 @@ namespace CefNet
 				instance->Release();
 		}
 
+		/// <summary>
+		/// Makes himself ineligible for garbage collection from the start of the current routine
+		/// to the point where this method is called (like &apos;GC.KeepAlive(this)&apos;) and
+		/// returns passed <paramref name="result"/>.
+		/// </summary>
+		/// <typeparam name="T">Any type.</typeparam>
+		/// <param name="result">Any value of <typeparamref name="T"/> type.</param>
+		/// <returns>Returns the passed parameter of <typeparamref name="T"/> type.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public T SafeCall<T>(T result)
+		{
+			return result;
+		}
 	}
 
 	internal unsafe sealed class UnknownRefCounted

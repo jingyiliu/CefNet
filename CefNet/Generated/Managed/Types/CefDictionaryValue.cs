@@ -49,7 +49,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsOwned() != 0;
+				return SafeCall(NativeInstance->IsOwned() != 0);
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetSize();
+				return SafeCall((long)NativeInstance->GetSize());
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefDictionaryValue that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsEqual(CefDictionaryValue that)
 		{
-			return NativeInstance->IsEqual((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsEqual((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefDictionaryValue Copy(bool excludeEmptyChildren)
 		{
-			return CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->Copy(excludeEmptyChildren ? 1 : 0));
+			return SafeCall(CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->Copy(excludeEmptyChildren ? 1 : 0)));
 		}
 
 		/// <summary>
@@ -120,7 +120,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Clear()
 		{
-			return NativeInstance->Clear() != 0;
+			return SafeCall(NativeInstance->Clear() != 0);
 		}
 
 		/// <summary>
@@ -131,7 +131,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->HasKey(&cstr0) != 0;
+				return SafeCall(NativeInstance->HasKey(&cstr0) != 0);
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetKeys(CefStringList keys)
 		{
-			return NativeInstance->GetKeys(keys.GetNativeInstance());
+			return SafeCall(NativeInstance->GetKeys(keys.GetNativeInstance()));
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->Remove(&cstr0) != 0;
+				return SafeCall(NativeInstance->Remove(&cstr0) != 0);
 			}
 		}
 
@@ -164,7 +164,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->GetType(&cstr0);
+				return SafeCall(NativeInstance->GetType(&cstr0));
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return CefValue.Wrap(CefValue.Create, NativeInstance->GetValue(&cstr0));
+				return SafeCall(CefValue.Wrap(CefValue.Create, NativeInstance->GetValue(&cstr0)));
 			}
 		}
 
@@ -192,7 +192,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->GetBool(&cstr0);
+				return SafeCall(NativeInstance->GetBool(&cstr0));
 			}
 		}
 
@@ -204,7 +204,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->GetInt(&cstr0);
+				return SafeCall(NativeInstance->GetInt(&cstr0));
 			}
 		}
 
@@ -216,7 +216,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->GetDouble(&cstr0);
+				return SafeCall(NativeInstance->GetDouble(&cstr0));
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetString(&cstr0));
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetString(&cstr0)));
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetBinary(&cstr0));
+				return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetBinary(&cstr0)));
 			}
 		}
 
@@ -256,7 +256,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetDictionary(&cstr0));
+				return SafeCall(CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetDictionary(&cstr0)));
 			}
 		}
 
@@ -270,7 +270,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return CefListValue.Wrap(CefListValue.Create, NativeInstance->GetList(&cstr0));
+				return SafeCall(CefListValue.Wrap(CefListValue.Create, NativeInstance->GetList(&cstr0)));
 			}
 		}
 
@@ -287,7 +287,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetValue(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->SetValue(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -300,7 +300,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetNull(&cstr0) != 0;
+				return SafeCall(NativeInstance->SetNull(&cstr0) != 0);
 			}
 		}
 
@@ -313,7 +313,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetBool(&cstr0, value ? 1 : 0) != 0;
+				return SafeCall(NativeInstance->SetBool(&cstr0, value ? 1 : 0) != 0);
 			}
 		}
 
@@ -326,7 +326,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetInt(&cstr0, value) != 0;
+				return SafeCall(NativeInstance->SetInt(&cstr0, value) != 0);
 			}
 		}
 
@@ -339,7 +339,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetDouble(&cstr0, value) != 0;
+				return SafeCall(NativeInstance->SetDouble(&cstr0, value) != 0);
 			}
 		}
 
@@ -354,7 +354,7 @@ namespace CefNet
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
-				return NativeInstance->SetString(&cstr0, &cstr1) != 0;
+				return SafeCall(NativeInstance->SetString(&cstr0, &cstr1) != 0);
 			}
 		}
 
@@ -370,7 +370,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetBinary(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->SetBinary(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -386,7 +386,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetDictionary(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->SetDictionary(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -402,7 +402,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetList(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->SetList(&cstr0, (value != null) ? value.GetNativeInstance() : null) != 0);
 			}
 		}
 	}

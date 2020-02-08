@@ -48,7 +48,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefBrowser.Wrap(CefBrowser.Create, NativeInstance->GetBrowser());
+				return SafeCall(CefBrowser.Wrap(CefBrowser.Create, NativeInstance->GetBrowser()));
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetWindowHandle();
+				return SafeCall(NativeInstance->GetWindowHandle());
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetOpenerWindowHandle();
+				return SafeCall(NativeInstance->GetOpenerWindowHandle());
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasView() != 0;
+				return SafeCall(NativeInstance->HasView() != 0);
 			}
 		}
 
@@ -97,7 +97,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefClient.Wrap(CefClient.Create, NativeInstance->GetClient());
+				return SafeCall(CefClient.Wrap(CefClient.Create, NativeInstance->GetClient()));
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefRequestContext.Wrap(CefRequestContext.Create, NativeInstance->GetRequestContext());
+				return SafeCall(CefRequestContext.Wrap(CefRequestContext.Create, NativeInstance->GetRequestContext()));
 			}
 		}
 
@@ -120,11 +120,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetZoomLevel();
+				return SafeCall(NativeInstance->GetZoomLevel());
 			}
 			set
 			{
 				NativeInstance->SetZoomLevel(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -136,7 +137,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasDevTools() != 0;
+				return SafeCall(NativeInstance->HasDevTools() != 0);
 			}
 		}
 
@@ -147,11 +148,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsMouseCursorChangeDisabled() != 0;
+				return SafeCall(NativeInstance->IsMouseCursorChangeDisabled() != 0);
 			}
 			set
 			{
 				NativeInstance->SetMouseCursorChangeDisabled(value ? 1 : 0);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -162,7 +164,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsWindowRenderingDisabled() != 0;
+				return SafeCall(NativeInstance->IsWindowRenderingDisabled() != 0);
 			}
 		}
 
@@ -177,11 +179,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetWindowlessFrameRate();
+				return SafeCall(NativeInstance->GetWindowlessFrameRate());
 			}
 			set
 			{
 				NativeInstance->SetWindowlessFrameRate(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -193,7 +196,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefNavigationEntry.Wrap(CefNavigationEntry.Create, NativeInstance->GetVisibleNavigationEntry());
+				return SafeCall(CefNavigationEntry.Wrap(CefNavigationEntry.Create, NativeInstance->GetVisibleNavigationEntry()));
 			}
 		}
 
@@ -205,7 +208,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefExtension.Wrap(CefExtension.Create, NativeInstance->GetExtension());
+				return SafeCall(CefExtension.Wrap(CefExtension.Create, NativeInstance->GetExtension()));
 			}
 		}
 
@@ -218,7 +221,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsBackgroundHost() != 0;
+				return SafeCall(NativeInstance->IsBackgroundHost() != 0);
 			}
 		}
 
@@ -230,11 +233,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsAudioMuted() != 0;
+				return SafeCall(NativeInstance->IsAudioMuted() != 0);
 			}
 			set
 			{
 				NativeInstance->SetAudioMuted(value ? 1 : 0);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -251,6 +255,7 @@ namespace CefNet
 		public unsafe virtual void CloseBrowser(bool forceClose)
 		{
 			NativeInstance->CloseBrowser(forceClose ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -263,7 +268,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool TryCloseBrowser()
 		{
-			return NativeInstance->TryCloseBrowser() != 0;
+			return SafeCall(NativeInstance->TryCloseBrowser() != 0);
 		}
 
 		/// <summary>
@@ -291,6 +296,7 @@ namespace CefNet
 				var cstr2 = new cef_string_t { Str = s2, Length = defaultFilePath != null ? defaultFilePath.Length : 0 };
 				NativeInstance->RunFileDialog(mode, &cstr1, &cstr2, acceptFilters.GetNativeInstance(), selectedAcceptFilter ? 1 : 0, (callback != null) ? callback.GetNativeInstance() : null);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -303,6 +309,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = url != null ? url.Length : 0 };
 				NativeInstance->StartDownload(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -326,6 +333,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = imageUrl != null ? imageUrl.Length : 0 };
 				NativeInstance->DownloadImage(&cstr0, isFavicon ? 1 : 0, maxImageSize, bypassCache ? 1 : 0, (callback != null) ? callback.GetNativeInstance() : null);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -334,6 +342,7 @@ namespace CefNet
 		public unsafe virtual void Print()
 		{
 			NativeInstance->Print();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -349,6 +358,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = path != null ? path.Length : 0 };
 				NativeInstance->PrintToPdf(&cstr0, (cef_pdf_print_settings_t*)&settings, (callback != null) ? callback.GetNativeInstance() : null);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -369,6 +379,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = searchText != null ? searchText.Length : 0 };
 				NativeInstance->Find(identifier, &cstr1, forward ? 1 : 0, matchCase ? 1 : 0, findNext ? 1 : 0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -377,6 +388,7 @@ namespace CefNet
 		public unsafe virtual void StopFinding(bool clearSelection)
 		{
 			NativeInstance->StopFinding(clearSelection ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -391,6 +403,7 @@ namespace CefNet
 		public unsafe virtual void ShowDevTools(CefWindowInfo windowInfo, CefClient client, CefBrowserSettings settings, CefPoint inspectElementAt)
 		{
 			NativeInstance->ShowDevTools(windowInfo.GetNativeInstance(), (client != null) ? client.GetNativeInstance() : null, settings.GetNativeInstance(), (cef_point_t*)&inspectElementAt);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -399,6 +412,7 @@ namespace CefNet
 		public unsafe virtual void CloseDevTools()
 		{
 			NativeInstance->CloseDevTools();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -410,6 +424,7 @@ namespace CefNet
 		public unsafe virtual void GetNavigationEntries(CefNavigationEntryVisitor visitor, bool currentOnly)
 		{
 			NativeInstance->GetNavigationEntries((visitor != null) ? visitor.GetNativeInstance() : null, currentOnly ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -423,6 +438,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = word != null ? word.Length : 0 };
 				NativeInstance->ReplaceMisspelling(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -435,6 +451,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = word != null ? word.Length : 0 };
 				NativeInstance->AddWordToDictionary(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -446,6 +463,7 @@ namespace CefNet
 		public unsafe virtual void WasResized()
 		{
 			NativeInstance->WasResized();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -456,6 +474,7 @@ namespace CefNet
 		public unsafe virtual void WasHidden(int hidden)
 		{
 			NativeInstance->WasHidden(hidden);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -469,6 +488,7 @@ namespace CefNet
 		public unsafe virtual void NotifyScreenInfoChanged()
 		{
 			NativeInstance->NotifyScreenInfoChanged();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -479,6 +499,7 @@ namespace CefNet
 		public unsafe virtual void Invalidate(CefPaintElementType type)
 		{
 			NativeInstance->Invalidate(type);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -488,6 +509,7 @@ namespace CefNet
 		public unsafe virtual void SendExternalBeginFrame()
 		{
 			NativeInstance->SendExternalBeginFrame();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -496,6 +518,7 @@ namespace CefNet
 		public unsafe virtual void SendKeyEvent(CefKeyEvent @event)
 		{
 			NativeInstance->SendKeyEvent((cef_key_event_t*)&@event);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -505,6 +528,7 @@ namespace CefNet
 		public unsafe virtual void SendMouseClickEvent(CefMouseEvent @event, CefMouseButtonType type, bool mouseUp, int clickCount)
 		{
 			NativeInstance->SendMouseClickEvent((cef_mouse_event_t*)&@event, type, mouseUp ? 1 : 0, clickCount);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -514,6 +538,7 @@ namespace CefNet
 		public unsafe virtual void SendMouseMoveEvent(CefMouseEvent @event, bool mouseLeave)
 		{
 			NativeInstance->SendMouseMoveEvent((cef_mouse_event_t*)&@event, mouseLeave ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -526,6 +551,7 @@ namespace CefNet
 		public unsafe virtual void SendMouseWheelEvent(CefMouseEvent @event, int deltaX, int deltaY)
 		{
 			NativeInstance->SendMouseWheelEvent((cef_mouse_event_t*)&@event, deltaX, deltaY);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -534,6 +560,7 @@ namespace CefNet
 		public unsafe virtual void SendTouchEvent(CefTouchEvent @event)
 		{
 			NativeInstance->SendTouchEvent((cef_touch_event_t*)&@event);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -542,6 +569,7 @@ namespace CefNet
 		public unsafe virtual void SendFocusEvent(bool setFocus)
 		{
 			NativeInstance->SendFocusEvent(setFocus ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -550,6 +578,7 @@ namespace CefNet
 		public unsafe virtual void SendCaptureLostEvent()
 		{
 			NativeInstance->SendCaptureLostEvent();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -559,6 +588,7 @@ namespace CefNet
 		public unsafe virtual void NotifyMoveOrResizeStarted()
 		{
 			NativeInstance->NotifyMoveOrResizeStarted();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -590,6 +620,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = text != null ? text.Length : 0 };
 				NativeInstance->ImeSetComposition(&cstr0, new UIntPtr((uint)underlines.Length), (cef_composition_underline_t*)p2, (cef_range_t*)&replacementRange, (cef_range_t*)&selectionRange);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -608,6 +639,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = text != null ? text.Length : 0 };
 				NativeInstance->ImeCommitText(&cstr0, (cef_range_t*)&replacementRange, relativeCursorPos);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -619,6 +651,7 @@ namespace CefNet
 		public unsafe virtual void ImeFinishComposingText(bool keepSelection)
 		{
 			NativeInstance->ImeFinishComposingText(keepSelection ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -629,6 +662,7 @@ namespace CefNet
 		public unsafe virtual void ImeCancelComposition()
 		{
 			NativeInstance->ImeCancelComposition();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -643,6 +677,7 @@ namespace CefNet
 		public unsafe virtual void DragTargetDragEnter(CefDragData dragData, CefMouseEvent @event, CefDragOperationsMask allowedOps)
 		{
 			NativeInstance->DragTargetDragEnter((dragData != null) ? dragData.GetNativeInstance() : null, (cef_mouse_event_t*)&@event, allowedOps);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -654,6 +689,7 @@ namespace CefNet
 		public unsafe virtual void DragTargetDragOver(CefMouseEvent @event, CefDragOperationsMask allowedOps)
 		{
 			NativeInstance->DragTargetDragOver((cef_mouse_event_t*)&@event, allowedOps);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -664,6 +700,7 @@ namespace CefNet
 		public unsafe virtual void DragTargetDragLeave()
 		{
 			NativeInstance->DragTargetDragLeave();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -676,6 +713,7 @@ namespace CefNet
 		public unsafe virtual void DragTargetDrop(CefMouseEvent @event)
 		{
 			NativeInstance->DragTargetDrop((cef_mouse_event_t*)&@event);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -690,6 +728,7 @@ namespace CefNet
 		public unsafe virtual void DragSourceEndedAt(int x, int y, CefDragOperationsMask op)
 		{
 			NativeInstance->DragSourceEndedAt(x, y, op);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -703,6 +742,7 @@ namespace CefNet
 		public unsafe virtual void DragSourceSystemDragEnded()
 		{
 			NativeInstance->DragSourceSystemDragEnded();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -713,6 +753,7 @@ namespace CefNet
 		public unsafe virtual void SetAutoResizeEnabled(int enabled, CefSize minSize, CefSize maxSize)
 		{
 			NativeInstance->SetAutoResizeEnabled(enabled, (cef_size_t*)&minSize, (cef_size_t*)&maxSize);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -721,6 +762,7 @@ namespace CefNet
 		public unsafe virtual void SetFocus(bool focus)
 		{
 			NativeInstance->SetFocus(focus ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -751,6 +793,7 @@ namespace CefNet
 		public unsafe virtual void SetAccessibilityState(CefState accessibilityState)
 		{
 			NativeInstance->SetAccessibilityState(accessibilityState);
+			GC.KeepAlive(this);
 		}
 	}
 }

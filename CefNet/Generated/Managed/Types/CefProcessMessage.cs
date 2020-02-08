@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetName()));
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefListValue.Wrap(CefListValue.Create, NativeInstance->GetArgumentList());
+				return SafeCall(CefListValue.Wrap(CefListValue.Create, NativeInstance->GetArgumentList()));
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefProcessMessage Copy()
 		{
-			return CefProcessMessage.Wrap(CefProcessMessage.Create, NativeInstance->Copy());
+			return SafeCall(CefProcessMessage.Wrap(CefProcessMessage.Create, NativeInstance->Copy()));
 		}
 	}
 }

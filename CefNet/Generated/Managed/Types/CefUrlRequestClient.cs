@@ -48,6 +48,7 @@ namespace CefNet
 		public unsafe virtual void OnRequestComplete(CefUrlRequest request)
 		{
 			NativeInstance->OnRequestComplete((request != null) ? request.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -59,6 +60,7 @@ namespace CefNet
 		public unsafe virtual void OnUploadProgress(CefUrlRequest request, long current, long total)
 		{
 			NativeInstance->OnUploadProgress((request != null) ? request.GetNativeInstance() : null, current, total);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -69,6 +71,7 @@ namespace CefNet
 		public unsafe virtual void OnDownloadProgress(CefUrlRequest request, long current, long total)
 		{
 			NativeInstance->OnDownloadProgress((request != null) ? request.GetNativeInstance() : null, current, total);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -79,6 +82,7 @@ namespace CefNet
 		public unsafe virtual void OnDownloadData(CefUrlRequest request, IntPtr data, long dataLength)
 		{
 			NativeInstance->OnDownloadData((request != null) ? request.GetNativeInstance() : null, (void*)data, new UIntPtr((ulong)dataLength));
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -101,7 +105,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = host != null ? host.Length : 0 };
 				var cstr3 = new cef_string_t { Str = s3, Length = realm != null ? realm.Length : 0 };
 				var cstr4 = new cef_string_t { Str = s4, Length = scheme != null ? scheme.Length : 0 };
-				return NativeInstance->GetAuthCredentials(isProxy ? 1 : 0, &cstr1, port, &cstr3, &cstr4, (callback != null) ? callback.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->GetAuthCredentials(isProxy ? 1 : 0, &cstr1, port, &cstr3, &cstr4, (callback != null) ? callback.GetNativeInstance() : null) != 0);
 			}
 		}
 	}

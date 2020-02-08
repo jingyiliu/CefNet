@@ -48,7 +48,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsOwned() != 0;
+				return SafeCall(NativeInstance->IsOwned() != 0);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefListValue that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsEqual(CefListValue that)
 		{
-			return NativeInstance->IsEqual((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsEqual((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefListValue Copy()
 		{
-			return CefListValue.Wrap(CefListValue.Create, NativeInstance->Copy());
+			return SafeCall(CefListValue.Wrap(CefListValue.Create, NativeInstance->Copy()));
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetSize(long size)
 		{
-			return NativeInstance->SetSize(new UIntPtr((ulong)size)) != 0;
+			return SafeCall(NativeInstance->SetSize(new UIntPtr((ulong)size)) != 0);
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Clear()
 		{
-			return NativeInstance->Clear() != 0;
+			return SafeCall(NativeInstance->Clear() != 0);
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int Remove(long index)
 		{
-			return NativeInstance->Remove(new UIntPtr((ulong)index));
+			return SafeCall(NativeInstance->Remove(new UIntPtr((ulong)index)));
 		}
 
 		/// <summary>
@@ -132,7 +132,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefValueType GetType(long index)
 		{
-			return NativeInstance->GetType(new UIntPtr((ulong)index));
+			return SafeCall(NativeInstance->GetType(new UIntPtr((ulong)index)));
 		}
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefValue GetValue(long index)
 		{
-			return CefValue.Wrap(CefValue.Create, NativeInstance->GetValue(new UIntPtr((ulong)index)));
+			return SafeCall(CefValue.Wrap(CefValue.Create, NativeInstance->GetValue(new UIntPtr((ulong)index))));
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetBool(long index)
 		{
-			return NativeInstance->GetBool(new UIntPtr((ulong)index));
+			return SafeCall(NativeInstance->GetBool(new UIntPtr((ulong)index)));
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetInt(long index)
 		{
-			return NativeInstance->GetInt(new UIntPtr((ulong)index));
+			return SafeCall(NativeInstance->GetInt(new UIntPtr((ulong)index)));
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual double GetDouble(long index)
 		{
-			return NativeInstance->GetDouble(new UIntPtr((ulong)index));
+			return SafeCall(NativeInstance->GetDouble(new UIntPtr((ulong)index)));
 		}
 
 		/// <summary>
@@ -177,7 +177,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetString(long index)
 		{
-			return CefString.ReadAndFree(NativeInstance->GetString(new UIntPtr((ulong)index)));
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetString(new UIntPtr((ulong)index))));
 		}
 
 		/// <summary>
@@ -186,7 +186,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefBinaryValue GetBinary(long index)
 		{
-			return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetBinary(new UIntPtr((ulong)index)));
+			return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->GetBinary(new UIntPtr((ulong)index))));
 		}
 
 		/// <summary>
@@ -196,7 +196,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefDictionaryValue GetDictionary(long index)
 		{
-			return CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetDictionary(new UIntPtr((ulong)index)));
+			return SafeCall(CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetDictionary(new UIntPtr((ulong)index))));
 		}
 
 		/// <summary>
@@ -206,7 +206,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefListValue GetList(long index)
 		{
-			return CefListValue.Wrap(CefListValue.Create, NativeInstance->GetList(new UIntPtr((ulong)index)));
+			return SafeCall(CefListValue.Wrap(CefListValue.Create, NativeInstance->GetList(new UIntPtr((ulong)index))));
 		}
 
 		/// <summary>
@@ -219,7 +219,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetValue(long index, CefValue value)
 		{
-			return NativeInstance->SetValue(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->SetValue(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -228,7 +228,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetNull(long index)
 		{
-			return NativeInstance->SetNull(new UIntPtr((ulong)index)) != 0;
+			return SafeCall(NativeInstance->SetNull(new UIntPtr((ulong)index)) != 0);
 		}
 
 		/// <summary>
@@ -237,7 +237,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetBool(long index, bool value)
 		{
-			return NativeInstance->SetBool(new UIntPtr((ulong)index), value ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetBool(new UIntPtr((ulong)index), value ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetInt(long index, int value)
 		{
-			return NativeInstance->SetInt(new UIntPtr((ulong)index), value) != 0;
+			return SafeCall(NativeInstance->SetInt(new UIntPtr((ulong)index), value) != 0);
 		}
 
 		/// <summary>
@@ -255,7 +255,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetDouble(long index, double value)
 		{
-			return NativeInstance->SetDouble(new UIntPtr((ulong)index), value) != 0;
+			return SafeCall(NativeInstance->SetDouble(new UIntPtr((ulong)index), value) != 0);
 		}
 
 		/// <summary>
@@ -267,7 +267,7 @@ namespace CefNet
 			fixed (char* s1 = value)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
-				return NativeInstance->SetString(new UIntPtr((ulong)index), &cstr1) != 0;
+				return SafeCall(NativeInstance->SetString(new UIntPtr((ulong)index), &cstr1) != 0);
 			}
 		}
 
@@ -280,7 +280,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetBinary(long index, CefBinaryValue value)
 		{
-			return NativeInstance->SetBinary(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->SetBinary(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -292,7 +292,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetDictionary(long index, CefDictionaryValue value)
 		{
-			return NativeInstance->SetDictionary(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->SetDictionary(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -304,7 +304,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetList(long index, CefListValue value)
 		{
-			return NativeInstance->SetList(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->SetList(new UIntPtr((ulong)index), (value != null) ? value.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -312,7 +312,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long GetSize()
 		{
-			return (long)NativeInstance->GetSize();
+			return SafeCall((long)NativeInstance->GetSize());
 		}
 	}
 }

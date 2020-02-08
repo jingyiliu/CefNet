@@ -44,7 +44,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long Read(IntPtr ptr, long size, long n)
 		{
-			return (long)NativeInstance->Read((void*)ptr, new UIntPtr((ulong)size), new UIntPtr((ulong)n));
+			return SafeCall((long)NativeInstance->Read((void*)ptr, new UIntPtr((ulong)size), new UIntPtr((ulong)n)));
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int Seek(long offset, int whence)
 		{
-			return NativeInstance->Seek(offset, whence);
+			return SafeCall(NativeInstance->Seek(offset, whence));
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long Tell()
 		{
-			return NativeInstance->Tell();
+			return SafeCall(NativeInstance->Tell());
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int Eof()
 		{
-			return NativeInstance->Eof();
+			return SafeCall(NativeInstance->Eof());
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool MayBlock()
 		{
-			return NativeInstance->MayBlock() != 0;
+			return SafeCall(NativeInstance->MayBlock() != 0);
 		}
 	}
 }

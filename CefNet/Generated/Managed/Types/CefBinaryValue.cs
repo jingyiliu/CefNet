@@ -48,7 +48,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsOwned() != 0;
+				return SafeCall(NativeInstance->IsOwned() != 0);
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetSize();
+				return SafeCall((long)NativeInstance->GetSize());
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefBinaryValue that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsEqual(CefBinaryValue that)
 		{
-			return NativeInstance->IsEqual((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsEqual((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -97,7 +97,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefBinaryValue Copy()
 		{
-			return CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->Copy());
+			return SafeCall(CefBinaryValue.Wrap(CefBinaryValue.Create, NativeInstance->Copy()));
 		}
 
 		/// <summary>
@@ -106,7 +106,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long GetData(IntPtr buffer, long bufferSize, long dataOffset)
 		{
-			return (long)NativeInstance->GetData((void*)buffer, new UIntPtr((ulong)bufferSize), new UIntPtr((ulong)dataOffset));
+			return SafeCall((long)NativeInstance->GetData((void*)buffer, new UIntPtr((ulong)bufferSize), new UIntPtr((ulong)dataOffset)));
 		}
 	}
 }

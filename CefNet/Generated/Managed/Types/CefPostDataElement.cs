@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCefType();
+				return SafeCall(NativeInstance->GetCefType());
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFile());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFile()));
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetBytesCount();
+				return SafeCall((long)NativeInstance->GetBytesCount());
 			}
 		}
 
@@ -90,6 +90,7 @@ namespace CefNet
 		public unsafe virtual void SetToEmpty()
 		{
 			NativeInstance->SetToEmpty();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -99,6 +100,7 @@ namespace CefNet
 		public unsafe virtual void SetToBytes(long size, IntPtr bytes)
 		{
 			NativeInstance->SetToBytes(new UIntPtr((ulong)size), (void*)bytes);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -107,7 +109,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long GetBytes(long size, IntPtr bytes)
 		{
-			return (long)NativeInstance->GetBytes(new UIntPtr((ulong)size), (void*)bytes);
+			return SafeCall((long)NativeInstance->GetBytes(new UIntPtr((ulong)size), (void*)bytes));
 		}
 
 		/// <summary>
@@ -120,6 +122,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = fileName != null ? fileName.Length : 0 };
 				NativeInstance->SetToFile(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

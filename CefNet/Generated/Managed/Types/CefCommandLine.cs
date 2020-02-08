@@ -53,7 +53,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetCommandLineString());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetCommandLineString()));
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetProgram());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetProgram()));
 			}
 			set
 			{
@@ -99,6 +99,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetProgram(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -109,7 +110,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasSwitches() != 0;
+				return SafeCall(NativeInstance->HasSwitches() != 0);
 			}
 		}
 
@@ -120,7 +121,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasArguments() != 0;
+				return SafeCall(NativeInstance->HasArguments() != 0);
 			}
 		}
 
@@ -129,7 +130,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefCommandLine Copy()
 		{
-			return CefCommandLine.Wrap(CefCommandLine.Create, NativeInstance->Copy());
+			return SafeCall(CefCommandLine.Wrap(CefCommandLine.Create, NativeInstance->Copy()));
 		}
 
 		/// <summary>
@@ -140,6 +141,7 @@ namespace CefNet
 		public unsafe virtual void InitFromArgv(int argc, IntPtr argv)
 		{
 			NativeInstance->InitFromArgv(argc, (byte**)argv);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -153,6 +155,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = commandLine != null ? commandLine.Length : 0 };
 				NativeInstance->InitFromString(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -162,6 +165,7 @@ namespace CefNet
 		public unsafe virtual void Reset()
 		{
 			NativeInstance->Reset();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -171,6 +175,7 @@ namespace CefNet
 		public unsafe virtual void GetArgv(CefStringList argv)
 		{
 			NativeInstance->GetArgv(argv.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -181,7 +186,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return NativeInstance->HasSwitch(&cstr0) != 0;
+				return SafeCall(NativeInstance->HasSwitch(&cstr0) != 0);
 			}
 		}
 
@@ -195,7 +200,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetSwitchValue(&cstr0));
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSwitchValue(&cstr0)));
 			}
 		}
 
@@ -206,6 +211,7 @@ namespace CefNet
 		public unsafe virtual void GetSwitches(CefStringMap switches)
 		{
 			NativeInstance->GetSwitches(switches);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -219,6 +225,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
 				NativeInstance->AppendSwitch(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -233,6 +240,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
 				NativeInstance->AppendSwitchWithValue(&cstr0, &cstr1);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -241,6 +249,7 @@ namespace CefNet
 		public unsafe virtual void GetArguments(CefStringList arguments)
 		{
 			NativeInstance->GetArguments(arguments.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -253,6 +262,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = argument != null ? argument.Length : 0 };
 				NativeInstance->AppendArgument(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -266,6 +276,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = wrapper != null ? wrapper.Length : 0 };
 				NativeInstance->PrependWrapper(&cstr0);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

@@ -50,6 +50,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = userInput != null ? userInput.Length : 0 };
 				NativeInstance->Continue(success ? 1 : 0, &cstr1);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

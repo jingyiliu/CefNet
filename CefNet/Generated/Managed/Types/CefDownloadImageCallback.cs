@@ -52,6 +52,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = imageUrl != null ? imageUrl.Length : 0 };
 				NativeInstance->OnDownloadImageFinished(&cstr0, httpStatusCode, (image != null) ? image.GetNativeInstance() : null);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

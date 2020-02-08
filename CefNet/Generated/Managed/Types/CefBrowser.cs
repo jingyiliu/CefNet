@@ -49,7 +49,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefBrowserHost.Wrap(CefBrowserHost.Create, NativeInstance->GetHost());
+				return SafeCall(CefBrowserHost.Wrap(CefBrowserHost.Create, NativeInstance->GetHost()));
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->CanGoBack() != 0;
+				return SafeCall(NativeInstance->CanGoBack() != 0);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->CanGoForward() != 0;
+				return SafeCall(NativeInstance->CanGoForward() != 0);
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsLoading() != 0;
+				return SafeCall(NativeInstance->IsLoading() != 0);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetIdentifier();
+				return SafeCall(NativeInstance->GetIdentifier());
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsPopup() != 0;
+				return SafeCall(NativeInstance->IsPopup() != 0);
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasDocument() != 0;
+				return SafeCall(NativeInstance->HasDocument() != 0);
 			}
 		}
 
@@ -127,7 +127,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefFrame.Wrap(CefFrame.Create, NativeInstance->GetMainFrame());
+				return SafeCall(CefFrame.Wrap(CefFrame.Create, NativeInstance->GetMainFrame()));
 			}
 		}
 
@@ -138,7 +138,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFocusedFrame());
+				return SafeCall(CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFocusedFrame()));
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetFrameCount();
+				return SafeCall((long)NativeInstance->GetFrameCount());
 			}
 		}
 
@@ -159,6 +159,7 @@ namespace CefNet
 		public unsafe virtual void GoBack()
 		{
 			NativeInstance->GoBack();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -167,6 +168,7 @@ namespace CefNet
 		public unsafe virtual void GoForward()
 		{
 			NativeInstance->GoForward();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -175,6 +177,7 @@ namespace CefNet
 		public unsafe virtual void Reload()
 		{
 			NativeInstance->Reload();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -183,6 +186,7 @@ namespace CefNet
 		public unsafe virtual void ReloadIgnoreCache()
 		{
 			NativeInstance->ReloadIgnoreCache();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -191,6 +195,7 @@ namespace CefNet
 		public unsafe virtual void StopLoad()
 		{
 			NativeInstance->StopLoad();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -199,7 +204,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefBrowser that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -207,7 +212,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefFrame GetFrameByIdent(long identifier)
 		{
-			return CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFrameByIdent(identifier));
+			return SafeCall(CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFrameByIdent(identifier)));
 		}
 
 		/// <summary>
@@ -218,7 +223,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFrame(&cstr0));
+				return SafeCall(CefFrame.Wrap(CefFrame.Create, NativeInstance->GetFrame(&cstr0)));
 			}
 		}
 
@@ -234,6 +239,7 @@ namespace CefNet
 				identifiersCount = (long)c1;
 				Array.Resize(ref identifiers, (int)c1);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -242,6 +248,7 @@ namespace CefNet
 		public unsafe virtual void GetFrameNames(CefStringList names)
 		{
 			NativeInstance->GetFrameNames(names.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 	}
 }

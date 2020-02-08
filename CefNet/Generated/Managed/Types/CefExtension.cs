@@ -49,7 +49,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetIdentifier());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetIdentifier()));
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetPath());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetPath()));
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetManifest());
+				return SafeCall(CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetManifest()));
 			}
 		}
 
@@ -88,7 +88,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefExtensionHandler.Wrap(CefExtensionHandler.Create, NativeInstance->GetHandler());
+				return SafeCall(CefExtensionHandler.Wrap(CefExtensionHandler.Create, NativeInstance->GetHandler()));
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefRequestContext.Wrap(CefRequestContext.Create, NativeInstance->GetLoaderContext());
+				return SafeCall(CefRequestContext.Wrap(CefRequestContext.Create, NativeInstance->GetLoaderContext()));
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsLoaded() != 0;
+				return SafeCall(NativeInstance->IsLoaded() != 0);
 			}
 		}
 
@@ -125,7 +125,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefExtension that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -136,6 +136,7 @@ namespace CefNet
 		public unsafe virtual void Unload()
 		{
 			NativeInstance->Unload();
+			GC.KeepAlive(this);
 		}
 	}
 }

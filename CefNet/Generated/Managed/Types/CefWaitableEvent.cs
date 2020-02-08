@@ -55,7 +55,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsSignaled() != 0;
+				return SafeCall(NativeInstance->IsSignaled() != 0);
 			}
 		}
 
@@ -65,6 +65,7 @@ namespace CefNet
 		public unsafe virtual void Reset()
 		{
 			NativeInstance->Reset();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -74,6 +75,7 @@ namespace CefNet
 		public unsafe virtual void Signal()
 		{
 			NativeInstance->Signal();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -84,6 +86,7 @@ namespace CefNet
 		public unsafe virtual void Wait()
 		{
 			NativeInstance->Wait();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -95,7 +98,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool TimedWait(long maxMs)
 		{
-			return NativeInstance->TimedWait(maxMs) != 0;
+			return SafeCall(NativeInstance->TimedWait(maxMs) != 0);
 		}
 	}
 }

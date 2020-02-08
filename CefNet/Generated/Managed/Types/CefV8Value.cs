@@ -51,7 +51,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsUndefined() != 0;
+				return SafeCall(NativeInstance->IsUndefined() != 0);
 			}
 		}
 
@@ -73,7 +73,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsNull() != 0;
+				return SafeCall(NativeInstance->IsNull() != 0);
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsBool() != 0;
+				return SafeCall(NativeInstance->IsBool() != 0);
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsInt() != 0;
+				return SafeCall(NativeInstance->IsInt() != 0);
 			}
 		}
 
@@ -106,7 +106,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsUInt() != 0;
+				return SafeCall(NativeInstance->IsUInt() != 0);
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsDouble() != 0;
+				return SafeCall(NativeInstance->IsDouble() != 0);
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsDate() != 0;
+				return SafeCall(NativeInstance->IsDate() != 0);
 			}
 		}
 
@@ -139,7 +139,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsString() != 0;
+				return SafeCall(NativeInstance->IsString() != 0);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsObject() != 0;
+				return SafeCall(NativeInstance->IsObject() != 0);
 			}
 		}
 
@@ -161,7 +161,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsArray() != 0;
+				return SafeCall(NativeInstance->IsArray() != 0);
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsArrayBuffer() != 0;
+				return SafeCall(NativeInstance->IsArrayBuffer() != 0);
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsFunction() != 0;
+				return SafeCall(NativeInstance->IsFunction() != 0);
 			}
 		}
 
@@ -194,7 +194,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsUserCreated() != 0;
+				return SafeCall(NativeInstance->IsUserCreated() != 0);
 			}
 		}
 
@@ -206,7 +206,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasException() != 0;
+				return SafeCall(NativeInstance->HasException() != 0);
 			}
 		}
 
@@ -216,7 +216,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefV8Value that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -224,7 +224,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool GetBoolValue()
 		{
-			return NativeInstance->GetBoolValue() != 0;
+			return SafeCall(NativeInstance->GetBoolValue() != 0);
 		}
 
 		/// <summary>
@@ -232,7 +232,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetIntValue()
 		{
-			return NativeInstance->GetIntValue();
+			return SafeCall(NativeInstance->GetIntValue());
 		}
 
 		/// <summary>
@@ -240,7 +240,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual uint GetUIntValue()
 		{
-			return NativeInstance->GetUIntValue();
+			return SafeCall(NativeInstance->GetUIntValue());
 		}
 
 		/// <summary>
@@ -248,7 +248,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual double GetDoubleValue()
 		{
-			return NativeInstance->GetDoubleValue();
+			return SafeCall(NativeInstance->GetDoubleValue());
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefTime GetDateValue()
 		{
-			return NativeInstance->GetDateValue();
+			return SafeCall(NativeInstance->GetDateValue());
 		}
 
 		/// <summary>
@@ -265,7 +265,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetStringValue()
 		{
-			return CefString.ReadAndFree(NativeInstance->GetStringValue());
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetStringValue()));
 		}
 
 		/// <summary>
@@ -274,7 +274,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefV8Exception GetException()
 		{
-			return CefV8Exception.Wrap(CefV8Exception.Create, NativeInstance->GetException());
+			return SafeCall(CefV8Exception.Wrap(CefV8Exception.Create, NativeInstance->GetException()));
 		}
 
 		/// <summary>
@@ -282,7 +282,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool ClearException()
 		{
-			return NativeInstance->ClearException() != 0;
+			return SafeCall(NativeInstance->ClearException() != 0);
 		}
 
 		/// <summary>
@@ -291,7 +291,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool WillRethrowExceptions()
 		{
-			return NativeInstance->WillRethrowExceptions() != 0;
+			return SafeCall(NativeInstance->WillRethrowExceptions() != 0);
 		}
 
 		/// <summary>
@@ -303,7 +303,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetRethrowExceptions(bool rethrow)
 		{
-			return NativeInstance->SetRethrowExceptions(rethrow ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetRethrowExceptions(rethrow ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -314,7 +314,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->HasValueByKey(&cstr0) != 0;
+				return SafeCall(NativeInstance->HasValueByKey(&cstr0) != 0);
 			}
 		}
 
@@ -323,7 +323,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool HasValueByIndex(int index)
 		{
-			return NativeInstance->HasValueByIndex(index) != 0;
+			return SafeCall(NativeInstance->HasValueByIndex(index) != 0);
 		}
 
 		/// <summary>
@@ -337,7 +337,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->DeleteValueByKey(&cstr0) != 0;
+				return SafeCall(NativeInstance->DeleteValueByKey(&cstr0) != 0);
 			}
 		}
 
@@ -349,7 +349,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool DeleteValueByIndex(int index)
 		{
-			return NativeInstance->DeleteValueByIndex(index) != 0;
+			return SafeCall(NativeInstance->DeleteValueByIndex(index) != 0);
 		}
 
 		/// <summary>
@@ -361,7 +361,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return CefV8Value.Wrap(CefV8Value.Create, NativeInstance->GetValueByKey(&cstr0));
+				return SafeCall(CefV8Value.Wrap(CefV8Value.Create, NativeInstance->GetValueByKey(&cstr0)));
 			}
 		}
 
@@ -371,7 +371,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefV8Value GetValueByIndex(int index)
 		{
-			return CefV8Value.Wrap(CefV8Value.Create, NativeInstance->GetValueByIndex(index));
+			return SafeCall(CefV8Value.Wrap(CefV8Value.Create, NativeInstance->GetValueByIndex(index)));
 		}
 
 		/// <summary>
@@ -385,7 +385,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetValueByKey(&cstr0, (value != null) ? value.GetNativeInstance() : null, attribute) != 0;
+				return SafeCall(NativeInstance->SetValueByKey(&cstr0, (value != null) ? value.GetNativeInstance() : null, attribute) != 0);
 			}
 		}
 
@@ -397,7 +397,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetValueByIndex(int index, CefV8Value value)
 		{
-			return NativeInstance->SetValueByIndex(index, (value != null) ? value.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->SetValueByIndex(index, (value != null) ? value.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -412,7 +412,7 @@ namespace CefNet
 			fixed (char* s0 = key)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = key != null ? key.Length : 0 };
-				return NativeInstance->SetValueByAccessor(&cstr0, settings, attribute) != 0;
+				return SafeCall(NativeInstance->SetValueByAccessor(&cstr0, settings, attribute) != 0);
 			}
 		}
 
@@ -422,7 +422,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetKeys(CefStringList keys)
 		{
-			return NativeInstance->GetKeys(keys.GetNativeInstance());
+			return SafeCall(NativeInstance->GetKeys(keys.GetNativeInstance()));
 		}
 
 		/// <summary>
@@ -432,7 +432,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetUserData(CefBaseRefCounted userData)
 		{
-			return NativeInstance->SetUserData(userData.GetNativeInstance()) != 0;
+			return SafeCall(NativeInstance->SetUserData(userData.GetNativeInstance()) != 0);
 		}
 
 		/// <summary>
@@ -440,7 +440,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefBaseRefCounted GetUserData()
 		{
-			return UnknownRefCounted.Wrap(UnknownRefCounted.Create, NativeInstance->GetUserData());
+			return SafeCall(UnknownRefCounted.Wrap(UnknownRefCounted.Create, NativeInstance->GetUserData()));
 		}
 
 		/// <summary>
@@ -449,7 +449,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetExternallyAllocatedMemory()
 		{
-			return NativeInstance->GetExternallyAllocatedMemory();
+			return SafeCall(NativeInstance->GetExternallyAllocatedMemory());
 		}
 
 		/// <summary>
@@ -465,7 +465,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int AdjustExternallyAllocatedMemory(int changeInBytes)
 		{
-			return NativeInstance->AdjustExternallyAllocatedMemory(changeInBytes);
+			return SafeCall(NativeInstance->AdjustExternallyAllocatedMemory(changeInBytes));
 		}
 
 		/// <summary>
@@ -473,7 +473,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetArrayLength()
 		{
-			return NativeInstance->GetArrayLength();
+			return SafeCall(NativeInstance->GetArrayLength());
 		}
 
 		/// <summary>
@@ -482,7 +482,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefV8ArrayBufferReleaseCallback GetArrayBufferReleaseCallback()
 		{
-			return CefV8ArrayBufferReleaseCallback.Wrap(CefV8ArrayBufferReleaseCallback.Create, NativeInstance->GetArrayBufferReleaseCallback());
+			return SafeCall(CefV8ArrayBufferReleaseCallback.Wrap(CefV8ArrayBufferReleaseCallback.Create, NativeInstance->GetArrayBufferReleaseCallback()));
 		}
 
 		/// <summary>
@@ -494,7 +494,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int NeuterArrayBuffer()
 		{
-			return NativeInstance->NeuterArrayBuffer();
+			return SafeCall(NativeInstance->NeuterArrayBuffer());
 		}
 
 		/// <summary>
@@ -503,7 +503,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetFunctionName()
 		{
-			return CefString.ReadAndFree(NativeInstance->GetFunctionName());
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetFunctionName()));
 		}
 
 		/// <summary>
@@ -511,7 +511,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefV8Handler GetFunctionHandler()
 		{
-			return CefV8Handler.Wrap(CefV8Handler.Create, NativeInstance->GetFunctionHandler());
+			return SafeCall(CefV8Handler.Wrap(CefV8Handler.Create, NativeInstance->GetFunctionHandler()));
 		}
 
 		/// <summary>
@@ -536,6 +536,7 @@ namespace CefNet
 			}
 			var rv = CefV8Value.Wrap(CefV8Value.Create, NativeInstance->ExecuteFunction((@object != null) ? @object.GetNativeInstance() : null, new UIntPtr((uint)arguments.Length), arr2));
 			Marshal.FreeHGlobal((IntPtr)arr2);
+			GC.KeepAlive(this);
 			return rv;
 		}
 
@@ -558,6 +559,7 @@ namespace CefNet
 			}
 			var rv = CefV8Value.Wrap(CefV8Value.Create, NativeInstance->ExecuteFunctionWithContext((context != null) ? context.GetNativeInstance() : null, (@object != null) ? @object.GetNativeInstance() : null, new UIntPtr((uint)arguments.Length), arr3));
 			Marshal.FreeHGlobal((IntPtr)arr3);
+			GC.KeepAlive(this);
 			return rv;
 		}
 	}

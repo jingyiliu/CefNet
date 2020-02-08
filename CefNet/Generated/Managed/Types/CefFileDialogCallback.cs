@@ -48,6 +48,7 @@ namespace CefNet
 		public unsafe virtual void Continue(bool selectedAcceptFilter, CefStringList filePaths)
 		{
 			NativeInstance->Continue(selectedAcceptFilter ? 1 : 0, filePaths.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -56,6 +57,7 @@ namespace CefNet
 		public unsafe virtual void Cancel()
 		{
 			NativeInstance->Cancel();
+			GC.KeepAlive(this);
 		}
 	}
 }

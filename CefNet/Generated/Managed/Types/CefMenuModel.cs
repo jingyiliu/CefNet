@@ -48,7 +48,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsSubMenu() != 0;
+				return SafeCall(NativeInstance->IsSubMenu() != 0);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCount();
+				return SafeCall(NativeInstance->GetCount());
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Clear()
 		{
-			return NativeInstance->Clear() != 0;
+			return SafeCall(NativeInstance->Clear() != 0);
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool AddSeparator()
 		{
-			return NativeInstance->AddSeparator() != 0;
+			return SafeCall(NativeInstance->AddSeparator() != 0);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace CefNet
 			fixed (char* s1 = label)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = label != null ? label.Length : 0 };
-				return NativeInstance->AddItem(commandId, &cstr1) != 0;
+				return SafeCall(NativeInstance->AddItem(commandId, &cstr1) != 0);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace CefNet
 			fixed (char* s1 = label)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = label != null ? label.Length : 0 };
-				return NativeInstance->AddCheckItem(commandId, &cstr1) != 0;
+				return SafeCall(NativeInstance->AddCheckItem(commandId, &cstr1) != 0);
 			}
 		}
 
@@ -112,7 +112,7 @@ namespace CefNet
 			fixed (char* s1 = label)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = label != null ? label.Length : 0 };
-				return NativeInstance->AddRadioItem(commandId, &cstr1, groupId) != 0;
+				return SafeCall(NativeInstance->AddRadioItem(commandId, &cstr1, groupId) != 0);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace CefNet
 			fixed (char* s1 = label)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = label != null ? label.Length : 0 };
-				return CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->AddSubMenu(commandId, &cstr1));
+				return SafeCall(CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->AddSubMenu(commandId, &cstr1)));
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool InsertSeparatorAt(int index)
 		{
-			return NativeInstance->InsertSeparatorAt(index) != 0;
+			return SafeCall(NativeInstance->InsertSeparatorAt(index) != 0);
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace CefNet
 			fixed (char* s2 = label)
 			{
 				var cstr2 = new cef_string_t { Str = s2, Length = label != null ? label.Length : 0 };
-				return NativeInstance->InsertItemAt(index, commandId, &cstr2) != 0;
+				return SafeCall(NativeInstance->InsertItemAt(index, commandId, &cstr2) != 0);
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace CefNet
 			fixed (char* s2 = label)
 			{
 				var cstr2 = new cef_string_t { Str = s2, Length = label != null ? label.Length : 0 };
-				return NativeInstance->InsertCheckItemAt(index, commandId, &cstr2) != 0;
+				return SafeCall(NativeInstance->InsertCheckItemAt(index, commandId, &cstr2) != 0);
 			}
 		}
 
@@ -173,7 +173,7 @@ namespace CefNet
 			fixed (char* s2 = label)
 			{
 				var cstr2 = new cef_string_t { Str = s2, Length = label != null ? label.Length : 0 };
-				return NativeInstance->InsertRadioItemAt(index, commandId, &cstr2, groupId) != 0;
+				return SafeCall(NativeInstance->InsertRadioItemAt(index, commandId, &cstr2, groupId) != 0);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace CefNet
 			fixed (char* s2 = label)
 			{
 				var cstr2 = new cef_string_t { Str = s2, Length = label != null ? label.Length : 0 };
-				return CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->InsertSubMenuAt(index, commandId, &cstr2));
+				return SafeCall(CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->InsertSubMenuAt(index, commandId, &cstr2)));
 			}
 		}
 
@@ -196,7 +196,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Remove(int commandId)
 		{
-			return NativeInstance->Remove(commandId) != 0;
+			return SafeCall(NativeInstance->Remove(commandId) != 0);
 		}
 
 		/// <summary>
@@ -204,7 +204,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool RemoveAt(int index)
 		{
-			return NativeInstance->RemoveAt(index) != 0;
+			return SafeCall(NativeInstance->RemoveAt(index) != 0);
 		}
 
 		/// <summary>
@@ -213,7 +213,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetIndexOf(int commandId)
 		{
-			return NativeInstance->GetIndexOf(commandId);
+			return SafeCall(NativeInstance->GetIndexOf(commandId));
 		}
 
 		/// <summary>
@@ -222,7 +222,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetCommandIdAt(int index)
 		{
-			return NativeInstance->GetCommandIdAt(index);
+			return SafeCall(NativeInstance->GetCommandIdAt(index));
 		}
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetCommandIdAt(int index, int commandId)
 		{
-			return NativeInstance->SetCommandIdAt(index, commandId) != 0;
+			return SafeCall(NativeInstance->SetCommandIdAt(index, commandId) != 0);
 		}
 
 		/// <summary>
@@ -239,7 +239,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetLabel(int commandId)
 		{
-			return CefString.ReadAndFree(NativeInstance->GetLabel(commandId));
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetLabel(commandId)));
 		}
 
 		/// <summary>
@@ -249,7 +249,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetLabelAt(int index)
 		{
-			return CefString.ReadAndFree(NativeInstance->GetLabelAt(index));
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetLabelAt(index)));
 		}
 
 		/// <summary>
@@ -260,7 +260,7 @@ namespace CefNet
 			fixed (char* s1 = label)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = label != null ? label.Length : 0 };
-				return NativeInstance->SetLabel(commandId, &cstr1) != 0;
+				return SafeCall(NativeInstance->SetLabel(commandId, &cstr1) != 0);
 			}
 		}
 
@@ -272,7 +272,7 @@ namespace CefNet
 			fixed (char* s1 = label)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = label != null ? label.Length : 0 };
-				return NativeInstance->SetLabelAt(index, &cstr1) != 0;
+				return SafeCall(NativeInstance->SetLabelAt(index, &cstr1) != 0);
 			}
 		}
 
@@ -281,7 +281,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefMenuItemType GetType(int commandId)
 		{
-			return NativeInstance->GetType(commandId);
+			return SafeCall(NativeInstance->GetType(commandId));
 		}
 
 		/// <summary>
@@ -289,7 +289,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefMenuItemType GetTypeAt(int index)
 		{
-			return NativeInstance->GetTypeAt(index);
+			return SafeCall(NativeInstance->GetTypeAt(index));
 		}
 
 		/// <summary>
@@ -297,7 +297,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetGroupId(int commandId)
 		{
-			return NativeInstance->GetGroupId(commandId);
+			return SafeCall(NativeInstance->GetGroupId(commandId));
 		}
 
 		/// <summary>
@@ -305,7 +305,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetGroupIdAt(int index)
 		{
-			return NativeInstance->GetGroupIdAt(index);
+			return SafeCall(NativeInstance->GetGroupIdAt(index));
 		}
 
 		/// <summary>
@@ -314,7 +314,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetGroupId(int commandId, int groupId)
 		{
-			return NativeInstance->SetGroupId(commandId, groupId) != 0;
+			return SafeCall(NativeInstance->SetGroupId(commandId, groupId) != 0);
 		}
 
 		/// <summary>
@@ -322,7 +322,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetGroupIdAt(int index, int groupId)
 		{
-			return NativeInstance->SetGroupIdAt(index, groupId) != 0;
+			return SafeCall(NativeInstance->SetGroupIdAt(index, groupId) != 0);
 		}
 
 		/// <summary>
@@ -330,7 +330,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefMenuModel GetSubMenu(int commandId)
 		{
-			return CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->GetSubMenu(commandId));
+			return SafeCall(CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->GetSubMenu(commandId)));
 		}
 
 		/// <summary>
@@ -338,7 +338,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefMenuModel GetSubMenuAt(int index)
 		{
-			return CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->GetSubMenuAt(index));
+			return SafeCall(CefMenuModel.Wrap(CefMenuModel.Create, NativeInstance->GetSubMenuAt(index)));
 		}
 
 		/// <summary>
@@ -346,7 +346,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsVisible(int commandId)
 		{
-			return NativeInstance->IsVisible(commandId) != 0;
+			return SafeCall(NativeInstance->IsVisible(commandId) != 0);
 		}
 
 		/// <summary>
@@ -354,7 +354,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsVisibleAt(int index)
 		{
-			return NativeInstance->IsVisibleAt(index) != 0;
+			return SafeCall(NativeInstance->IsVisibleAt(index) != 0);
 		}
 
 		/// <summary>
@@ -363,7 +363,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetVisible(int commandId, bool visible)
 		{
-			return NativeInstance->SetVisible(commandId, visible ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetVisible(commandId, visible ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -372,7 +372,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetVisibleAt(int index, bool visible)
 		{
-			return NativeInstance->SetVisibleAt(index, visible ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetVisibleAt(index, visible ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -380,7 +380,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsEnabled(int commandId)
 		{
-			return NativeInstance->IsEnabled(commandId) != 0;
+			return SafeCall(NativeInstance->IsEnabled(commandId) != 0);
 		}
 
 		/// <summary>
@@ -388,7 +388,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsEnabledAt(int index)
 		{
-			return NativeInstance->IsEnabledAt(index) != 0;
+			return SafeCall(NativeInstance->IsEnabledAt(index) != 0);
 		}
 
 		/// <summary>
@@ -397,7 +397,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetEnabled(int commandId, int enabled)
 		{
-			return NativeInstance->SetEnabled(commandId, enabled) != 0;
+			return SafeCall(NativeInstance->SetEnabled(commandId, enabled) != 0);
 		}
 
 		/// <summary>
@@ -406,7 +406,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetEnabledAt(int index, bool enabled)
 		{
-			return NativeInstance->SetEnabledAt(index, enabled ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetEnabledAt(index, enabled ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -415,7 +415,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsChecked(int commandId)
 		{
-			return NativeInstance->IsChecked(commandId) != 0;
+			return SafeCall(NativeInstance->IsChecked(commandId) != 0);
 		}
 
 		/// <summary>
@@ -424,7 +424,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsCheckedAt(int index)
 		{
-			return NativeInstance->IsCheckedAt(index) != 0;
+			return SafeCall(NativeInstance->IsCheckedAt(index) != 0);
 		}
 
 		/// <summary>
@@ -433,7 +433,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetChecked(int commandId, int @checked)
 		{
-			return NativeInstance->SetChecked(commandId, @checked) != 0;
+			return SafeCall(NativeInstance->SetChecked(commandId, @checked) != 0);
 		}
 
 		/// <summary>
@@ -442,7 +442,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetCheckedAt(int index, bool @checked)
 		{
-			return NativeInstance->SetCheckedAt(index, @checked ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetCheckedAt(index, @checked ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -451,7 +451,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool HasAccelerator(int commandId)
 		{
-			return NativeInstance->HasAccelerator(commandId) != 0;
+			return SafeCall(NativeInstance->HasAccelerator(commandId) != 0);
 		}
 
 		/// <summary>
@@ -460,7 +460,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool HasAcceleratorAt(int index)
 		{
-			return NativeInstance->HasAcceleratorAt(index) != 0;
+			return SafeCall(NativeInstance->HasAcceleratorAt(index) != 0);
 		}
 
 		/// <summary>
@@ -469,7 +469,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetAccelerator(int commandId, int keyCode, bool shiftPressed, bool ctrlPressed, bool altPressed)
 		{
-			return NativeInstance->SetAccelerator(commandId, keyCode, shiftPressed ? 1 : 0, ctrlPressed ? 1 : 0, altPressed ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetAccelerator(commandId, keyCode, shiftPressed ? 1 : 0, ctrlPressed ? 1 : 0, altPressed ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -478,7 +478,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetAcceleratorAt(int index, int keyCode, bool shiftPressed, bool ctrlPressed, bool altPressed)
 		{
-			return NativeInstance->SetAcceleratorAt(index, keyCode, shiftPressed ? 1 : 0, ctrlPressed ? 1 : 0, altPressed ? 1 : 0) != 0;
+			return SafeCall(NativeInstance->SetAcceleratorAt(index, keyCode, shiftPressed ? 1 : 0, ctrlPressed ? 1 : 0, altPressed ? 1 : 0) != 0);
 		}
 
 		/// <summary>
@@ -487,7 +487,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool RemoveAccelerator(int commandId)
 		{
-			return NativeInstance->RemoveAccelerator(commandId) != 0;
+			return SafeCall(NativeInstance->RemoveAccelerator(commandId) != 0);
 		}
 
 		/// <summary>
@@ -496,7 +496,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool RemoveAcceleratorAt(int index)
 		{
-			return NativeInstance->RemoveAcceleratorAt(index) != 0;
+			return SafeCall(NativeInstance->RemoveAcceleratorAt(index) != 0);
 		}
 
 		/// <summary>
@@ -510,7 +510,7 @@ namespace CefNet
 			fixed (int* p3 = &ctrlPressed)
 			fixed (int* p4 = &altPressed)
 			{
-				return NativeInstance->GetAccelerator(commandId, p1, p2, p3, p4) != 0;
+				return SafeCall(NativeInstance->GetAccelerator(commandId, p1, p2, p3, p4) != 0);
 			}
 		}
 
@@ -525,7 +525,7 @@ namespace CefNet
 			fixed (int* p3 = &ctrlPressed)
 			fixed (int* p4 = &altPressed)
 			{
-				return NativeInstance->GetAcceleratorAt(index, p1, p2, p3, p4) != 0;
+				return SafeCall(NativeInstance->GetAcceleratorAt(index, p1, p2, p3, p4) != 0);
 			}
 		}
 
@@ -537,7 +537,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetColor(int commandId, CefMenuColorType colorType, CefColor color)
 		{
-			return NativeInstance->SetColor(commandId, colorType, color) != 0;
+			return SafeCall(NativeInstance->SetColor(commandId, colorType, color) != 0);
 		}
 
 		/// <summary>
@@ -549,7 +549,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetColorAt(int index, CefMenuColorType colorType, CefColor color)
 		{
-			return NativeInstance->SetColorAt(index, colorType, color) != 0;
+			return SafeCall(NativeInstance->SetColorAt(index, colorType, color) != 0);
 		}
 
 		/// <summary>
@@ -561,7 +561,7 @@ namespace CefNet
 		{
 			fixed (CefColor* p2 = &color)
 			{
-				return NativeInstance->GetColor(commandId, colorType, (cef_color_t*)p2) != 0;
+				return SafeCall(NativeInstance->GetColor(commandId, colorType, (cef_color_t*)p2) != 0);
 			}
 		}
 
@@ -575,7 +575,7 @@ namespace CefNet
 		{
 			fixed (CefColor* p2 = &color)
 			{
-				return NativeInstance->GetColorAt(index, colorType, (cef_color_t*)p2) != 0;
+				return SafeCall(NativeInstance->GetColorAt(index, colorType, (cef_color_t*)p2) != 0);
 			}
 		}
 
@@ -599,7 +599,7 @@ namespace CefNet
 			fixed (char* s1 = fontList)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = fontList != null ? fontList.Length : 0 };
-				return NativeInstance->SetFontList(commandId, &cstr1) != 0;
+				return SafeCall(NativeInstance->SetFontList(commandId, &cstr1) != 0);
 			}
 		}
 
@@ -624,7 +624,7 @@ namespace CefNet
 			fixed (char* s1 = fontList)
 			{
 				var cstr1 = new cef_string_t { Str = s1, Length = fontList != null ? fontList.Length : 0 };
-				return NativeInstance->SetFontListAt(index, &cstr1) != 0;
+				return SafeCall(NativeInstance->SetFontListAt(index, &cstr1) != 0);
 			}
 		}
 	}

@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCefType();
+				return SafeCall(NativeInstance->GetCefType());
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsText() != 0;
+				return SafeCall(NativeInstance->IsText() != 0);
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsElement() != 0;
+				return SafeCall(NativeInstance->IsElement() != 0);
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsEditable() != 0;
+				return SafeCall(NativeInstance->IsEditable() != 0);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsFormControlElement() != 0;
+				return SafeCall(NativeInstance->IsFormControlElement() != 0);
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFormControlElementType());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFormControlElementType()));
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetName()));
 			}
 		}
 
@@ -126,7 +126,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetAsMarkup());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetAsMarkup()));
 			}
 		}
 
@@ -137,7 +137,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMDocument.Wrap(CefDOMDocument.Create, NativeInstance->GetDocument());
+				return SafeCall(CefDOMDocument.Wrap(CefDOMDocument.Create, NativeInstance->GetDocument()));
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetParent());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetParent()));
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetPreviousSibling());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetPreviousSibling()));
 			}
 		}
 
@@ -170,7 +170,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetNextSibling());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetNextSibling()));
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasChildren() != 0;
+				return SafeCall(NativeInstance->HasChildren() != 0);
 			}
 		}
 
@@ -192,7 +192,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetFirstChild());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetFirstChild()));
 			}
 		}
 
@@ -203,7 +203,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetLastChild());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetLastChild()));
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetElementTagName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetElementTagName()));
 			}
 		}
 
@@ -226,7 +226,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasElementAttributes() != 0;
+				return SafeCall(NativeInstance->HasElementAttributes() != 0);
 			}
 		}
 
@@ -238,7 +238,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetElementInnerText());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetElementInnerText()));
 			}
 		}
 
@@ -249,7 +249,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetElementBounds();
+				return SafeCall(NativeInstance->GetElementBounds());
 			}
 		}
 
@@ -259,7 +259,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefDOMNode that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -270,7 +270,7 @@ namespace CefNet
 			fixed (char* s0 = value)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
-				return NativeInstance->SetValue(&cstr0) != 0;
+				return SafeCall(NativeInstance->SetValue(&cstr0) != 0);
 			}
 		}
 
@@ -282,7 +282,7 @@ namespace CefNet
 			fixed (char* s0 = attrName)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = attrName != null ? attrName.Length : 0 };
-				return NativeInstance->HasElementAttribute(&cstr0) != 0;
+				return SafeCall(NativeInstance->HasElementAttribute(&cstr0) != 0);
 			}
 		}
 
@@ -295,7 +295,7 @@ namespace CefNet
 			fixed (char* s0 = attrName)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = attrName != null ? attrName.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetElementAttribute(&cstr0));
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetElementAttribute(&cstr0)));
 			}
 		}
 
@@ -305,6 +305,7 @@ namespace CefNet
 		public unsafe virtual void GetElementAttributes(CefStringMap attrMap)
 		{
 			NativeInstance->GetElementAttributes(attrMap);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -318,7 +319,7 @@ namespace CefNet
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = attrName != null ? attrName.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
-				return NativeInstance->SetElementAttribute(&cstr0, &cstr1) != 0;
+				return SafeCall(NativeInstance->SetElementAttribute(&cstr0, &cstr1) != 0);
 			}
 		}
 
@@ -328,7 +329,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetValue()
 		{
-			return CefString.ReadAndFree(NativeInstance->GetValue());
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetValue()));
 		}
 	}
 }

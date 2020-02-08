@@ -51,6 +51,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = password != null ? password.Length : 0 };
 				NativeInstance->Continue(&cstr0, &cstr1);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -59,6 +60,7 @@ namespace CefNet
 		public unsafe virtual void Cancel()
 		{
 			NativeInstance->Cancel();
+			GC.KeepAlive(this);
 		}
 	}
 }

@@ -45,6 +45,7 @@ namespace CefNet
 		public unsafe virtual void Continue(CefStreamReader stream)
 		{
 			NativeInstance->Continue((stream != null) ? stream.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -53,6 +54,7 @@ namespace CefNet
 		public unsafe virtual void Cancel()
 		{
 			NativeInstance->Cancel();
+			GC.KeepAlive(this);
 		}
 	}
 }

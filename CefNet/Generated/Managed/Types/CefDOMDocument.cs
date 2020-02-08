@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCefType();
+				return SafeCall(NativeInstance->GetCefType());
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetDocument());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetDocument()));
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetBody());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetBody()));
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetHead());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetHead()));
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetTitle());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetTitle()));
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetFocusedNode());
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetFocusedNode()));
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasSelection() != 0;
+				return SafeCall(NativeInstance->HasSelection() != 0);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetSelectionStartOffset();
+				return SafeCall(NativeInstance->GetSelectionStartOffset());
 			}
 		}
 
@@ -135,7 +135,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetSelectionEndOffset();
+				return SafeCall(NativeInstance->GetSelectionEndOffset());
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetSelectionAsMarkup());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSelectionAsMarkup()));
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetSelectionAsText());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSelectionAsText()));
 			}
 		}
 
@@ -171,7 +171,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetBaseUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetBaseUrl()));
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace CefNet
 			fixed (char* s0 = id)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = id != null ? id.Length : 0 };
-				return CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetElementById(&cstr0));
+				return SafeCall(CefDOMNode.Wrap(CefDOMNode.Create, NativeInstance->GetElementById(&cstr0)));
 			}
 		}
 
@@ -197,7 +197,7 @@ namespace CefNet
 			fixed (char* s0 = partialURL)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = partialURL != null ? partialURL.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetCompleteUrl(&cstr0));
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetCompleteUrl(&cstr0)));
 			}
 		}
 	}

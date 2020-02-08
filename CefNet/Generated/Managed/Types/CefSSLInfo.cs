@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCertStatus();
+				return SafeCall(NativeInstance->GetCertStatus());
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefX509Certificate.Wrap(CefX509Certificate.Create, NativeInstance->GetX509certificate());
+				return SafeCall(CefX509Certificate.Wrap(CefX509Certificate.Create, NativeInstance->GetX509certificate()));
 			}
 		}
 	}

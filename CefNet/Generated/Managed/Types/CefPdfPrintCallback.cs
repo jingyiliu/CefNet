@@ -51,6 +51,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = path != null ? path.Length : 0 };
 				NativeInstance->OnPdfPrintFinished(&cstr0, ok ? 1 : 0);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

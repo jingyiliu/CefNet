@@ -50,6 +50,7 @@ namespace CefNet
 		public unsafe virtual void Continue(int bytesRead)
 		{
 			NativeInstance->Continue(bytesRead);
+			GC.KeepAlive(this);
 		}
 	}
 }

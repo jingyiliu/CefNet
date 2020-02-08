@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsLink() != 0;
+				return SafeCall(NativeInstance->IsLink() != 0);
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsFragment() != 0;
+				return SafeCall(NativeInstance->IsFragment() != 0);
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsFile() != 0;
+				return SafeCall(NativeInstance->IsFile() != 0);
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetLinkUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetLinkUrl()));
 			}
 			set
 			{
@@ -100,6 +100,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetLinkUrl(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -111,7 +112,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetLinkTitle());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetLinkTitle()));
 			}
 			set
 			{
@@ -120,6 +121,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetLinkTitle(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -131,7 +133,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetLinkMetadata());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetLinkMetadata()));
 			}
 			set
 			{
@@ -140,6 +142,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetLinkMetadata(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -151,7 +154,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFragmentText());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFragmentText()));
 			}
 			set
 			{
@@ -160,6 +163,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetFragmentText(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -171,7 +175,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFragmentHtml());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFragmentHtml()));
 			}
 			set
 			{
@@ -180,6 +184,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetFragmentHtml(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -192,7 +197,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFragmentBaseUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFragmentBaseUrl()));
 			}
 			set
 			{
@@ -201,6 +206,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetFragmentBaseUrl(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -212,7 +218,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFileName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFileName()));
 			}
 		}
 
@@ -223,7 +229,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasImage() != 0;
+				return SafeCall(NativeInstance->HasImage() != 0);
 			}
 		}
 
@@ -234,7 +240,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetImageHotspot();
+				return SafeCall(NativeInstance->GetImageHotspot());
 			}
 		}
 
@@ -243,7 +249,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefDragData Clone()
 		{
-			return CefDragData.Wrap(CefDragData.Create, NativeInstance->Clone());
+			return SafeCall(CefDragData.Wrap(CefDragData.Create, NativeInstance->Clone()));
 		}
 
 		/// <summary>
@@ -254,7 +260,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long GetFileContents(CefStreamWriter writer)
 		{
-			return (long)NativeInstance->GetFileContents((writer != null) ? writer.GetNativeInstance() : null);
+			return SafeCall((long)NativeInstance->GetFileContents((writer != null) ? writer.GetNativeInstance() : null));
 		}
 
 		/// <summary>
@@ -263,7 +269,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int GetFileNames(CefStringList names)
 		{
-			return NativeInstance->GetFileNames(names.GetNativeInstance());
+			return SafeCall(NativeInstance->GetFileNames(names.GetNativeInstance()));
 		}
 
 		/// <summary>
@@ -274,6 +280,7 @@ namespace CefNet
 		public unsafe virtual void ResetFileContents()
 		{
 			NativeInstance->ResetFileContents();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -288,6 +295,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = displayName != null ? displayName.Length : 0 };
 				NativeInstance->AddFile(&cstr0, &cstr1);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

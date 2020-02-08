@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetName()));
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetPath());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetPath()));
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetVersion());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetVersion()));
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetDescription());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetDescription()));
 			}
 		}
 	}

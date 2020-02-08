@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasExcludedElements() != 0;
+				return SafeCall(NativeInstance->HasExcludedElements() != 0);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetElementCount();
+				return SafeCall((long)NativeInstance->GetElementCount());
 			}
 		}
 
@@ -95,6 +95,7 @@ namespace CefNet
 				elements[i] = CefPostDataElement.Wrap(CefPostDataElement.Create, *(arr1 + i)); 
 			}
 			Marshal.FreeHGlobal((IntPtr)arr1);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -103,7 +104,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool RemoveElement(CefPostDataElement element)
 		{
-			return NativeInstance->RemoveElement((element != null) ? element.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->RemoveElement((element != null) ? element.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -111,7 +112,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool AddElement(CefPostDataElement element)
 		{
-			return NativeInstance->AddElement((element != null) ? element.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->AddElement((element != null) ? element.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -120,6 +121,7 @@ namespace CefNet
 		public unsafe virtual void RemoveElements()
 		{
 			NativeInstance->RemoveElements();
+			GC.KeepAlive(this);
 		}
 	}
 }

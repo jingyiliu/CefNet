@@ -48,7 +48,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFileName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFileName()));
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetFileSize();
+				return SafeCall(NativeInstance->GetFileSize());
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetFileLastModified();
+				return SafeCall(NativeInstance->GetFileLastModified());
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool MoveToFirstFile()
 		{
-			return NativeInstance->MoveToFirstFile() != 0;
+			return SafeCall(NativeInstance->MoveToFirstFile() != 0);
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool MoveToNextFile()
 		{
-			return NativeInstance->MoveToNextFile() != 0;
+			return SafeCall(NativeInstance->MoveToNextFile() != 0);
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace CefNet
 			fixed (char* s0 = fileName)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = fileName != null ? fileName.Length : 0 };
-				return NativeInstance->MoveToFile(&cstr0, caseSensitive ? 1 : 0) != 0;
+				return SafeCall(NativeInstance->MoveToFile(&cstr0, caseSensitive ? 1 : 0) != 0);
 			}
 		}
 
@@ -112,7 +112,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int Close()
 		{
-			return NativeInstance->Close();
+			return SafeCall(NativeInstance->Close());
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace CefNet
 			fixed (char* s0 = password)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = password != null ? password.Length : 0 };
-				return NativeInstance->OpenFile(&cstr0);
+				return SafeCall(NativeInstance->OpenFile(&cstr0));
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int CloseFile()
 		{
-			return NativeInstance->CloseFile();
+			return SafeCall(NativeInstance->CloseFile());
 		}
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int ReadFile(IntPtr buffer, long bufferSize)
 		{
-			return NativeInstance->ReadFile((void*)buffer, new UIntPtr((ulong)bufferSize));
+			return SafeCall(NativeInstance->ReadFile((void*)buffer, new UIntPtr((ulong)bufferSize)));
 		}
 
 		/// <summary>
@@ -152,7 +152,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual long Tell()
 		{
-			return NativeInstance->Tell();
+			return SafeCall(NativeInstance->Tell());
 		}
 
 		/// <summary>
@@ -160,7 +160,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Eof()
 		{
-			return NativeInstance->Eof() != 0;
+			return SafeCall(NativeInstance->Eof() != 0);
 		}
 	}
 }

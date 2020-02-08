@@ -49,6 +49,7 @@ namespace CefNet
 		public unsafe virtual void OnFileDialogDismissed(bool selectedAcceptFilter, CefStringList filePaths)
 		{
 			NativeInstance->OnFileDialogDismissed(selectedAcceptFilter ? 1 : 0, filePaths.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 	}
 }

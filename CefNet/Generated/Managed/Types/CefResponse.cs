@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -57,11 +57,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetError();
+				return SafeCall(NativeInstance->GetError());
 			}
 			set
 			{
 				NativeInstance->SetError(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -72,11 +73,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetStatus();
+				return SafeCall(NativeInstance->GetStatus());
 			}
 			set
 			{
 				NativeInstance->SetStatus(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -88,7 +90,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetStatusText());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetStatusText()));
 			}
 			set
 			{
@@ -97,6 +99,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetStatusText(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -108,7 +111,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetMimeType());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetMimeType()));
 			}
 			set
 			{
@@ -117,6 +120,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetMimeType(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -128,7 +132,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetCharset());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetCharset()));
 			}
 			set
 			{
@@ -137,6 +141,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetCharset(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -148,7 +153,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetUrl()));
 			}
 			set
 			{
@@ -157,6 +162,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetUrl(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -169,7 +175,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return CefString.ReadAndFree(NativeInstance->GetHeaderByName(&cstr0));
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetHeaderByName(&cstr0)));
 			}
 		}
 
@@ -187,6 +193,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = value != null ? value.Length : 0 };
 				NativeInstance->SetHeaderByName(&cstr0, &cstr1, overwrite ? 1 : 0);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -195,6 +202,7 @@ namespace CefNet
 		public unsafe virtual void GetHeaderMap(CefStringMultimap headerMap)
 		{
 			NativeInstance->GetHeaderMap(headerMap);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -203,6 +211,7 @@ namespace CefNet
 		public unsafe virtual void SetHeaderMap(CefStringMultimap headerMap)
 		{
 			NativeInstance->SetHeaderMap(headerMap);
+			GC.KeepAlive(this);
 		}
 	}
 }

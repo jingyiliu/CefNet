@@ -47,7 +47,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetXCoord();
+				return SafeCall(NativeInstance->GetXCoord());
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetYCoord();
+				return SafeCall(NativeInstance->GetYCoord());
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetTypeFlags();
+				return SafeCall(NativeInstance->GetTypeFlags());
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetLinkUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetLinkUrl()));
 			}
 		}
 
@@ -97,7 +97,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetUnfilteredLinkUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetUnfilteredLinkUrl()));
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetSourceUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSourceUrl()));
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasImageContents() != 0;
+				return SafeCall(NativeInstance->HasImageContents() != 0);
 			}
 		}
 
@@ -135,7 +135,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetTitleText());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetTitleText()));
 			}
 		}
 
@@ -147,7 +147,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetPageUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetPageUrl()));
 			}
 		}
 
@@ -159,7 +159,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFrameUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFrameUrl()));
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFrameCharset());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFrameCharset()));
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetMediaType();
+				return SafeCall(NativeInstance->GetMediaType());
 			}
 		}
 
@@ -195,7 +195,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetMediaStateFlags();
+				return SafeCall(NativeInstance->GetMediaStateFlags());
 			}
 		}
 
@@ -208,7 +208,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetSelectionText());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSelectionText()));
 			}
 		}
 
@@ -221,7 +221,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetMisspelledWord());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetMisspelledWord()));
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsEditable() != 0;
+				return SafeCall(NativeInstance->IsEditable() != 0);
 			}
 		}
 
@@ -244,7 +244,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsSpellCheckEnabled() != 0;
+				return SafeCall(NativeInstance->IsSpellCheckEnabled() != 0);
 			}
 		}
 
@@ -256,7 +256,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetEditStateFlags();
+				return SafeCall(NativeInstance->GetEditStateFlags());
 			}
 		}
 
@@ -269,7 +269,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsCustomMenu() != 0;
+				return SafeCall(NativeInstance->IsCustomMenu() != 0);
 			}
 		}
 
@@ -280,7 +280,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsPepperMenu() != 0;
+				return SafeCall(NativeInstance->IsPepperMenu() != 0);
 			}
 		}
 
@@ -291,7 +291,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool GetDictionarySuggestions(CefStringList suggestions)
 		{
-			return NativeInstance->GetDictionarySuggestions(suggestions.GetNativeInstance()) != 0;
+			return SafeCall(NativeInstance->GetDictionarySuggestions(suggestions.GetNativeInstance()) != 0);
 		}
 	}
 }

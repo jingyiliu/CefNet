@@ -50,7 +50,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual string GetLocalizedString(int stringId)
 		{
-			return CefString.ReadAndFree(NativeInstance->GetLocalizedString(stringId));
+			return SafeCall(CefString.ReadAndFree(NativeInstance->GetLocalizedString(stringId)));
 		}
 
 		/// <summary>
@@ -68,6 +68,7 @@ namespace CefNet
 				UIntPtr c2 = new UIntPtr((ulong)dataSize);
 				var rv = NativeInstance->GetDataResource(resourceId, (void**)p1, &c2) != 0;
 				dataSize = (long)c2;
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}
@@ -89,6 +90,7 @@ namespace CefNet
 				UIntPtr c3 = new UIntPtr((ulong)dataSize);
 				var rv = NativeInstance->GetDataResourceForScale(resourceId, scaleFactor, (void**)p2, &c3) != 0;
 				dataSize = (long)c3;
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}

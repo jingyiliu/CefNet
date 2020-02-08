@@ -1385,6 +1385,14 @@ namespace CefGen
 				wrappingformat = "(long){0};";
 			}
 
+			if (disposers.Length == 0 && !method.ReturnsVoid)
+			{
+				if(wrappingformat.EndsWith(';'))
+					wrappingformat = "SafeCall(" + wrappingformat.Substring(0, wrappingformat.Length - 1) + ");";
+				else
+					wrappingformat = "SafeCall(" + wrappingformat + ")";
+			}
+
 			body.AppendFormat(wrappingformat, string.Format("NativeInstance->{0}({1})", method.Name, string.Join(", ", args)));
 
 			if (disposers.Length != 0)
@@ -1395,7 +1403,13 @@ namespace CefGen
 				{
 					body.AppendLine();
 					if (usings.Length != 0)
-						body.Append('\t');
+					{
+						body.Append("\tGC.KeepAlive(this);\r\n\t");
+					}
+					else
+					{
+						body.Append("GC.KeepAlive(this);\r\n");
+					}
 					body.Append("return rv;");
 				}
 			}
@@ -1403,8 +1417,12 @@ namespace CefGen
 			{
 				body.AppendLine("\r\n}");
 			}
-
-			return body.ToString().TrimEnd(new char[] { '\r', '\n' });
+			body.TrimEnd();
+			if (method.ReturnsVoid)
+			{
+				body.Append("\r\nGC.KeepAlive(this);");
+			}
+			return body.ToString();
 		}
 
 		private static void WriteMultilineText(StringBuilder sb, string text, string indent, bool startCR)

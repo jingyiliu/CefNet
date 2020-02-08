@@ -50,7 +50,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefRequest.Wrap(CefRequest.Create, NativeInstance->GetRequest());
+				return SafeCall(CefRequest.Wrap(CefRequest.Create, NativeInstance->GetRequest()));
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefUrlRequestClient.Wrap(CefUrlRequestClient.Create, NativeInstance->GetClient());
+				return SafeCall(CefUrlRequestClient.Wrap(CefUrlRequestClient.Create, NativeInstance->GetClient()));
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetRequestStatus();
+				return SafeCall(NativeInstance->GetRequestStatus());
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetRequestError();
+				return SafeCall(NativeInstance->GetRequestError());
 			}
 		}
 
@@ -97,7 +97,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefResponse.Wrap(CefResponse.Create, NativeInstance->GetResponse());
+				return SafeCall(CefResponse.Wrap(CefResponse.Create, NativeInstance->GetResponse()));
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool ResponseWasCached()
 		{
-			return NativeInstance->ResponseWasCached() != 0;
+			return SafeCall(NativeInstance->ResponseWasCached() != 0);
 		}
 
 		/// <summary>
@@ -116,6 +116,7 @@ namespace CefNet
 		public unsafe virtual void Cancel()
 		{
 			NativeInstance->Cancel();
+			GC.KeepAlive(this);
 		}
 	}
 }

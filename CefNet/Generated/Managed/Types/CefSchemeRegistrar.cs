@@ -51,7 +51,7 @@ namespace CefNet
 			fixed (char* s0 = schemeName)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = schemeName != null ? schemeName.Length : 0 };
-				return NativeInstance->AddCustomScheme(&cstr0, options) != 0;
+				return SafeCall(NativeInstance->AddCustomScheme(&cstr0, options) != 0);
 			}
 		}
 	}

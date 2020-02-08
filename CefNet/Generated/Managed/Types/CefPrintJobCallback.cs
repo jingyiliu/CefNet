@@ -44,6 +44,7 @@ namespace CefNet
 		public unsafe virtual void Continue()
 		{
 			NativeInstance->Continue();
+			GC.KeepAlive(this);
 		}
 	}
 }

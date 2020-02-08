@@ -46,6 +46,7 @@ namespace CefNet
 		public unsafe virtual void OnResolveCompleted(CefErrorCode result, CefStringList resolvedIps)
 		{
 			NativeInstance->OnResolveCompleted(result, resolvedIps.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 	}
 }

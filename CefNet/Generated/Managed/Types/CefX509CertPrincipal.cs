@@ -48,7 +48,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetDisplayName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetDisplayName()));
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetCommonName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetCommonName()));
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetLocalityName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetLocalityName()));
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetStateOrProvinceName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetStateOrProvinceName()));
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetCountryName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetCountryName()));
 			}
 		}
 
@@ -106,6 +106,7 @@ namespace CefNet
 		public unsafe virtual void GetStreetAddresses(CefStringList addresses)
 		{
 			NativeInstance->GetStreetAddresses(addresses.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -114,6 +115,7 @@ namespace CefNet
 		public unsafe virtual void GetOrganizationNames(CefStringList names)
 		{
 			NativeInstance->GetOrganizationNames(names.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -122,6 +124,7 @@ namespace CefNet
 		public unsafe virtual void GetOrganizationUnitNames(CefStringList names)
 		{
 			NativeInstance->GetOrganizationUnitNames(names.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -130,6 +133,7 @@ namespace CefNet
 		public unsafe virtual void GetDomainComponents(CefStringList components)
 		{
 			NativeInstance->GetDomainComponents(components.GetNativeInstance());
+			GC.KeepAlive(this);
 		}
 	}
 }

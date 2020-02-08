@@ -64,6 +64,7 @@ namespace CefNet
 				var rv = NativeInstance->GetByName(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
 				retval = CefV8Value.Wrap(CefV8Value.Create, p2);
 				exception = CefString.ReadAndFree(&cstr3);
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}
@@ -86,6 +87,7 @@ namespace CefNet
 				var rv = NativeInstance->GetByIndex(index, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
 				retval = CefV8Value.Wrap(CefV8Value.Create, p2);
 				exception = CefString.ReadAndFree(&cstr3);
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}
@@ -107,6 +109,7 @@ namespace CefNet
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
 				var rv = NativeInstance->SetByName(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
 				exception = CefString.ReadAndFree(&cstr3);
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}
@@ -125,6 +128,7 @@ namespace CefNet
 				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
 				var rv = NativeInstance->SetByIndex(index, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
 				exception = CefString.ReadAndFree(&cstr3);
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}

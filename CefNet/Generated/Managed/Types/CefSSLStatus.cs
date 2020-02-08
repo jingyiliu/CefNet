@@ -45,7 +45,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsSecureConnection() != 0;
+				return SafeCall(NativeInstance->IsSecureConnection() != 0);
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCertStatus();
+				return SafeCall(NativeInstance->GetCertStatus());
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetSslversion();
+				return SafeCall(NativeInstance->GetSslversion());
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetContentStatus();
+				return SafeCall(NativeInstance->GetContentStatus());
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefX509Certificate.Wrap(CefX509Certificate.Create, NativeInstance->GetX509certificate());
+				return SafeCall(CefX509Certificate.Wrap(CefX509Certificate.Create, NativeInstance->GetX509certificate()));
 			}
 		}
 	}

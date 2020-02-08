@@ -48,7 +48,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Visit(CefNavigationEntry entry, bool current, int index, int total)
 		{
-			return NativeInstance->Visit((entry != null) ? entry.GetNativeInstance() : null, current ? 1 : 0, index, total) != 0;
+			return SafeCall(NativeInstance->Visit((entry != null) ? entry.GetNativeInstance() : null, current ? 1 : 0, index, total) != 0);
 		}
 	}
 }

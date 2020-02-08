@@ -49,7 +49,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefTaskRunner that)
 		{
-			return NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((that != null) ? that.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool BelongsToCurrentThread()
 		{
-			return NativeInstance->BelongsToCurrentThread() != 0;
+			return SafeCall(NativeInstance->BelongsToCurrentThread() != 0);
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool BelongsToThread(CefThreadId threadId)
 		{
-			return NativeInstance->BelongsToThread(threadId) != 0;
+			return SafeCall(NativeInstance->BelongsToThread(threadId) != 0);
 		}
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int PostTask(CefTask task)
 		{
-			return NativeInstance->PostTask((task != null) ? task.GetNativeInstance() : null);
+			return SafeCall(NativeInstance->PostTask((task != null) ? task.GetNativeInstance() : null));
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual int PostDelayedTask(CefTask task, long delayMs)
 		{
-			return NativeInstance->PostDelayedTask((task != null) ? task.GetNativeInstance() : null, delayMs);
+			return SafeCall(NativeInstance->PostDelayedTask((task != null) ? task.GetNativeInstance() : null, delayMs));
 		}
 	}
 }

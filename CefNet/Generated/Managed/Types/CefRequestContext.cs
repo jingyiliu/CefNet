@@ -60,7 +60,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsGlobal() != 0;
+				return SafeCall(NativeInstance->IsGlobal() != 0);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefRequestContextHandler.Wrap(CefRequestContextHandler.Create, NativeInstance->GetHandler());
+				return SafeCall(CefRequestContextHandler.Wrap(CefRequestContextHandler.Create, NativeInstance->GetHandler()));
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetCachePath());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetCachePath()));
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSame(CefRequestContext other)
 		{
-			return NativeInstance->IsSame((other != null) ? other.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSame((other != null) ? other.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsSharingWith(CefRequestContext other)
 		{
-			return NativeInstance->IsSharingWith((other != null) ? other.GetNativeInstance() : null) != 0;
+			return SafeCall(NativeInstance->IsSharingWith((other != null) ? other.GetNativeInstance() : null) != 0);
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefCookieManager GetCookieManager(CefCompletionCallback callback)
 		{
-			return CefCookieManager.Wrap(CefCookieManager.Create, NativeInstance->GetCookieManager((callback != null) ? callback.GetNativeInstance() : null));
+			return SafeCall(CefCookieManager.Wrap(CefCookieManager.Create, NativeInstance->GetCookieManager((callback != null) ? callback.GetNativeInstance() : null)));
 		}
 
 		/// <summary>
@@ -136,7 +136,7 @@ namespace CefNet
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = schemeName != null ? schemeName.Length : 0 };
 				var cstr1 = new cef_string_t { Str = s1, Length = domainName != null ? domainName.Length : 0 };
-				return NativeInstance->RegisterSchemeHandlerFactory(&cstr0, &cstr1, (factory != null) ? factory.GetNativeInstance() : null) != 0;
+				return SafeCall(NativeInstance->RegisterSchemeHandlerFactory(&cstr0, &cstr1, (factory != null) ? factory.GetNativeInstance() : null) != 0);
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool ClearSchemeHandlerFactories()
 		{
-			return NativeInstance->ClearSchemeHandlerFactories() != 0;
+			return SafeCall(NativeInstance->ClearSchemeHandlerFactories() != 0);
 		}
 
 		/// <summary>
@@ -159,6 +159,7 @@ namespace CefNet
 		public unsafe virtual void PurgePluginListCache(bool reloadPages)
 		{
 			NativeInstance->PurgePluginListCache(reloadPages ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -170,7 +171,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return NativeInstance->HasPreference(&cstr0) != 0;
+				return SafeCall(NativeInstance->HasPreference(&cstr0) != 0);
 			}
 		}
 
@@ -186,7 +187,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return CefValue.Wrap(CefValue.Create, NativeInstance->GetPreference(&cstr0));
+				return SafeCall(CefValue.Wrap(CefValue.Create, NativeInstance->GetPreference(&cstr0)));
 			}
 		}
 
@@ -200,7 +201,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefDictionaryValue GetAllPreferences(bool includeDefaults)
 		{
-			return CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetAllPreferences(includeDefaults ? 1 : 0));
+			return SafeCall(CefDictionaryValue.Wrap(CefDictionaryValue.Create, NativeInstance->GetAllPreferences(includeDefaults ? 1 : 0)));
 		}
 
 		/// <summary>
@@ -214,7 +215,7 @@ namespace CefNet
 			fixed (char* s0 = name)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				return NativeInstance->CanSetPreference(&cstr0) != 0;
+				return SafeCall(NativeInstance->CanSetPreference(&cstr0) != 0);
 			}
 		}
 
@@ -234,6 +235,7 @@ namespace CefNet
 				var cstr2 = new cef_string_t { Str = s2, Length = error != null ? error.Length : 0 };
 				var rv = NativeInstance->SetPreference(&cstr0, (value != null) ? value.GetNativeInstance() : null, &cstr2) != 0;
 				error = CefString.ReadAndFree(&cstr2);
+				GC.KeepAlive(this);
 				return rv;
 			}
 		}
@@ -249,6 +251,7 @@ namespace CefNet
 		public unsafe virtual void ClearCertificateExceptions(CefCompletionCallback callback)
 		{
 			NativeInstance->ClearCertificateExceptions((callback != null) ? callback.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -259,6 +262,7 @@ namespace CefNet
 		public unsafe virtual void ClearHttpAuthCredentials(CefCompletionCallback callback)
 		{
 			NativeInstance->ClearHttpAuthCredentials((callback != null) ? callback.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -270,6 +274,7 @@ namespace CefNet
 		public unsafe virtual void CloseAllConnections(CefCompletionCallback callback)
 		{
 			NativeInstance->CloseAllConnections((callback != null) ? callback.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -283,6 +288,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = origin != null ? origin.Length : 0 };
 				NativeInstance->ResolveHost(&cstr0, (callback != null) ? callback.GetNativeInstance() : null);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -337,6 +343,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = rootDirectory != null ? rootDirectory.Length : 0 };
 				NativeInstance->LoadExtension(&cstr0, (manifest != null) ? manifest.GetNativeInstance() : null, (handler != null) ? handler.GetNativeInstance() : null);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -350,7 +357,7 @@ namespace CefNet
 			fixed (char* s0 = extensionId)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = extensionId != null ? extensionId.Length : 0 };
-				return NativeInstance->DidLoadExtension(&cstr0) != 0;
+				return SafeCall(NativeInstance->DidLoadExtension(&cstr0) != 0);
 			}
 		}
 
@@ -365,7 +372,7 @@ namespace CefNet
 			fixed (char* s0 = extensionId)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = extensionId != null ? extensionId.Length : 0 };
-				return NativeInstance->HasExtension(&cstr0) != 0;
+				return SafeCall(NativeInstance->HasExtension(&cstr0) != 0);
 			}
 		}
 
@@ -377,7 +384,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool GetExtensions(CefStringList extensionIds)
 		{
-			return NativeInstance->GetExtensions(extensionIds.GetNativeInstance()) != 0;
+			return SafeCall(NativeInstance->GetExtensions(extensionIds.GetNativeInstance()) != 0);
 		}
 
 		/// <summary>
@@ -390,7 +397,7 @@ namespace CefNet
 			fixed (char* s0 = extensionId)
 			{
 				var cstr0 = new cef_string_t { Str = s0, Length = extensionId != null ? extensionId.Length : 0 };
-				return CefExtension.Wrap(CefExtension.Create, NativeInstance->GetExtension(&cstr0));
+				return SafeCall(CefExtension.Wrap(CefExtension.Create, NativeInstance->GetExtension(&cstr0)));
 			}
 		}
 	}

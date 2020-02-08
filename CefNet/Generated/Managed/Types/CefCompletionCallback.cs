@@ -44,6 +44,7 @@ namespace CefNet
 		public unsafe virtual void OnComplete()
 		{
 			NativeInstance->OnComplete();
+			GC.KeepAlive(this);
 		}
 	}
 }

@@ -49,7 +49,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefTaskRunner.Wrap(CefTaskRunner.Create, NativeInstance->GetTaskRunner());
+				return SafeCall(CefTaskRunner.Wrap(CefTaskRunner.Create, NativeInstance->GetTaskRunner()));
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsRunning() != 0;
+				return SafeCall(NativeInstance->IsRunning() != 0);
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetAddress());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetAddress()));
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasConnection() != 0;
+				return SafeCall(NativeInstance->HasConnection() != 0);
 			}
 		}
 
@@ -99,6 +99,7 @@ namespace CefNet
 		public unsafe virtual void Shutdown()
 		{
 			NativeInstance->Shutdown();
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -107,7 +108,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool IsValidConnection(int connectionId)
 		{
-			return NativeInstance->IsValidConnection(connectionId) != 0;
+			return SafeCall(NativeInstance->IsValidConnection(connectionId) != 0);
 		}
 
 		/// <summary>
@@ -124,6 +125,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = contentType != null ? contentType.Length : 0 };
 				NativeInstance->SendHttp200response(connectionId, &cstr1, (void*)data, new UIntPtr((ulong)dataSize));
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -134,6 +136,7 @@ namespace CefNet
 		public unsafe virtual void SendHttp404response(int connectionId)
 		{
 			NativeInstance->SendHttp404response(connectionId);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -149,6 +152,7 @@ namespace CefNet
 				var cstr1 = new cef_string_t { Str = s1, Length = errorMessage != null ? errorMessage.Length : 0 };
 				NativeInstance->SendHttp500response(connectionId, &cstr1);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -174,6 +178,7 @@ namespace CefNet
 				var cstr2 = new cef_string_t { Str = s2, Length = contentType != null ? contentType.Length : 0 };
 				NativeInstance->SendHttpResponse(connectionId, responseCode, &cstr2, contentLength, extraHeaders);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -187,6 +192,7 @@ namespace CefNet
 		public unsafe virtual void SendRawData(int connectionId, IntPtr data, long dataSize)
 		{
 			NativeInstance->SendRawData(connectionId, (void*)data, new UIntPtr((ulong)dataSize));
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -196,6 +202,7 @@ namespace CefNet
 		public unsafe virtual void CloseConnection(int connectionId)
 		{
 			NativeInstance->CloseConnection(connectionId);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -207,6 +214,7 @@ namespace CefNet
 		public unsafe virtual void SendWebSocketMessage(int connectionId, IntPtr data, long dataSize)
 		{
 			NativeInstance->SendWebSocketMessage(connectionId, (void*)data, new UIntPtr((ulong)dataSize));
+			GC.KeepAlive(this);
 		}
 	}
 }

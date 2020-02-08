@@ -45,6 +45,7 @@ namespace CefNet
 		public unsafe virtual void Select(CefX509Certificate cert)
 		{
 			NativeInstance->Select((cert != null) ? cert.GetNativeInstance() : null);
+			GC.KeepAlive(this);
 		}
 	}
 }

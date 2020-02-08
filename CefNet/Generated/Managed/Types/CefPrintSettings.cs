@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsReadOnly() != 0;
+				return SafeCall(NativeInstance->IsReadOnly() != 0);
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsLandscape() != 0;
+				return SafeCall(NativeInstance->IsLandscape() != 0);
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetDeviceName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetDeviceName()));
 			}
 			set
 			{
@@ -90,6 +90,7 @@ namespace CefNet
 					var cstr0 = new cef_string_t { Str = s0, Length = value != null ? value.Length : 0 };
 					NativeInstance->SetDeviceName(&cstr0);
 				}
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -100,11 +101,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetDpi();
+				return SafeCall(NativeInstance->GetDpi());
 			}
 			set
 			{
 				NativeInstance->SetDpi(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -115,7 +117,7 @@ namespace CefNet
 		{
 			get
 			{
-				return (long)NativeInstance->GetPageRangesCount();
+				return SafeCall((long)NativeInstance->GetPageRangesCount());
 			}
 		}
 
@@ -126,11 +128,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsSelectionOnly() != 0;
+				return SafeCall(NativeInstance->IsSelectionOnly() != 0);
 			}
 			set
 			{
 				NativeInstance->SetSelectionOnly(value ? 1 : 0);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -141,11 +144,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetColorModel();
+				return SafeCall(NativeInstance->GetColorModel());
 			}
 			set
 			{
 				NativeInstance->SetColorModel(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -156,11 +160,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCopies();
+				return SafeCall(NativeInstance->GetCopies());
 			}
 			set
 			{
 				NativeInstance->SetCopies(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -171,11 +176,12 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetDuplexMode();
+				return SafeCall(NativeInstance->GetDuplexMode());
 			}
 			set
 			{
 				NativeInstance->SetDuplexMode(value);
+				GC.KeepAlive(this);
 			}
 		}
 
@@ -187,6 +193,7 @@ namespace CefNet
 		public unsafe virtual void SetPrinterPrintableArea(CefSize physicalSizeDeviceUnits, CefRect printableAreaDeviceUnits, bool landscapeNeedsFlip)
 		{
 			NativeInstance->SetPrinterPrintableArea((cef_size_t*)&physicalSizeDeviceUnits, (cef_rect_t*)&printableAreaDeviceUnits, landscapeNeedsFlip ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -198,6 +205,7 @@ namespace CefNet
 			{
 				NativeInstance->SetPageRanges(new UIntPtr((uint)ranges.Length), (cef_range_t*)p1);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -212,6 +220,7 @@ namespace CefNet
 				rangesCount = (long)c1;
 				Array.Resize(ref ranges, (int)c1);
 			}
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -219,7 +228,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool WillCollate()
 		{
-			return NativeInstance->WillCollate() != 0;
+			return SafeCall(NativeInstance->WillCollate() != 0);
 		}
 
 		/// <summary>
@@ -228,6 +237,7 @@ namespace CefNet
 		public unsafe virtual void SetOrientation(bool landscape)
 		{
 			NativeInstance->SetOrientation(landscape ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 
 		/// <summary>
@@ -236,6 +246,7 @@ namespace CefNet
 		public unsafe virtual void SetCollate(bool collate)
 		{
 			NativeInstance->SetCollate(collate ? 1 : 0);
+			GC.KeepAlive(this);
 		}
 	}
 }

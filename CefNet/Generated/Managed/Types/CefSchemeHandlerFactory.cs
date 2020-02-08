@@ -53,7 +53,7 @@ namespace CefNet
 			fixed (char* s2 = schemeName)
 			{
 				var cstr2 = new cef_string_t { Str = s2, Length = schemeName != null ? schemeName.Length : 0 };
-				return CefResourceHandler.Wrap(CefResourceHandler.Create, NativeInstance->Create((browser != null) ? browser.GetNativeInstance() : null, (frame != null) ? frame.GetNativeInstance() : null, &cstr2, (request != null) ? request.GetNativeInstance() : null));
+				return SafeCall(CefResourceHandler.Wrap(CefResourceHandler.Create, NativeInstance->Create((browser != null) ? browser.GetNativeInstance() : null, (frame != null) ? frame.GetNativeInstance() : null, &cstr2, (request != null) ? request.GetNativeInstance() : null)));
 			}
 		}
 	}

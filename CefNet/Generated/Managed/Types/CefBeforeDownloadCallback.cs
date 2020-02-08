@@ -51,6 +51,7 @@ namespace CefNet
 				var cstr0 = new cef_string_t { Str = s0, Length = downloadPath != null ? downloadPath.Length : 0 };
 				NativeInstance->Continue(&cstr0, showDialog ? 1 : 0);
 			}
+			GC.KeepAlive(this);
 		}
 	}
 }

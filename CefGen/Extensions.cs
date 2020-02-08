@@ -73,6 +73,18 @@ namespace CefGen
 			"stream", "handler", "method", "filter", "flags", "rethrow"
 		};
 
+		public static StringBuilder TrimEnd(this StringBuilder self)
+		{
+			for (var i = self.Length - 1; i >= 0; i--)
+			{
+				if (char.IsWhiteSpace(self[i]))
+					self.Length = i;
+				else
+					break;
+			}
+			return self;
+		}
+
 		public static bool StartsWith(this string s, params string[] values)
 		{
 			foreach(string value in values)

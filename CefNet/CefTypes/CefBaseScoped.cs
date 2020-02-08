@@ -7,6 +7,7 @@
 using CefNet.CApi;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -137,6 +138,21 @@ namespace CefNet
 		public void Del()
 		{
 			_instance->Del();
+		}
+
+		/// <summary>
+		/// Makes himself ineligible for garbage collection from the start of the current routine
+		/// to the point where this method is called (like &apos;GC.KeepAlive(this)&apos;) and
+		/// returns passed <paramref name="result"/>.
+		/// </summary>
+		/// <typeparam name="T">Any type.</typeparam>
+		/// <param name="result">Any value of <typeparamref name="T"/> type.</param>
+		/// <returns>Returns the passed parameter of <typeparamref name="T"/> type.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		public T SafeCall<T>(T result)
+		{
+			return result;
 		}
 	}
 }

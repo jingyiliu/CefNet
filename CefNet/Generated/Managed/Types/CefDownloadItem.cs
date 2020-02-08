@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsInProgress() != 0;
+				return SafeCall(NativeInstance->IsInProgress() != 0);
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsComplete() != 0;
+				return SafeCall(NativeInstance->IsComplete() != 0);
 			}
 		}
 
@@ -79,7 +79,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsCanceled() != 0;
+				return SafeCall(NativeInstance->IsCanceled() != 0);
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCurrentSpeed();
+				return SafeCall(NativeInstance->GetCurrentSpeed());
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetPercentComplete();
+				return SafeCall(NativeInstance->GetPercentComplete());
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetTotalBytes();
+				return SafeCall(NativeInstance->GetTotalBytes());
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetReceivedBytes();
+				return SafeCall(NativeInstance->GetReceivedBytes());
 			}
 		}
 
@@ -135,7 +135,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetStartTime();
+				return SafeCall(NativeInstance->GetStartTime());
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetEndTime();
+				return SafeCall(NativeInstance->GetEndTime());
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetFullPath());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetFullPath()));
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetId();
+				return SafeCall(NativeInstance->GetId());
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetUrl()));
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetOriginalUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetOriginalUrl()));
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetSuggestedFileName());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetSuggestedFileName()));
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetContentDisposition());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetContentDisposition()));
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetMimeType());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetMimeType()));
 			}
 		}
 	}

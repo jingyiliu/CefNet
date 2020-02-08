@@ -46,7 +46,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetUrl()));
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetDisplayUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetDisplayUrl()));
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetOriginalUrl());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetOriginalUrl()));
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefString.ReadAndFree(NativeInstance->GetTitle());
+				return SafeCall(CefString.ReadAndFree(NativeInstance->GetTitle()));
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetTransitionType();
+				return SafeCall(NativeInstance->GetTransitionType());
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->HasPostData() != 0;
+				return SafeCall(NativeInstance->HasPostData() != 0);
 			}
 		}
 
@@ -131,7 +131,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetCompletionTime();
+				return SafeCall(NativeInstance->GetCompletionTime());
 			}
 		}
 
@@ -144,7 +144,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetHttpStatusCode();
+				return SafeCall(NativeInstance->GetHttpStatusCode());
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace CefNet
 		{
 			get
 			{
-				return CefSSLStatus.Wrap(CefSSLStatus.Create, NativeInstance->GetSslstatus());
+				return SafeCall(CefSSLStatus.Wrap(CefSSLStatus.Create, NativeInstance->GetSslstatus()));
 			}
 		}
 	}

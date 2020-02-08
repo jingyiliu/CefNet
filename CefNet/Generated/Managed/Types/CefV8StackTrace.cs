@@ -51,7 +51,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->IsValid() != 0;
+				return SafeCall(NativeInstance->IsValid() != 0);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace CefNet
 		{
 			get
 			{
-				return NativeInstance->GetFrameCount();
+				return SafeCall(NativeInstance->GetFrameCount());
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefV8StackFrame GetFrame(int index)
 		{
-			return CefV8StackFrame.Wrap(CefV8StackFrame.Create, NativeInstance->GetFrame(index));
+			return SafeCall(CefV8StackFrame.Wrap(CefV8StackFrame.Create, NativeInstance->GetFrame(index)));
 		}
 	}
 }
