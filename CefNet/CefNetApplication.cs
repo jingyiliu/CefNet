@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -28,7 +29,7 @@ namespace CefNet
 		/// </summary>
 		public event EventHandler<CefUncaughtExceptionEventArgs> CefUncaughtException;
 
-		private static bool? _IsRendererProcess;
+		private static ProcessType? _ProcessType;
 		private int _initThreadId;
 
 		public CefNetApplication()
@@ -177,13 +178,51 @@ namespace CefNet
 			CefApi.Shutdown();
 		}
 
-		public static bool IsRendererProcess
+		/// <summary>
+		/// Gets the type of the current process.
+		/// </summary>
+		public static ProcessType ProcessType
 		{
 			get
 			{
-				if (_IsRendererProcess == null)
-					_IsRendererProcess = Environment.CommandLine.Contains("--type=renderer");
-				return _IsRendererProcess.Value;
+				if (_ProcessType != null)
+					return _ProcessType.Value;
+
+				string type = Environment.GetCommandLineArgs().FirstOrDefault(arg => arg.StartsWith("--type="));
+				if (type is null)
+				{
+					_ProcessType = ProcessType.Main;
+					return ProcessType.Main;
+				}
+
+				switch (type.Substring(7))
+				{
+					case "renderer":
+						_ProcessType = ProcessType.Renderer;
+						break;
+					case "zygote":
+						_ProcessType = ProcessType.Zygote;
+						break;
+					case "gpu-process":
+						_ProcessType = ProcessType.Gpu;
+						break;
+					case "utility":
+						_ProcessType = ProcessType.Utility;
+						break;
+					case "ppapi":
+						_ProcessType = ProcessType.PPApi;
+						break;
+					case "ppapi-broker":
+						_ProcessType = ProcessType.PPApiBroker;
+						break;
+					case "nacl-loader":
+						_ProcessType = ProcessType.NaClLoader;
+						break;
+					default:
+						_ProcessType = ProcessType.Other;
+						break;
+				}
+				return _ProcessType.Value;
 			}
 		}
 

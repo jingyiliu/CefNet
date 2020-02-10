@@ -108,7 +108,7 @@ namespace CefNet.JSInterop
 
 		private static XrayHandle GetGlobal(CefFrame frame)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				return GetGlobalInternal(frame);
 			}
@@ -168,7 +168,7 @@ namespace CefNet.JSInterop
 
 		public object GetProperty(XrayHandle self, int index)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				return GetPropertyInternal(self, index);
 			}
@@ -210,7 +210,7 @@ namespace CefNet.JSInterop
 
 		public object GetProperty(XrayHandle self, string name)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				return GetPropertyInternal(self, name);
 			}
@@ -253,7 +253,7 @@ namespace CefNet.JSInterop
 
 		public void SetProperty(XrayHandle self, int index, object value)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				SetPropertyInternal(self, index, value);
 			}
@@ -298,7 +298,7 @@ namespace CefNet.JSInterop
 
 		public void SetProperty(XrayHandle self, string name, object value)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				SetPropertyInternal(self, name, value);
 			}
@@ -343,7 +343,7 @@ namespace CefNet.JSInterop
 
 		public object Invoke(XrayHandle self, params object[] args)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				return InvokeInternal(self, args);
 			}
@@ -355,7 +355,7 @@ namespace CefNet.JSInterop
 
 		public object InvokeMember(XrayHandle self, string name, params object[] args)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				return InvokeMemberInternal(self, name, args);
 			}
@@ -370,7 +370,7 @@ namespace CefNet.JSInterop
 
 		public void ReleaseObject(XrayHandle handle)
 		{
-			if (CefNetApplication.IsRendererProcess)
+			if (CefNetApplication.ProcessType == ProcessType.Renderer)
 			{
 				if (CefApi.CurrentlyOn(CefThreadId.Renderer))
 					handle.Release();
