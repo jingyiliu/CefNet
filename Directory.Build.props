@@ -1,4 +1,9 @@
 <Project>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CodeAnalysisRuleSet>$(SolutionDir)Debug.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="!Exists($(CodeAnalysisRuleSet))">Debug.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="!Exists($(CodeAnalysisRuleSet))">../Debug.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <PropertyGroup Condition="$(Configuration) != 'Nuget_Release'">
     <VersionSuffix>m-$([System.DateTime]::UtcNow.ToString(mmss))</VersionSuffix>
   </PropertyGroup>
