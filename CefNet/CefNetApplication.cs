@@ -296,10 +296,7 @@ namespace CefNet
 			}
 			else
 			{
-				string typeName = args.GetString(2);
-				Type exceptionType = Type.GetType(typeName);
-				object exception = Activator.CreateInstance(exceptionType, args.GetString(1));
-				sqi.Complete((Exception)exception);
+				sqi.Complete(new CefNetRemoteException(args.GetString(1), args.GetString(2), args.GetString(3)));
 			}
 			return true;
 		}
@@ -397,9 +394,10 @@ namespace CefNet
 			catch (Exception ex)
 			{
 				//File.AppendAllText("G:\\outlog.txt", ex.GetType().Name + ": " + ex.Message + "\r\n" + ex.StackTrace + "\r\n");
-				retArgs.SetSize(3);
+				retArgs.SetSize(4);
 				retArgs.SetString(1, ex.Message);
 				retArgs.SetString(2, ex.GetType().FullName);
+				retArgs.SetString(3, ex.StackTrace);
 			}
 
 
