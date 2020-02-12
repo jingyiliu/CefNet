@@ -6,6 +6,8 @@
 // Source: libcef_dll\wrapper_types.h
 // --------------------------------------------------------------------------------------------
 
+#pragma warning disable 1591
+
 namespace CefNet.Unsafe
 {
 	public enum CefWrapperType

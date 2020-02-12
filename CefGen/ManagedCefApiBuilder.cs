@@ -91,7 +91,7 @@ namespace CefGen
 			using (var csfile = new StreamWriter(file, false, Encoding.UTF8))
 			{
 				var csharp = new CSharpCodeGen();
-				csharp.Directives.Add("#pragma warning disable 0169");
+				csharp.Directives.Add("#pragma warning disable 0169, 1591, 1573");
 				csharp.GenerateCode(fileDecl, csfile);
 				csfile.Flush();
 			}

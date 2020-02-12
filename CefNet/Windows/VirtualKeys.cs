@@ -4,6 +4,9 @@ using System.Text;
 
 namespace CefNet.WinApi
 {
+	/// <summary>
+	/// Specifies virtual key codes.
+	/// </summary>
 	public enum VirtualKeys
 	{
 		/// <summary>The bitmask to extract a key code from a key value.</summary>

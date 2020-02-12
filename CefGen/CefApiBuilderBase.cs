@@ -35,10 +35,10 @@ namespace CefGen
 			using (var w = new StringWriter(sb))
 			{
 				var codeGen = new CSharpCodeGen();
+				codeGen.Directives.Add("#pragma warning disable 0169, 1591, 1573");
 				codeGen.GenerateCode(codefile, w);
 				w.Flush();
 			}
-			//langStream.WriteLine("#pragma warning disable 1591, 1572, 1573");
 			stream.WriteLine(sb.ToString());
 
 
@@ -52,11 +52,10 @@ namespace CefGen
 			using (var w = new StringWriter(sb))
 			{
 				var codeGen = new CSharpCodeGen();
-				codeGen.Directives.Add("#pragma warning disable 0169");
+				codeGen.Directives.Add("#pragma warning disable 0169, 1591, 1573");
 				codeGen.GenerateCode(codefile, w);
 				w.Flush();
 			}
-			//langStream.WriteLine("#pragma warning disable 1591, 1572, 1573");
 			langStream.WriteLine(sb.ToString());
 
 			sb.Clear();
