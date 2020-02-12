@@ -3,8 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace CefNet.CApi
 {
-    public static partial class CefNativeApi
-    {
+	/// <summary>
+	/// Provides CEF methods.
+	/// </summary>
+	public static partial class CefNativeApi
+	{
 		/// <remarks>
 		/// Defined in include/internal/cef_types_linux.h as
 		/// XDisplay* cef_get_xdisplay()
@@ -31,5 +34,5 @@ namespace CefNet.CApi
 		/// </remarks>
 		[DllImport("libcef", EntryPoint = "cef_get_current_platform_thread_handle", CallingConvention = CallingConvention.Cdecl)]
 		public static unsafe extern uint cef_get_current_platform_thread_handle_windows();
-    }
+	}
 }

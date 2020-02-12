@@ -8,8 +8,20 @@ using System.Threading;
 
 namespace CefNet
 {
+	/// <summary>
+	/// Provide global methods.
+	/// </summary>
 	public static class CefNetApi
 	{
+		/// <summary>
+		/// Translates a virtual key to the corresponding native key code for the current keyboard.
+		/// </summary>
+		/// <param name="eventType">The key event type.</param>
+		/// <param name="repeatCount">The repeat count for a message.</param>
+		/// <param name="modifiers">A bitwise combination of the <see cref="CefEventFlags"/> values.</param>
+		/// <param name="key">The virtual key.</param>
+		/// <param name="isExtended">The extended key flag.</param>
+		/// <returns>A native key code for the current keyboard.</returns>
 		public static int GetNativeKeyCode(CefKeyEventType eventType, int repeatCount, VirtualKeys key, CefEventFlags modifiers, bool isExtended)
 		{
 			if (PlatformInfo.IsWindows)
@@ -20,6 +32,15 @@ namespace CefNet
 			return 0;
 		}
 
+		/// <summary>
+		/// Translates a virtual key to the corresponding native key code for the current keyboard.
+		/// </summary>
+		/// <param name="eventType">The key event type.</param>
+		/// <param name="repeatCount">The repeat count for a message.</param>
+		/// <param name="scanCode">The scan code for a key.</param>
+		/// <param name="isSystemKey">The system key flag.</param>
+		/// <param name="isExtended">The extended key flag.</param>
+		/// <returns>A native key code for the current keyboard.</returns>
 		public static int GetWindowsNativeKeyCode(CefKeyEventType eventType, int repeatCount, byte scanCode, bool isSystemKey, bool isExtended)
 		{
 			if (repeatCount < 0)
@@ -56,6 +77,15 @@ namespace CefNet
 			return (keyInfo << 16) | (repeatCount & 0xFFFF);
 		}
 
+		/// <summary>
+		/// Translates a character to the corresponding virtual-key code for the current keyboard.
+		/// </summary>
+		/// <param name="c">The character to be translated into a virtual-key code.</param>
+		/// <returns>The virtual key code.</returns>
+		/// <exception cref="InvalidOperationException">
+		/// The function finds no key that translates to the passed character code.
+		/// Perhaps the wrong locale is being used.
+		/// </exception>
 		public static VirtualKeys GetVirtualKey(char c)
 		{
 			if (PlatformInfo.IsWindows)
@@ -77,6 +107,11 @@ namespace CefNet
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Translates a KeySym to the corresponding KeySym from latin range for the current keyboard.
+		/// </summary>
+		/// <param name="keysym">The KeySym to be translated.</param>
+		/// <returns>The KeySym.</returns>
 		public static XKeySym TranslateXKeySymToAsciiXKeySym(XKeySym keysym)
 		{
 			IntPtr display = Linux.NativeMethods.XOpenDisplay(IntPtr.Zero);
@@ -91,6 +126,11 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Returns a hardware key code for the specified X keysym (only Linux OS).
+		/// </summary>
+		/// <param name="keysym">Specifies the KeySym.</param>
+		/// <returns>A hardware key code.</returns>
 		public static byte GetHardwareKeyCode(XKeySym keysym)
 		{
 			IntPtr display = Linux.NativeMethods.XOpenDisplay(IntPtr.Zero);
@@ -104,6 +144,12 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Returns a native key code for the specified virtual key.
+		/// </summary>
+		/// <param name="key">Specifies the virtual key.</param>
+		/// <param name="shift">Specifies a Shift key state.</param>
+		/// <returns>A native key code for the current keyboard.</returns>
 		public static int GetLinuxNativeKeyCode(VirtualKeys key, bool shift)
 		{
 			XKeySym keysym = Linux.KeyInterop.VirtualKeyToXKeySym(key, shift);
@@ -115,10 +161,10 @@ namespace CefNet
 		/// <summary>
 		/// Converts the value of a UTF-16 encoded character into a native key code.
 		/// </summary>
-		/// <param name="c"></param>
-		/// <param name="repeatCount"></param>
-		/// <param name="modifiers"></param>
-		/// <param name="isExtended"></param>
+		/// <param name="c">The character.</param>
+		/// <param name="repeatCount">The repeat count for a message.</param>
+		/// <param name="modifiers">A bitwise combination of the <see cref="CefEventFlags"/> values.</param>
+		/// <param name="isExtended">The extended key flag.</param>
 		public static int GetNativeKeyCode(char c, int repeatCount, CefEventFlags modifiers, bool isExtended)
 		{
 			if (PlatformInfo.IsWindows)
@@ -134,6 +180,10 @@ namespace CefNet
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Converts the value of a UTF-16 encoded character into a native key code.
+		/// </summary>
+		/// <param name="c">The character to be converted.</param>
 		public static int GetLinuxNativeKeyCode(char c)
 		{
 			XKeySym keysym = Linux.KeyInterop.CharToXKeySym(c);
@@ -142,6 +192,14 @@ namespace CefNet
 			return GetHardwareKeyCode(keysym);
 		}
 
+		/// <summary>
+		/// Determines that a character requires the Shift modifier key.
+		/// </summary>
+		/// <param name="c">The Unicode character to evaluate.</param>
+		/// <returns>
+		/// Returns true if a character requires the Shift modifier key;
+		/// otherwise, false.
+		/// </returns>
 		public static bool IsShiftRequired(this char c)
 		{
 			if (c >= '!' && c <= '+')
@@ -157,6 +215,26 @@ namespace CefNet
 			return char.IsUpper(c);
 		}
 
+		/// <summary>
+		/// Compares two instances of the specified reference type <typeparamref name="T"/>
+		/// for reference equality and, if they are equal, replaces the first one.
+		/// </summary>
+		/// <typeparam name="T">
+		/// The type to be used for <paramref name="location"/>, <paramref name="value"/>,
+		/// and <paramref name="comparand"/>. This type must be a reference type.
+		/// </typeparam>
+		/// <param name="location">
+		/// The destination, whose value is compared by reference with <paramref name="comparand"/>
+		/// and possibly replaced.
+		/// </param>
+		/// <param name="value">
+		/// The value that replaces the destination value if the comparison by reference
+		/// results in equality.
+		/// </param>
+		/// <param name="comparand">
+		/// The value that is compared by reference to the value at <paramref name="location"/>.
+		/// </param>
+		/// <returns></returns>
 		public static T CompareExchange<T>(in T location, T value, T comparand)
 			where T : class
 		{

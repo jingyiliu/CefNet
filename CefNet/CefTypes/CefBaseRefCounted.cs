@@ -229,6 +229,7 @@ namespace CefNet
 
 		}
 
+#pragma warning disable CS1591
 		protected unsafe override void Dispose(bool disposing)
 		{
 			IntPtr key = Volatile.Read(ref _instance);
@@ -262,6 +263,7 @@ namespace CefNet
 				base.Dispose(disposing);
 			}
 		}
+#pragma warning restore CS1591
 
 		/// <summary>
 		/// Gets an unsafe pointer to a specified CEF struct.

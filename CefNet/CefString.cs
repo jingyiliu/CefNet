@@ -13,6 +13,9 @@ using System.Text;
 
 namespace CefNet
 {
+	/// <summary>
+	/// Providers static methods for working with CEF strings.
+	/// </summary>
 	public static unsafe class CefString
 	{
 		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
@@ -22,6 +25,11 @@ namespace CefNet
 
 		internal static readonly void* DestructorAddress = (void*)Marshal.GetFunctionPointerForDelegate(fnDtor);
 
+		/// <summary>
+		/// Creates a <see cref="cef_string_userfree_t"/> from the specified <see cref="string"/>.
+		/// </summary>
+		/// <param name="s">The source string.</param>
+		/// <returns>A new <see cref="cef_string_userfree_t"/> that this method creates.</returns>
 		public static cef_string_userfree_t Create(string s)
 		{
 			cef_string_userfree_t str = default;
@@ -35,6 +43,11 @@ namespace CefNet
 			return str;
 		}
 
+		/// <summary>
+		/// Allocates a managed <see cref="string"/> and copies a CEF string into it.
+		/// </summary>
+		/// <param name="str">The pointer to the CEF string.</param>
+		/// <returns>A managed string that holds a copy of the CEF string.</returns>
 		public static string Read(cef_string_t* str)
 		{
 			unchecked
@@ -46,6 +59,12 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Allocates a managed <see cref="string"/>, copies <see cref="cef_string_t"/>&apos;s value
+		/// into it and frees memory allocated for the <see cref="cef_string_t"/>&apos;s value.
+		/// </summary>
+		/// <param name="str">The pointer to the CEF string.</param>
+		/// <returns>A managed string that holds a copy of the CEF string.</returns>
 		public static string ReadAndFree(cef_string_t* str)
 		{
 			cef_string_utf16_t* s = (cef_string_utf16_t*)str;
@@ -63,6 +82,13 @@ namespace CefNet
 			return rv;
 		}
 
+		/// <summary>
+		/// Allocates a managed <see cref="string"/>, copies <see cref="cef_string_userfree_t"/>&apos;s
+		/// value into it and frees memory allocated for the <see cref="cef_string_userfree_t"/>&apos;s
+		/// value.
+		/// </summary>
+		/// <param name="str">The pointer to the CEF string.</param>
+		/// <returns>A managed string that holds a copy of the CEF string.</returns>
 		public static string ReadAndFree(cef_string_userfree_t str)
 		{
 			cef_string_utf16_t* s = str.Base.Base;
@@ -73,6 +99,10 @@ namespace CefNet
 			return rv;
 		}
 
+		/// <summary>
+		/// Frees memory allocated for the <see cref="cef_string_t"/>&apos;s value.
+		/// </summary>
+		/// <param name="str">The pointer to the CEF string.</param>
 		public static void Free(cef_string_t* str)
 		{
 			cef_string_utf16_t* s = (cef_string_utf16_t*)str;
@@ -85,11 +115,21 @@ namespace CefNet
 			s->length = UIntPtr.Zero;
 		}
 
+		/// <summary>
+		/// Frees memory allocated for the <see cref="cef_string_userfree_t"/>&apos;s value.
+		/// </summary>
+		/// <param name="str">The pointer to the CEF string.</param>
 		public static void Free(cef_string_userfree_t str)
 		{
 			CefNativeApi.cef_string_userfree_utf16_free(str.Base);
 		}
 
+		/// <summary>
+		/// Replaces a value of a CEF string to a new value.
+		/// </summary>
+		/// <param name="str">The pointer to a CEF string.</param>
+		/// <param name="value">The string to replace.</param>
+		/// <remarks>This method frees memory allocated for the old string.</remarks>
 		public static void Replace(cef_string_t* str, string value)
 		{
 			unchecked
