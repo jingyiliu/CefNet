@@ -231,56 +231,13 @@ namespace CefNet
 			return AppGlue.RenderProcessGlue;
 		}
 
-		public static long GetCorsQueryFrame(long id)
-		{
-			long frameid;
-			ManualResetEventSlim corsEvent = null;
-			while (true)
-			{
-				lock (corsData)
-				{
-					if (corsData.TryGetValue(id, out frameid))
-						break;
-					corsEvent = new ManualResetEventSlim(false);
-					corsQuery.Add(id, corsEvent);
-				}
-				corsEvent.Wait();
-			}
-			corsEvent?.Dispose();
-			return frameid;
-		}
-
 		private static bool ProcessOnBrowserMessage(CefProcessMessageReceivedEventArgs e)
 		{
-			CefProcessMessage msg = e.Message;
-			if (msg.Name == CefNetApplication.XrayResponseKey)
+			if (e.Name == CefNetApplication.XrayResponseKey)
 			{
-				return ProcessXrayMessage(msg);
-			}
-			else if (msg.Name == "frameid-query")
-			{
-				return ProcessXrayCorsMessage(msg);
+				return ProcessXrayMessage(e.Message);
 			}
 			return false;
-		}
-
-		private static Dictionary<long, ManualResetEventSlim> corsQuery = new Dictionary<long, ManualResetEventSlim>();
-		private static Dictionary<long, long> corsData = new Dictionary<long, long>();
-
-		private static bool ProcessXrayCorsMessage(CefProcessMessage msg)
-		{
-			CefListValue args = msg.ArgumentList;
-			long corsid = args.GetInt64(0);
-			long frameid = args.GetInt64(1);
-			lock (corsData)
-			{
-				corsData.Add(corsid, frameid);
-				if (corsQuery.TryGetValue(corsid, out ManualResetEventSlim corsEvent))
-				{
-					corsEvent.Set();
-				}
-			}
-			return true;
 		}
 
 		private static bool ProcessXrayMessage(CefProcessMessage msg)
