@@ -16,7 +16,13 @@ namespace CefNet
 			long frameid = this.Identifier;
 			CefBrowser browser = this.Browser;
 			if (browser is null)
+			{
+#if NET45
+				return new CefFrame[0];
+#else
 				return Array.Empty<CefFrame>();
+#endif
+			}
 
 			long[] ids = browser.GetFrameIdentifiers();
 			var frames = new List<CefFrame>(ids.Length);
