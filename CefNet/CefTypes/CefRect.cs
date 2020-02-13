@@ -187,8 +187,8 @@ namespace CefNet
 		/// </summary>
 		/// <param name="rect">The rectangle to test.</param>
 		/// <returns>
-		/// This method returns <see cref="true"/> if there is any intersection,
-		/// otherwise <see cref="false"/>.
+		/// This method returns true if there is any intersection,
+		/// otherwise false.
 		/// </returns>
 		public bool IntersectsWith(CefRect rect)
 		{
@@ -205,8 +205,8 @@ namespace CefNet
 		/// <param name="x">The x-coordinate of the point to test.</param>
 		/// <param name="y">The y-coordinate of the point to test.</param>
 		/// <returns>
-		/// This method returns <see cref="true"/> if the point defined by x and y is contained
-		/// within this <see cref="CefRect"/> structure; otherwise <see cref="false"/>.
+		/// This method returns true if the point defined by x and y is contained
+		/// within this <see cref="CefRect"/> structure; otherwise false.
 		/// </returns>
 		public bool Contains(int x, int y)
 		{
@@ -222,8 +222,8 @@ namespace CefNet
 		/// </summary>
 		/// <param name="pt">The <see cref="CefPoint"/> to test.</param>
 		/// <returns>
-		/// This method returns <see cref="true"/> if the point represented by <paramref name="pt"/>
-		/// is contained within this <see cref="CefRect"/> structure; otherwise <see cref="false"/>.
+		/// This method returns true if the point represented by <paramref name="pt"/>
+		/// is contained within this <see cref="CefRect"/> structure; otherwise false.
 		/// </returns>
 		public bool Contains(CefPoint pt)
 		{
@@ -240,9 +240,9 @@ namespace CefNet
 		/// </summary>
 		/// <param name="rect">The <see cref="CefRect"/> to test.</param>
 		/// <returns>
-		/// This method returns <see cref="true"/> if the rectangular region represented by
+		/// This method returns true if the rectangular region represented by
 		/// <paramref name="rect"/> is entirely contained within this <see cref="CefRect"/>
-		/// structure; otherwise <see cref="false"/>.
+		/// structure; otherwise false.
 		/// </returns>
 		public bool Contains(CefRect rect)
 		{
@@ -259,10 +259,10 @@ namespace CefNet
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to test.</param>
 		/// <returns>
-		/// This method returns <see cref="true"/> if <paramref name="obj"/> is a <see cref="CefRect"/>
+		/// This method returns true if <paramref name="obj"/> is a <see cref="CefRect"/>
 		/// structure and its <see cref="X"/>, <see cref="Y"/>, <see cref="Width"/>, and <see cref="Height"/>
 		/// properties are equal to the corresponding properties of this <see cref="CefRect"/> structure;
-		/// otherwise, <see cref="false"/>.
+		/// otherwise, false.
 		/// </returns>
 		public override bool Equals(object obj)
 		{
@@ -281,8 +281,8 @@ namespace CefNet
 		/// </summary>
 		/// <param name="rectangle">The rectangle to test.</param>
 		/// <returns>
-		/// This method returns <see cref="true"/> if the <paramref name="rectangle"/> have equal <see cref="X"/>,
-		/// <see cref="Y"/>, <see cref="Width"/>, and <see cref="Height"/> properties; otherwise, <see cref="false"/>.
+		/// This method returns true if the <paramref name="rectangle"/> have equal <see cref="X"/>,
+		/// <see cref="Y"/>, <see cref="Width"/>, and <see cref="Height"/> properties; otherwise, false.
 		/// </returns>
 		public bool Equals(CefRect rectangle)
 		{
@@ -308,6 +308,18 @@ namespace CefNet
 		}
 
 		/// <summary>
+		/// Converts the attributes of this <see cref="CefRect"/> to a human-readable string.
+		/// </summary>
+		/// <returns>
+		/// A string that contains the position, width, and height
+		/// of this <see cref="CefRect"/> structure.
+		/// </returns>
+		public override string ToString()
+		{
+			return $"X = {X}; Y = {Y}; Width = {Width}; Height = {Height}";
+		}
+
+		/// <summary>
 		/// Creates a <see cref="CefRect"/> structure with the specified edge locations.
 		/// </summary>
 		/// <param name="left">The x-coordinate of the upper-left corner of a rectangle.</param>
@@ -326,9 +338,9 @@ namespace CefNet
 		/// <param name="a">The <see cref="CefRect"/> structure that is to the left of the equality operator.</param>
 		/// <param name="b">The <see cref="CefRect"/> structure that is to the right of the equality operator.</param>
 		/// <returns>
-		/// This operator returns <see cref="true"/> if the two <see cref="CefRect"/> structures
+		/// This operator returns true if the two <see cref="CefRect"/> structures
 		/// have equal <see cref="X"/>, <see cref="Y"/>, <see cref="Width"/>, and <see cref="Height"/>
-		/// properties; otherwise <see cref="false"/>.
+		/// properties; otherwise false.
 		/// </returns>
 		public static bool operator ==(CefRect a, CefRect b)
 		{
@@ -345,9 +357,9 @@ namespace CefNet
 		/// <param name="a">The <see cref="CefRect"/> structure that is to the left of the inequality operator.</param>
 		/// <param name="b">The <see cref="CefRect"/> structure that is to the right of the inequality operator.</param>
 		/// <returns>
-		/// This operator returns <see cref="true"/> if any of the <see cref="X"/>, <see cref="Y"/>, <see cref="Width"/>
+		/// This operator returns true if any of the <see cref="X"/>, <see cref="Y"/>, <see cref="Width"/>
 		/// or <see cref="Height"/> properties of the two <see cref="CefRect"/> structures are unequal;
-		/// otherwise <see cref="false"/>.
+		/// otherwise false.
 		/// </returns>
 		public static bool operator !=(CefRect a, CefRect b)
 		{
