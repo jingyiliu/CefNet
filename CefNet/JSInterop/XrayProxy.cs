@@ -25,7 +25,10 @@ namespace CefNet.JSInterop
 		{
 			if (_providerHandle.IsAllocated)
 			{
-				Provider?.ReleaseObject(_instance);
+				if (!Environment.HasShutdownStarted)
+				{
+					Provider?.ReleaseObject(_instance);
+				}
 				_providerHandle.Free();
 			}
 		}
