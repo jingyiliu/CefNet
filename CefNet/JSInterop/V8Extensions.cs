@@ -11,17 +11,6 @@ namespace CefNet.JSInterop
 {
 	public static class V8Extensions
 	{
-		public static CefV8Value CreateObject(this CefV8Context context)
-		{
-			if (context == null)
-				throw new ArgumentNullException(nameof(context));
-			using (CefV8Value global = context.GetGlobal())
-			using (CefV8Value ctor = global.GetValue("Object"))
-			{
-				return ctor.ExecuteFunction(global, new CefV8Value[0]);
-			}
-		}
-
 		public static Task<ScriptableObject> GetScriptableObjectAsync(this CefFrame self, CancellationToken cancellationToken)
 		{
 			if (self is null)
