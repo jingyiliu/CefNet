@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
+#pragma warning disable CS1591
 
 namespace CefNet.Internal
 {

@@ -542,7 +542,7 @@ namespace CefNet.Wpf
 			if (e.ChangedButton <= MouseButton.Right)
 			{
 				Point mousePos = e.GetPosition(this);
-				SendMouseClickEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), false, e.ClickCount, GetModifierKeys());
+				SendMouseDownEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), e.ClickCount, GetModifierKeys());
 			}
 			base.OnMouseDown(e);
 		}
@@ -554,7 +554,7 @@ namespace CefNet.Wpf
 				return;
 
 			Point mousePos = e.GetPosition(this);
-			SendMouseClickEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), true, e.ClickCount, GetModifierKeys());
+			SendMouseUpEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), e.ClickCount, GetModifierKeys());
 		}
 
 		protected override void OnMouseWheel(MouseWheelEventArgs e)

@@ -52,9 +52,22 @@ namespace CefNet
 		public event EventHandler<CreateWindowEventArgs> CreateWindow;
 
 		public event EventHandler<BeforeBrowseEventArgs> BeforeBrowse;
+		/// <summary>
+		/// Occurs before the WebView control navigates to a new document.
+		/// </summary>
 		public event EventHandler<BeforeBrowseEventArgs> Navigating;
+		/// <summary>
+		/// Occurs when the WebView control has navigated to a new document
+		/// and has begun loading it.
+		/// </summary>
 		public event EventHandler<NavigatedEventArgs> Navigated;
+		/// <summary>
+		/// Occurs when a frame&apos;s address has changed.
+		/// </summary>
 		public event EventHandler<AddressChangeEventArgs> AddressChange;
+		/// <summary>
+		/// Occurs when the loading state has changed.
+		/// </summary>
 		public event EventHandler<LoadingStateChangeEventArgs> LoadingStateChange;
 
 		/// <summary>
@@ -66,8 +79,24 @@ namespace CefNet
 		/// </summary>
 		public event EventHandler<CancelEventArgs> Closing;
 
+		/// <summary>
+		/// Occurs when an view or a pop-up window should be painted.<para/>
+		/// This event can be occurred on a thread other than the UI thread.
+		/// </summary>
+		/// <remarks>
+		/// This event is only occurred when <see cref="CefWindowInfo.SharedTextureEnabled"/>
+		/// is set to false.
+		/// </remarks>
 		public event EventHandler<CefPaintEventArgs> CefPaint;
+
+		/// <summary>
+		/// Occurs when a new browser is created.
+		/// </summary>
 		public event EventHandler BrowserCreated;
+
+		/// <summary>
+		/// Occurs when the page title changes.
+		/// </summary>
 		public event EventHandler<DocumentTitleChangedEventArgs> DocumentTitleChanged;
 		
 
@@ -92,7 +121,9 @@ namespace CefNet
 			_state = (value ? (_state | flag) : (_state & ~flag));
 		}
 
-
+		/// <summary>
+		/// Closes the current browser window.
+		/// </summary>
 		public void Close()
 		{
 			((IDisposable)this).Dispose();
@@ -176,6 +207,12 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Gets and sets a default URL.
+		/// </summary>
+		/// <remarks>
+		/// This property cannot be used after the browser is created.
+		/// </remarks>
 		public string InitialUrl
 		{
 			get
@@ -190,6 +227,9 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Gets the associated <see cref="CefBrowser"/> object.
+		/// </summary>
 		[Browsable(false)]
 		public CefBrowser BrowserObject
 		{
@@ -630,11 +670,25 @@ namespace CefNet
 		//	return new Window(Provider.GetGlobal(), Provider);
 		//}
 
+		/// <summary>
+		/// Send a notification to the browser that the screen info has changed.<para/>
+		/// This function is only used when window rendering is disabled.
+		/// </summary>
+		/// <remarks>
+		/// The browser will then call <see cref="CefRenderHandler.GetScreenInfo"/>
+		/// to update the screen information with the new values. This simulates moving
+		/// the webview window from one display to another, or changing the properties
+		/// of the current display.
+		/// </remarks>
 		public void NotifyRootMovedOrResized()
 		{
 			this.BrowserObject?.Host.NotifyScreenInfoChanged();
 		}
 
+		/// <summary>
+		/// Loads the document at the specified location into the WebView control.
+		/// </summary>
+		/// <param name="url">The URL of the document to load.</param>
 		public void Navigate(string url)
 		{
 			AliveBrowserObject.MainFrame.LoadUrl(url);
@@ -802,6 +856,10 @@ namespace CefNet
 			RaiseCrossThreadEvent(OnDocumentTitleChanged, e, false);
 		}
 
+		/// <summary>
+		/// Raises the <see cref="DocumentTitleChanged"/> event.
+		/// </summary>
+		/// <param name="e">A <see cref="DocumentTitleChangedEventArgs"/> that contains the event data.</param>
 		protected virtual void OnDocumentTitleChanged(DocumentTitleChangedEventArgs e)
 		{
 			DocumentTitleChanged?.Invoke(this, e);
@@ -826,7 +884,7 @@ namespace CefNet
 		/// <summary>
 		/// Raises the <see cref="TextFound"/> event.
 		/// </summary>
-		/// <param name="e"></param>
+		/// <param name="e">A <see cref="ITextFoundEventArgs"/> that contains the event data.</param>
 		protected virtual void OnTextFound(ITextFoundEventArgs e)
 		{
 			TextFoundEvent?.Invoke(this, e);
@@ -840,6 +898,12 @@ namespace CefNet
 			_mouseEventProxy.Modifiers = (uint)modifiers;
 		}
 
+		/// <summary>
+		/// Sends a mouse move event to the browser.
+		/// </summary>
+		/// <param name="x">The x-coordinate of the mouse relative to the left edge of the view.</param>
+		/// <param name="y">The y-coordinate of the mouse relative to the top edge of the view.</param>
+		/// <param name="modifiers">A bitwise combination of the <see cref="CefEventFlags"/> values.</param>
 		public void SendMouseMoveEvent(int x, int y, CefEventFlags modifiers)
 		{
 			InitMouseEvent(x, y, modifiers);
@@ -852,7 +916,15 @@ namespace CefNet
 			this.BrowserObject?.Host.SendMouseMoveEvent(_mouseEventProxy, true);
 		}
 
-		public void SendMouseClickEvent(int x, int y, CefMouseButtonType button, bool mouseUp, int clicks, CefEventFlags modifiers)
+		/// <summary>
+		/// Sends a mouse down event to the browser.
+		/// </summary>
+		/// <param name="x">The x-coordinate of the mouse relative to the left edge of the view.</param>
+		/// <param name="y">The y-coordinate of the mouse relative to the top edge of the view.</param>
+		/// <param name="button">One of the <see cref="CefMouseButtonType"/> values.</param>
+		/// <param name="clicks">A click count.</param>
+		/// <param name="modifiers">A bitwise combination of the <see cref="CefEventFlags"/> values.</param>
+		public void SendMouseDownEvent(int x, int y, CefMouseButtonType button, int clicks, CefEventFlags modifiers)
 		{
 			CefBrowserHost browserHost = this.BrowserObject?.Host;
 			if (browserHost == null)
@@ -860,9 +932,35 @@ namespace CefNet
 
 			InitMouseEvent(x, y, modifiers);
 			browserHost.SendFocusEvent(true);
-			browserHost.SendMouseClickEvent(_mouseEventProxy, button, mouseUp, clicks);
+			browserHost.SendMouseClickEvent(_mouseEventProxy, button, false, clicks);
 		}
 
+		/// <summary>
+		/// Sends a mouse up event to the browser.
+		/// </summary>
+		/// <param name="x">The x-coordinate of the mouse relative to the left edge of the view.</param>
+		/// <param name="y">The y-coordinate of the mouse relative to the top edge of the view.</param>
+		/// <param name="button">One of the <see cref="CefMouseButtonType"/> values.</param>
+		/// <param name="clicks">A click count.</param>
+		/// <param name="modifiers">A bitwise combination of the <see cref="CefEventFlags"/> values.</param>
+		public void SendMouseUpEvent(int x, int y, CefMouseButtonType button, int clicks, CefEventFlags modifiers)
+		{
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost == null)
+				return;
+
+			InitMouseEvent(x, y, modifiers);
+			browserHost.SendFocusEvent(true);
+			browserHost.SendMouseClickEvent(_mouseEventProxy, button, true, clicks);
+		}
+
+		/// <summary>
+		/// Sends a mouse wheel event to the browser.
+		/// </summary>
+		/// <param name="x">The x-coordinate of the mouse relative to the left edge of the view.</param>
+		/// <param name="y">The y-coordinate of the mouse relative to the top edge of the view.</param>
+		/// <param name="deltaX">A movement delta in the X direction.</param>
+		/// <param name="deltaY">A movement delta in the Y direction.</param>
 		public void SendMouseWheelEvent(int x, int y, int deltaX, int deltaY)
 		{
 			CefBrowserHost browserHost = this.BrowserObject?.Host;

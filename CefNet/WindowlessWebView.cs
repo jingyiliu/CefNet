@@ -198,6 +198,11 @@ namespace CefNet
 			BrowserCreated?.Invoke(this, e);
 		}
 
+		/// <summary>
+		/// Raises the <see cref="CefPaint"/> event.
+		/// </summary>
+		/// <param name="e">A <see cref="CefPaintEventArgs"/> that contains the event data.</param>
+		/// <remarks>This method can be called on a thread other than the UI thread.</remarks>
 		protected virtual void OnCefPaint(CefPaintEventArgs e)
 		{
 			CefPaint?.Invoke(this, e);

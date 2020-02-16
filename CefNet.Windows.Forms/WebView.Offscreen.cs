@@ -511,7 +511,7 @@ namespace CefNet.Windows.Forms
 			{
 				if (WindowlessRenderingEnabled)
 				{
-					SendMouseClickEvent(e.X, e.Y, GetButton(e), false, e.Clicks, GetModifierKeys());
+					SendMouseDownEvent(e.X, e.Y, GetButton(e), e.Clicks, GetModifierKeys());
 				}
 			}
 			base.OnMouseDown(e);
@@ -524,7 +524,7 @@ namespace CefNet.Windows.Forms
 			{
 				if (WindowlessRenderingEnabled)
 				{
-					SendMouseClickEvent(e.X, e.Y, GetButton(e), true, e.Clicks, GetModifierKeys());
+					SendMouseUpEvent(e.X, e.Y, GetButton(e), e.Clicks, GetModifierKeys());
 				}
 			}
 		}

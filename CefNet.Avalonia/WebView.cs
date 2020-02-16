@@ -585,7 +585,7 @@ namespace CefNet.Avalonia
 			if (e.GetCurrentPoint(null).Properties.PointerUpdateKind.GetMouseButton() <= MouseButton.Right)
 			{
 				Point mousePos = e.GetPosition(this);
-				SendMouseClickEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), false, e.ClickCount, GetModifierKeys(e.KeyModifiers));
+				SendMouseDownEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), e.ClickCount, GetModifierKeys(e.KeyModifiers));
 			}
 			base.OnPointerPressed(e);
 		}
@@ -597,7 +597,7 @@ namespace CefNet.Avalonia
 				return;
 
 			Point mousePos = e.GetPosition(this);
-			SendMouseClickEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), true, 1, GetModifierKeys(e.KeyModifiers));
+			SendMouseUpEvent((int)mousePos.X, (int)mousePos.Y, GetButton(e), 1, GetModifierKeys(e.KeyModifiers));
 		}
 
 		protected override void OnPointerWheelChanged(PointerWheelEventArgs e)

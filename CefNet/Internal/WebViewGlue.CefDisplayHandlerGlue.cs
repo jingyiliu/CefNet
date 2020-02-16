@@ -14,11 +14,14 @@ namespace CefNet.Internal
 		}
 
 		/// <summary>
-		/// Called when a frame's address has changed.
+		/// Called when a frame&apos;s address has changed.
 		/// </summary>
-		/// <param name="browser"></param>
-		/// <param name="frame"></param>
-		/// <param name="url"></param>
+		/// <param name="browser">The <see cref="CefBrowser"/> object.</param>
+		/// <param name="frame">A <see cref="CefFrame"/> object.</param>
+		/// <param name="url">
+		/// A string representing the location of the document
+		/// to which the <paramref name="frame"/> has navigated.
+		/// </param>
 		internal protected virtual void OnAddressChange(CefBrowser browser, CefFrame frame, string url)
 		{
 			WebView.RaiseAddressChange(new AddressChangeEventArgs(frame, url));
