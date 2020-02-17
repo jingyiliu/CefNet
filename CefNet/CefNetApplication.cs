@@ -11,6 +11,10 @@ using System.Threading;
 
 namespace CefNet
 {
+	/// <summary>
+	/// Provides methods and properties to manage an application, such as methods to start and stop
+	/// an application, to process messages, and properties to get information about an application.
+	/// </summary>
 	public class CefNetApplication : CefApp
 	{
 		internal const string XrayRequestKey = "xray-request";
@@ -29,9 +33,17 @@ namespace CefNet
 		/// </summary>
 		public event EventHandler<CefUncaughtExceptionEventArgs> CefUncaughtException;
 
+		/// <summary>
+		/// Occurs after WebKit has been initialized.
+		/// </summary>
+		public event EventHandler WebKitInitialized;
+
 		private static ProcessType? _ProcessType;
 		private int _initThreadId;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CefNetApplication"/> class.
+		/// </summary>
 		public CefNetApplication()
 		{
 			AppGlue = new CefAppGlue(this);
@@ -39,8 +51,14 @@ namespace CefNet
 
 		private CefAppGlue AppGlue { get; }
 
+		/// <summary>
+		/// Gets the current <see cref="CefNetApplication"/>.
+		/// </summary>
 		public static CefNetApplication Instance { get; private set; }
 
+		/// <summary>
+		/// Gets a value that indicates whether the <see cref="CefNetApplication"/> is initialized.
+		/// </summary>
 		public static bool IsInitialized
 		{
 			get { return Instance != null; }
@@ -170,6 +188,9 @@ namespace CefNet
 			GC.KeepAlive(settings);
 		}
 
+		/// <summary>
+		/// Shuts down a CEF application.
+		/// </summary>
 		public void Shutdown()
 		{
 			if (_initThreadId != Thread.CurrentThread.ManagedThreadId)
@@ -226,18 +247,13 @@ namespace CefNet
 			}
 		}
 
+		/// <summary>
+		/// Returns a handler for functionality specific to the render process.
+		/// </summary>
+		/// <returns></returns>
 		public override CefRenderProcessHandler GetRenderProcessHandler()
 		{
 			return AppGlue.RenderProcessGlue;
-		}
-
-		private static bool ProcessOnBrowserMessage(CefProcessMessageReceivedEventArgs e)
-		{
-			if (e.Name == CefNetApplication.XrayResponseKey)
-			{
-				return ProcessXrayMessage(e.Message);
-			}
-			return false;
 		}
 
 		private static bool ProcessXrayMessage(CefProcessMessage msg)
@@ -373,14 +389,24 @@ namespace CefNet
 
 		#region CefRenderProcessHandler 
 
+		/// <summary>
+		/// Called after the render process main thread has been created.
+		/// </summary>
+		/// <param name="extraInfo">
+		/// A read-only value originating from <see cref="CefBrowserProcessHandler.OnRenderProcessThreadCreated"/>.<para/>
+		/// Do not keep a reference to <paramref name="extraInfo"/> outside of this function.
+		/// </param>
 		protected internal virtual void OnRenderThreadCreated(CefListValue extraInfo)
 		{
 
 		}
 
+		/// <summary>
+		/// Raises the <see cref="WebKitInitialized"/> event.
+		/// </summary>
 		protected internal virtual void OnWebKitInitialized()
 		{
-
+			WebKitInitialized?.Invoke(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -403,6 +429,10 @@ namespace CefNet
 
 		}
 
+		/// <summary>
+		/// Return a handler for browser load status events.
+		/// </summary>
+		/// <returns>The handler for browser load status events.</returns>
 		protected internal virtual CefLoadHandler GetLoadHandler()
 		{
 			return null;
@@ -441,7 +471,10 @@ namespace CefNet
 		{
 			if (e.SourceProcess == CefProcessId.Renderer)
 			{
-				e.Handled = ProcessOnBrowserMessage(e);
+				if (e.Name == XrayResponseKey)
+				{
+					e.Handled = ProcessXrayMessage(e.Message);
+				}
 			}
 			else if (e.SourceProcess == CefProcessId.Browser)
 			{
