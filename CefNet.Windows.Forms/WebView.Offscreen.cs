@@ -80,8 +80,14 @@ namespace CefNet.Windows.Forms
 			}
 		}
 
+		/// <summary>
+		/// Gets a graphics buffer for off-screen rendering.
+		/// </summary>
 		protected OffscreenGraphics OffscreenGraphics { get; private set; }
 
+		/// <summary>
+		/// Gets and sets a value indicating whether the browser using off-screen rendering.
+		/// </summary>
 		public bool WindowlessRenderingEnabled
 		{
 			get
@@ -95,7 +101,14 @@ namespace CefNet.Windows.Forms
 				if (value)
 				{
 					if (OffscreenGraphics == null)
-						OffscreenGraphics = new OffscreenGraphics { Background = this.BackColor, Device = Device };
+					{
+						VirtualDevice device = this.Device;
+						OffscreenGraphics = new OffscreenGraphics { Background = this.BackColor, Device = device };
+						if(device is null)
+							OffscreenGraphics.SetSize(this.Width, this.Height);
+						else
+							OffscreenGraphics.SetSize(device.ViewportRect.Width, device.ViewportRect.Height);
+					}
 				}
 				else
 				{
@@ -125,7 +138,15 @@ namespace CefNet.Windows.Forms
 			{
 				devicePixelRatio = g.DpiX / 96f;
 			}
-			SetDevicePixelRatio(devicePixelRatio);
+
+			if (OffscreenGraphics.PixelsPerDip != devicePixelRatio)
+			{
+				SetDevicePixelRatio(devicePixelRatio);
+			}
+			else
+			{
+				OnSizeChanged(EventArgs.Empty);
+			}
 
 			base.OnHandleCreated(e);
 		}
@@ -334,6 +355,10 @@ namespace CefNet.Windows.Forms
 			}
 		}
 
+		/// <summary>
+		/// Raises the <see cref="CefPaint"/> event.
+		/// </summary>
+		/// <param name="e">A <see cref="CefPaintEventArgs"/> that contains event data.</param>
 		protected virtual void OnCefPaint(CefPaintEventArgs e)
 		{
 			CefPaint?.Invoke(this, e);
@@ -419,6 +444,10 @@ namespace CefNet.Windows.Forms
 			Invalidate(invalidRect, false);
 		}
 
+		/// <summary>
+		/// Raises the <see cref="Control.SizeChanged"/> event.
+		/// </summary>
+		/// <param name="e">An <see cref="EventArgs"/> that contains event data.</param>
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
