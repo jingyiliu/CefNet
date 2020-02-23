@@ -648,9 +648,16 @@ namespace CefNet
 				throw new InvalidOperationException();
 		}
 
+		private static readonly Dictionary<HashKey, WeakReference<CefV8Value>> WeakRefs = new Dictionary<HashKey, WeakReference<CefV8Value>>(new HashKeyComparer());
 
-		private static readonly HashSet<WeakReference<CefV8Value>> WeakRefs = new HashSet<WeakReference<CefV8Value>>();
+#if DEBUG
+		public static int GetWeakRefsCacheSize()
+		{
+			return WeakRefs.Count;
+		}
+#endif
 
+		private int _hashcode;
 		private WeakReference<CefV8Value> _weakRef;
 
 		/// <summary>
@@ -672,13 +679,28 @@ namespace CefNet
 			}
 		}
 
+#pragma warning disable CS1591
 		protected override void Dispose(bool disposing)
+#pragma warning restore CS1591
 		{
-			lock (WeakRefs)
+			if (!IsDisposed)
 			{
-				WeakRefs.Remove(WeakRef);
+				lock (WeakRefs)
+				{
+					WeakRefs.Remove(new HashKey(_hashcode, WeakRef));
+				}
 			}
 			base.Dispose(disposing);
+		}
+
+
+		/// <summary>
+		/// Returns the hash code for this instance.
+		/// </summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
+		public override int GetHashCode()
+		{
+			return IsDisposed ? 0 : _hashcode;
 		}
 
 		/// <summary>
@@ -692,21 +714,23 @@ namespace CefNet
 			if (instance == null)
 				return null;
 
-			IntPtr key = new IntPtr(instance);
+			IntPtr ptr = new IntPtr(instance);
 			lock (WeakRefs)
 			{
 				CefV8Value wrapper;
-				foreach (WeakReference<CefV8Value> weakRef in WeakRefs)
+				int hashcode = instance->GetHashCode();
+
+				if (WeakRefs.TryGetValue(new HashKey(hashcode, instance), out WeakReference<CefV8Value> weakRef)
+					&& weakRef.TryGetTarget(out wrapper)
+					&& instance->IsSame(wrapper.GetNativeInstance()) != 0)
 				{
-					if (weakRef.TryGetTarget(out wrapper) && instance->IsSame(wrapper.GetNativeInstance()) != 0)
-					{
-						instance->@base.Release();
-						Debug.Print("V8Value type: {0}", wrapper.Type);
-						return wrapper;
-					}
+					instance->@base.Release();
+					Debug.Print("V8Value type: {0}", wrapper.Type);
+					return wrapper;
 				}
-				wrapper = create(key);
-				WeakRefs.Add(wrapper.WeakRef);
+				wrapper = create(ptr);
+				wrapper._hashcode = hashcode;
+				WeakRefs.Add(new HashKey(hashcode, wrapper.WeakRef), wrapper.WeakRef);
 				return wrapper;
 			}
 		}

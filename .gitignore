@@ -34,6 +34,8 @@ bld/
 # CEF
 cef/
 _cef/
+__cef/
+___cef/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

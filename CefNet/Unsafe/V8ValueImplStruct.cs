@@ -17,7 +17,7 @@ namespace CefNet.Unsafe
 		public IntPtr isolate;
 		public IntPtr type;
 		public V8ValueImpl_ValueUnion value;
-		public IntPtr handle;
+		public V8ValueImplHandleLayout* handle;
 		public IntPtr last_exception;
 
 		public CefV8ValueType Type
@@ -45,5 +45,22 @@ namespace CefNet.Unsafe
 		public cef_time_t date_value_;
 		[FieldOffset(0)]
 		public cef_string_t string_value_;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+#if DEBUG
+	public
+#endif
+	unsafe struct V8ValueImplHandleLayout
+	{
+		public void* v8value_handle_vtable;
+		public void* atomic_refcount;
+		public void* isolate;
+		public void* taskrunner;
+		public void* context_state;
+		public IntPtr* handle;
+		public void* tracker;
+		public byte should_persist;
+		public byte is_set_weak;
 	}
 }
