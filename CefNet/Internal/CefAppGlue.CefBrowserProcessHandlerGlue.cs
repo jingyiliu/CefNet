@@ -6,9 +6,9 @@ namespace CefNet.Internal
 {
 	partial class CefAppGlue
 	{
-		public virtual void OnContextInitialized()
+		public void OnContextInitialized()
 		{
-
+			_application.OnContextInitialized();
 		}
 
 		internal bool AvoidOnBeforeChildProcessLaunch()
@@ -16,9 +16,9 @@ namespace CefNet.Internal
 			return false;
 		}
 
-		public virtual void OnBeforeChildProcessLaunch(CefCommandLine commandLine)
+		public void OnBeforeChildProcessLaunch(CefCommandLine commandLine)
 		{
-
+			_application.OnBeforeChildProcessLaunch(new BeforeChildProcessLaunchEventArgs(commandLine));
 		}
 
 		internal bool AvoidOnRenderProcessThreadCreated()
@@ -26,14 +26,14 @@ namespace CefNet.Internal
 			return false;
 		}
 
-		public virtual void OnRenderProcessThreadCreated(CefListValue extraInfo)
+		public void OnRenderProcessThreadCreated(CefListValue extraInfo)
 		{
-
+			_application.OnRenderThreadCreated(new RenderThreadCreatedEventArgs(extraInfo));
 		}
 
-		public virtual CefPrintHandler GetPrintHandler()
+		public CefPrintHandler GetPrintHandler()
 		{
-			return null;
+			return _application.GetPrintHandler();
 		}
 
 		internal bool AvoidOnScheduleMessagePumpWork()
@@ -41,9 +41,9 @@ namespace CefNet.Internal
 			return false;
 		}
 
-		public virtual void OnScheduleMessagePumpWork(long delayMs)
+		public void OnScheduleMessagePumpWork(long delayMs)
 		{
-
+			_application.OnScheduleMessagePumpWork(delayMs);
 		}
 	}
 }

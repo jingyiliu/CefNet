@@ -38,8 +38,31 @@ namespace CefNet
 		/// </summary>
 		public event EventHandler WebKitInitialized;
 
+		/// <summary>
+		/// Occurs immediately after the CEF context has been initialized.
+		/// </summary>
+		public event EventHandler CefContextInitialized;
+
+		/// <summary>
+		/// Occurs before a child process is launched.
+		/// </summary>
+		public event EventHandler<EventArgs> BeforeChildProcessLaunch;
+
+		/// <summary>
+		/// Occurs after the render process main thread has been created.
+		/// </summary>
+		public event EventHandler<RenderThreadCreatedEventArgs> RenderThreadCreated;
+
 		private static ProcessType? _ProcessType;
 		private int _initThreadId;
+
+		static CefNetApplication()
+		{
+			using (Process process = Process.GetCurrentProcess())
+			{
+				AllowDotnetProcess = "dotnet".Equals(process.ProcessName, StringComparison.Ordinal);
+			}
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CefNetApplication"/> class.
@@ -63,6 +86,12 @@ namespace CefNet
 		{
 			get { return Instance != null; }
 		}
+
+		/// <summary>
+		/// Gets and sets a value indicating that the dotnet can be used to run this application,
+		/// by specifying an application DLL, such as &apos;dotnet myapp.dll&apos;.
+		/// </summary>
+		public static bool AllowDotnetProcess { get; set; }
 
 		private static void AssertApiVersion()
 		{
@@ -250,10 +279,20 @@ namespace CefNet
 		/// <summary>
 		/// Returns a handler for functionality specific to the render process.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A handler for functionality specific to the render process.</returns>
 		public override CefRenderProcessHandler GetRenderProcessHandler()
 		{
 			return AppGlue.RenderProcessGlue;
+		}
+
+		/// <summary>
+		/// Returns the handler for functionality specific to the browser process.<para/>
+		/// This function is called on multiple threads in the browser process.
+		/// </summary>
+		/// <returns>A handler for functionality specific to the browser process.</returns>
+		public override CefBrowserProcessHandler GetBrowserProcessHandler()
+		{
+			return AppGlue.BrowserProcessGlue;
 		}
 
 		private static bool ProcessXrayMessage(CefProcessMessage msg)
@@ -390,15 +429,13 @@ namespace CefNet
 		#region CefRenderProcessHandler 
 
 		/// <summary>
-		/// Called after the render process main thread has been created.
+		/// Raises the <see cref="RenderThreadCreated"/> event.<para/>
+		/// Called after the render process main thread has been created. In the browser process called on the IO thread.
 		/// </summary>
-		/// <param name="extraInfo">
-		/// A read-only value originating from <see cref="CefBrowserProcessHandler.OnRenderProcessThreadCreated"/>.<para/>
-		/// Do not keep a reference to <paramref name="extraInfo"/> outside of this function.
-		/// </param>
-		protected internal virtual void OnRenderThreadCreated(CefListValue extraInfo)
+		/// <param name="e">A <see cref="RenderThreadCreatedEventArgs"/> that contains the event data.</param>
+		protected internal virtual void OnRenderThreadCreated(RenderThreadCreatedEventArgs e)
 		{
-
+			RenderThreadCreated?.Invoke(this, e);
 		}
 
 		/// <summary>
@@ -495,5 +532,62 @@ namespace CefNet
 		}
 
 		#endregion
+
+
+		/// <summary>
+		/// Raises the <see cref="CefContextInitialized"/> event.<para/>
+		/// Called on the browser process UI thread immediately after the CEF context has been initialized.
+		/// </summary>
+		protected internal virtual void OnContextInitialized()
+		{
+			CefContextInitialized?.Invoke(this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// Raises the <see cref="BeforeChildProcessLaunch"/> event.<para/>
+		/// Will be called on the browser process UI thread when launching a render process
+		/// and on the browser process IO thread when launching a GPU or plugin process.
+		/// </summary>
+		/// <param name="e">A <see cref="BeforeChildProcessLaunchEventArgs"/> that contains the event data.</param>
+		protected internal virtual void OnBeforeChildProcessLaunch(BeforeChildProcessLaunchEventArgs e)
+		{
+			if (AllowDotnetProcess)
+			{
+				e.CommandLine.Program = Environment.GetCommandLineArgs()[0];
+				e.CommandLine.PrependWrapper("dotnet");
+			}
+			BeforeChildProcessLaunch?.Invoke(this, e);
+		}
+
+		/// <summary>
+		/// Return the handler for printing on Linux.<para/>
+		/// If a print handler is not provided then printing will not be supported on the Linux platform.
+		/// </summary>
+		/// <returns>The handler for printing.</returns>
+		public virtual CefPrintHandler GetPrintHandler()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Called from any thread when work has been scheduled for the browser process main (UI) thread.<para/>
+		/// This callback should schedule a <see cref="CefApi.DoMessageLoopWork"/> call to happen on the main (UI) thread. 
+		/// </summary>
+		/// <param name="delayMs">
+		/// The requested delay in milliseconds.<para/>If <paramref name="delayMs"/> is &lt;= 0
+		/// then the call should happen reasonably soon; otherwise the call should be scheduled
+		/// to happen after the specified delay and any currently pending scheduled call should
+		/// be cancelled.
+		/// </param>
+		/// <remarks>
+		/// This callback is used in combination with <see cref="CefSettings.ExternalMessagePump"/>
+		/// and <see cref="CefApi.DoMessageLoopWork"/> in cases where the CEF message loop must be
+		/// integrated into an existing application message loop.
+		/// </remarks>
+		protected internal virtual void OnScheduleMessagePumpWork(long delayMs)
+		{
+
+		}
+
 	}
 }

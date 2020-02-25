@@ -12,7 +12,7 @@ namespace CefNet.Internal
 
 		public void OnRenderThreadCreated(CefListValue extraInfo)
 		{
-			_application.OnRenderThreadCreated(extraInfo);
+			_application.OnRenderThreadCreated(new RenderThreadCreatedEventArgs(extraInfo));
 		}
 
 		public void OnWebKitInitialized()

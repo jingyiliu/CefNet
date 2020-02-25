@@ -12,8 +12,11 @@ namespace CefNet.Internal
 		{
 			_application = application;
 			this.RenderProcessGlue = new CefRenderProcessHandlerGlue(this);
+			this.BrowserProcessGlue = new CefBrowserProcessHandlerGlue(this);
 		}
 
 		internal CefRenderProcessHandler RenderProcessGlue { get; private set; }
+
+		internal CefBrowserProcessHandler BrowserProcessGlue { get; private set; }
 	}
 }

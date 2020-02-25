@@ -5,8 +5,8 @@
 		.maxstack 2
 		ldarg.0
 		ldfld class CefNet.CefNetApplication CefNet.Internal.CefAppGlue::_application
-		ldvirtftn instance void CefNet.CefNetApplication::OnRenderThreadCreated(class CefNet.CefListValue)
-		ldftn instance void CefNet.CefNetApplication::OnRenderThreadCreated(class CefNet.CefListValue)
+		ldvirtftn instance void CefNet.CefNetApplication::OnRenderThreadCreated(class CefNet.RenderThreadCreatedEventArgs)
+		ldftn instance void CefNet.CefNetApplication::OnRenderThreadCreated(class CefNet.RenderThreadCreatedEventArgs)
 		ceq
 		ret
 	}
