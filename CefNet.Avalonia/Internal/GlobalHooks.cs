@@ -59,6 +59,9 @@ namespace CefNet.Internal
 
 		private unsafe IntPtr WndProc(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
+			const int WM_ENTERMENULOOP = 0x0211;
+			const int WM_EXITMENULOOP = 0x0212;
+
 			switch (message)
 			{
 				case 0x0002: // WM_DESTROY
@@ -102,6 +105,14 @@ namespace CefNet.Internal
 					{
 						handled = true;
 					}
+					break;
+				case WM_ENTERMENULOOP:
+					if (wParam == IntPtr.Zero)
+						CefApi.SetOSModalLoop(true);
+					break;
+				case WM_EXITMENULOOP:
+					if (wParam == IntPtr.Zero)
+						CefApi.SetOSModalLoop(false);
 					break;
 			}
 			return IntPtr.Zero;

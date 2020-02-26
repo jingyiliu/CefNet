@@ -50,6 +50,9 @@ namespace CefNet.Internal
 
 		private unsafe IntPtr WndProcHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
+			const int WM_ENTERMENULOOP = 0x0211;
+			const int WM_EXITMENULOOP = 0x0212;
+
 			switch (msg)
 			{
 				case 0x020E: // WM_MOUSEHWHEEL
@@ -92,6 +95,14 @@ namespace CefNet.Internal
 					const int SC_KEYMENU = 0xF100;
 					// Menu loop must not be runned with Alt key
 					handled = ((int)(wParam.ToInt64() & 0xFFF0) == SC_KEYMENU && lParam == IntPtr.Zero);
+					break;
+				case WM_ENTERMENULOOP:
+					if (wParam == IntPtr.Zero)
+						CefApi.SetOSModalLoop(true);
+					break;
+				case WM_EXITMENULOOP:
+					if (wParam == IntPtr.Zero)
+						CefApi.SetOSModalLoop(false);
 					break;
 			}
 			return IntPtr.Zero;

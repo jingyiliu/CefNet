@@ -218,6 +218,31 @@ namespace CefNet
 		}
 
 		/// <summary>
+		/// Begins running a standard application message loop on the current thread.<para/>
+		/// This function should only be called on the main application thread and only if
+		/// <see cref="Initialize"/> is called with a <see cref="CefSettings.MultiThreadedMessageLoop"/>
+		/// value of false. This function will block until a quit message is received by the system.
+		/// </summary>
+		/// <remarks>
+		/// Use this function instead of an application-provided message loop to get the best
+		/// balance between performance and CPU usage. 
+		/// </remarks>
+		public static void Run()
+		{
+			CefApi.RunMessageLoop();
+		}
+
+		/// <summary>
+		/// Quit the CEF message loop that was started by calling <see cref="Run"/>.<para/>
+		/// This function should only be called on the main application thread and only
+		/// if <see cref="Run"/> was used.
+		/// </summary>
+		public static void Exit()
+		{
+			CefApi.QuitMessageLoop();
+		}
+
+		/// <summary>
 		/// Shuts down a CEF application.
 		/// </summary>
 		public void Shutdown()

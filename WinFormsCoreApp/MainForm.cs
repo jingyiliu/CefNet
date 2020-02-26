@@ -280,6 +280,24 @@ namespace WinFormsCoreApp
 			//SelectedView.LoadContent("http://hello.world", "http://example.com", "text/html", "Hello, World!", Encoding.UTF8);
 		}
 
+		protected override void WndProc(ref Message m)
+		{
+			const int WM_ENTERMENULOOP = 0x0211;
+			const int WM_EXITMENULOOP = 0x0212;
+
+			switch (m.Msg)
+			{
+				case WM_ENTERMENULOOP:
+					if (m.WParam == IntPtr.Zero)
+						CefApi.SetOSModalLoop(true);
+					break;
+				case WM_EXITMENULOOP:
+					if (m.WParam == IntPtr.Zero)
+						CefApi.SetOSModalLoop(false);
+					break;
+			}
+			base.WndProc(ref m);
+		}
 
 	}
 }
