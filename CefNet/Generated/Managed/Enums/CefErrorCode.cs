@@ -256,7 +256,9 @@ namespace CefNet
 
 		CertSymantecLegacy = -215,
 
-		CertEnd = -217,
+		CertKnownInterceptionBlocked = -217,
+
+		CertEnd = -218,
 
 		InvalidUrl = -300,
 
@@ -418,7 +420,7 @@ namespace CefNet
 
 		InvalidSignedExchange = -504,
 
-		InvalidBundledExchanges = -505,
+		InvalidWebBundle = -505,
 
 		FtpFailed = -601,
 
@@ -474,7 +476,7 @@ namespace CefNet
 
 		DnsSortError = -806,
 
-		DnsHttpFailed = -807,
+		DnsSecureResolverHostnameResolutionFailed = -808,
 	}
 }
 

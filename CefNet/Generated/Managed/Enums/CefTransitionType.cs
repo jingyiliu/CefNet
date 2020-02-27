@@ -32,9 +32,8 @@ namespace CefNet
 		Link = 0,
 
 		/// <summary>
-		/// Source is some other &quot;explicit&quot; navigation action such as creating a new
-		/// browser or using the LoadURL function. This is also the default value
-		/// for navigations where the actual type is unknown.
+		/// Source is some other &quot;explicit&quot; navigation. This is the default value for
+		/// navigations where the actual type is unknown. See also TT_DIRECT_LOAD_FLAG.
 		/// </summary>
 		Explicit = 1,
 
@@ -82,8 +81,14 @@ namespace CefNet
 
 		/// <summary>
 		/// Used the Forward or Back function to navigate among browsing history.
+		/// Will be ORed to the transition type for the original load.
 		/// </summary>
 		ForwardBackFlag = 0x01000000,
+
+		/// <summary>
+		/// Loaded a URL directly via CreateBrowser, LoadURL or LoadRequest.
+		/// </summary>
+		DirectLoadFlag = 0x02000000,
 
 		/// <summary>
 		/// The beginning of a navigation chain.
