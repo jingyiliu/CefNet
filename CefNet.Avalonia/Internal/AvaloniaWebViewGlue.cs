@@ -90,5 +90,10 @@ namespace CefNet.Internal
 			WebView.RaiseTextFound(new TextFoundRoutedEventArgs(identifier, count, selectionRect, activeMatchOrdinal, finalUpdate));
 		}
 
+		protected override void OnPdfPrintFinished(string path, bool success)
+		{
+			WebView.RaisePdfPrintFinished(new PdfPrintFinishedRoutedEventArgs(path, success));
+		}
+
 	}
 }

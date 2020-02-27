@@ -530,12 +530,11 @@ namespace CefNet
 		/// <summary>
 		/// Print the current browser contents to the PDF file and execute |callback| on completion.
 		/// </summary>
-		/// <param name="path">
-		///  The PDF file path.
-		/// </param>
-		public void PrintToPdf(string path, CefPdfPrintSettings settings, CefPdfPrintCallback callback)
+		/// <param name="path">The PDF file path.</param>
+		/// <param name="settings">A PDF print settings.</param>
+		public void PrintToPdf(string path, CefPdfPrintSettings settings)
 		{
-			AliveBrowserHost.PrintToPdf(path, settings, callback);
+			AliveBrowserHost.PrintToPdf(path, settings, new CefPdfPrintCallbackGlue(ViewGlue));
 		}
 
 		public void Find(int identifier, string searchText, bool forward, bool matchCase, bool findNext)
@@ -581,8 +580,9 @@ namespace CefNet
 
 		/// <summary>
 		/// If a misspelled word is currently selected in an editable node calling this
-		/// function will replace it with the specified |word|.
+		/// function will replace it with the specified <paramref name="word"/>.
 		/// </summary>
+		/// <param name="word">The word to replace.</param>
 		public void ReplaceMisspelling(string word)
 		{
 			if (word == null)
@@ -591,8 +591,9 @@ namespace CefNet
 		}
 
 		/// <summary>
-		/// Add the specified |word| to the spelling dictionary.
+		/// Add the specified <paramref name="word"/> to the spelling dictionary.
 		/// </summary>
+		/// <param name="word">The word to be added to the spelling dictionary.</param>
 		public void AddWordToDictionary(string word)
 		{
 			if (word == null)
@@ -875,6 +876,9 @@ namespace CefNet
 			RaiseCrossThreadEvent(OnTextFound, e, false);
 		}
 
+		/// <summary>
+		/// Occurs to report find results returned by <see cref="Find"/>.
+		/// </summary>
 		public event EventHandler<ITextFoundEventArgs> TextFound
 		{
 			add { AddHandler(in TextFoundEvent, value); }
@@ -888,6 +892,29 @@ namespace CefNet
 		protected virtual void OnTextFound(ITextFoundEventArgs e)
 		{
 			TextFoundEvent?.Invoke(this, e);
+		}
+
+		void IChromiumWebViewPrivate.RaisePdfPrintFinished(IPdfPrintFinishedEventArgs e)
+		{
+			RaiseCrossThreadEvent(OnPdfPrintFinished, e, false);
+		}
+
+		/// <summary>
+		/// Occurs when the PDF printing has completed.
+		/// </summary>
+		public event EventHandler<IPdfPrintFinishedEventArgs> PdfPrintFinished
+		{
+			add { AddHandler(in PdfPrintFinishedEvent, value); }
+			remove { RemoveHandler(in PdfPrintFinishedEvent, value); }
+		}
+
+		/// <summary>
+		/// Raises the <see cref="PdfPrintFinished"/> event.
+		/// </summary>
+		/// <param name="e">A <see cref="IPdfPrintFinishedEventArgs"/> that contains the event data.</param>
+		protected virtual void OnPdfPrintFinished(IPdfPrintFinishedEventArgs e)
+		{
+			PdfPrintFinishedEvent?.Invoke(this, e);
 		}
 
 		private void InitMouseEvent(int x, int y, CefEventFlags modifiers)

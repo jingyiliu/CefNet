@@ -27,17 +27,33 @@ namespace CefNet.Wpf
 		private bool _lastKeydownIsExtendedKey;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
+		/// <summary>
+		/// Identifies the <see cref="TextFound"/> routed event.
+		/// </summary>
+		public static readonly RoutedEvent TextFoundEvent = EventManager.RegisterRoutedEvent(nameof(TextFound), RoutingStrategy.Bubble, typeof(EventHandler<ITextFoundEventArgs>), typeof(WebView));
 
-		public static readonly RoutedEvent TextFoundEvent = EventManager.RegisterRoutedEvent("TextFound", RoutingStrategy.Bubble, typeof(EventHandler<ITextFoundEventArgs>), typeof(WebView));
+		/// <summary>
+		/// Identifies the <see cref="PdfPrintFinished"/> routed event.
+		/// </summary>
+		public static readonly RoutedEvent PdfPrintFinishedEvent = EventManager.RegisterRoutedEvent(nameof(PdfPrintFinished), RoutingStrategy.Bubble, typeof(EventHandler<IPdfPrintFinishedEventArgs>), typeof(WebView));
 
+		/// <summary>
+		/// Identifies the <see cref="StatusTextChanged"/> routed event.
+		/// </summary>
 		public static readonly RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusTextChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
 
+		/// <summary>
+		/// Occurs when the <see cref="StatusText"/> property value changes.
+		/// </summary>
 		public event RoutedEventHandler StatusTextChanged
 		{
 			add { AddHandler(StatusTextChangedEvent, value); }
 			remove { RemoveHandler(StatusTextChangedEvent, value); }
 		}
 
+		/// <summary>
+		/// Identifies the <see cref="StartDragging"/> routed event.
+		/// </summary>
 		public static readonly RoutedEvent StartDraggingEvent = EventManager.RegisterRoutedEvent(nameof(StartDragging), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
 
 		/// <summary>

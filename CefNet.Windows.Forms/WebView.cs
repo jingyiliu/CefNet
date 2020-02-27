@@ -20,6 +20,7 @@ namespace CefNet.Windows.Forms
 		private ContextMenuStrip _cefmenu;
 
 		private EventHandler<ITextFoundEventArgs> TextFoundEvent;
+		private EventHandler<IPdfPrintFinishedEventArgs> PdfPrintFinishedEvent;
 
 		/// <summary>
 		/// Occurs when the StatusText property value changes.

@@ -85,6 +85,11 @@ namespace CefNet
 		event EventHandler<ITextFoundEventArgs> TextFound;
 
 		/// <summary>
+		/// Occurs when the PDF printing has completed.
+		/// </summary>
+		event EventHandler<IPdfPrintFinishedEventArgs> PdfPrintFinished;
+
+		/// <summary>
 		/// Gets and sets a default URL.
 		/// </summary>
 		/// <remarks>
@@ -156,6 +161,31 @@ namespace CefNet
 		/// Stop loading the page.
 		/// </summary>
 		void Stop();
+
+		/// <summary>
+		/// Print the current browser contents.
+		/// </summary>
+		void Print();
+
+		/// <summary>
+		/// Print the WebView contents to the PDF file.
+		/// </summary>
+		/// <param name="path">The PDF file path.</param>
+		/// <param name="settings">A PDF print settings.</param>
+		void PrintToPdf(string path, CefPdfPrintSettings settings);
+
+		/// <summary>
+		/// If a misspelled word is currently selected in an editable node calling this
+		/// function will replace it with the specified <paramref name="word"/>.
+		/// </summary>
+		/// <param name="word">The word to replace.</param>
+		void ReplaceMisspelling(string word);
+
+		/// <summary>
+		/// Add the specified <paramref name="word"/> to the spelling dictionary.
+		/// </summary>
+		/// <param name="word">The word to be added to the spelling dictionary.</param>
+		void AddWordToDictionary(string word);
 
 		/// <summary>
 		/// Returns the main (top-level) frame for the browser window.

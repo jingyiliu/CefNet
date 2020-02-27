@@ -14,6 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\CefNet.Wpf\Events\PdfPrintFinishedRoutedEventArgs.cs" Link="Events\PdfPrintFinishedRoutedEventArgs.cs" />
     <Compile Include="..\CefNet.Wpf\Events\TextFoundRoutedEventArgs.cs" Link="Events\TextFoundRoutedEventArgs.cs" />
     <Compile Include="..\CefNet\WebView.CommonImplementation.cs" Link="WebView.CommonImplementation.cs" />
   </ItemGroup>

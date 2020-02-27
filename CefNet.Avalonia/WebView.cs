@@ -25,14 +25,23 @@ namespace CefNet.Avalonia
 		private PointerPressedEventArgs _lastPointerPressedEventArgs;
 		private Dictionary<InitialPropertyKeys, object> InitialPropertyBag = new Dictionary<InitialPropertyKeys, object>();
 
+		/// <summary>
+		/// Identifies the <see cref="StatusTextChanged"/> routed event.
+		/// </summary>
 		public static readonly RoutedEvent StatusTextChangedEvent = RoutedEvent.Register<WebView, RoutedEventArgs>(nameof(StatusTextChanged), RoutingStrategies.Bubble);
 
+		/// <summary>
+		/// Occurs when the <see cref="StatusText"/> property value changes.
+		/// </summary>
 		public event EventHandler<RoutedEventArgs> StatusTextChanged
 		{
 			add { AddHandler(StatusTextChangedEvent, value); }
 			remove { RemoveHandler(StatusTextChangedEvent, value); }
 		}
 
+		/// <summary>
+		/// Identifies the <see cref="StartDragging"/> routed event.
+		/// </summary>
 		public static readonly RoutedEvent<StartDraggingEventArgs> StartDraggingEvent = RoutedEvent.Register<WebView, StartDraggingEventArgs>(nameof(StartDragging), RoutingStrategies.Bubble);
 
 		/// <summary>
@@ -84,14 +93,49 @@ namespace CefNet.Avalonia
 		/// </summary>
 		public static readonly RoutedEvent TextFoundEvent = RoutedEvent.Register<WebView, TextFoundRoutedEventArgs>(nameof(TextFound), RoutingStrategies.Bubble);
 
+		/// <summary>
+		/// Adds a handler for the <see cref="TextFound"/> attached event.
+		/// </summary>
+		/// <param name="element">An object that raise the <see cref="TextFound"/> routed event.</param>
+		/// <param name="handler">The handler.</param>
 		public static void AddTextFoundHandler(IInteractive element, EventHandler<TextFoundRoutedEventArgs> handler)
 		{
 			element?.AddHandler(TextFoundEvent, handler);
 		}
 
+		/// <summary>
+		/// Removes a handler for the <see cref="TextFound"/> attached event.
+		/// </summary>
+		/// <param name="element">An object that raise the <see cref="TextFound"/> routed event.</param>
+		/// <param name="handler">The handler.</param>
 		public static void RemoveTextFoundHandler(IInteractive element, EventHandler<TextFoundRoutedEventArgs> handler)
 		{
 			element?.RemoveHandler(TextFoundEvent, handler);
+		}
+
+		/// <summary>
+		/// Identifies the <see cref="PdfPrintFinished"/> routed event.
+		/// </summary>
+		public static readonly RoutedEvent PdfPrintFinishedEvent = RoutedEvent.Register<WebView, PdfPrintFinishedRoutedEventArgs>(nameof(PdfPrintFinished), RoutingStrategies.Bubble);
+
+		/// <summary>
+		/// Adds a handler for the <see cref="PdfPrintFinished"/> attached event.
+		/// </summary>
+		/// <param name="element">An object that raise the <see cref="PdfPrintFinished"/> routed event.</param>
+		/// <param name="handler">The handler.</param>
+		public static void AddPdfPrintFinishedHandler(IInteractive element, EventHandler<PdfPrintFinishedRoutedEventArgs> handler)
+		{
+			element?.AddHandler(PdfPrintFinishedEvent, handler);
+		}
+
+		/// <summary>
+		/// Removes a handler for the <see cref="PdfPrintFinished"/> attached event.
+		/// </summary>
+		/// <param name="element">An object that raise the <see cref="PdfPrintFinished"/> routed event.</param>
+		/// <param name="handler">The handler.</param>
+		public static void RemovePdfPrintFinishedHandler(IInteractive element, EventHandler<PdfPrintFinishedRoutedEventArgs> handler)
+		{
+			element?.RemoveHandler(PdfPrintFinishedEvent, handler);
 		}
 
 		protected bool IsDesignMode

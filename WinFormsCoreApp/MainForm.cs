@@ -45,6 +45,7 @@ namespace WinFormsCoreApp
 				new ToolStripMenuItem("Add Tab", null, HandleAddTab) { Tag = true },
 				new ToolStripMenuItem("Add Tab (new context)", null, HandleAddTab) { Tag = false },
 				new ToolStripMenuItem("Show Device Simulator", null, HandleShowSimulator),
+				new ToolStripMenuItem("Print to PDF", null, HandlePrintToPdf),
 #if USERAGENTOVERRIDE
 				new ToolStripMenuItem("Custom UserAgent", null, HandleCustomUserAgent),
 #endif
@@ -106,6 +107,7 @@ namespace WinFormsCoreApp
 			tabs.Height = ClientSize.Height - tabs.Top;
 			tabs.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 			tabs.ControlAdded += Tabs_ControlAdded;
+			tabs.ControlRemoved += Tabs_ControlRemoved;
 			tabs.SelectedIndexChanged += Tabs_SelectedIndexChanged;
 			this.Controls.Add(tabs);
 		}
@@ -115,6 +117,29 @@ namespace WinFormsCoreApp
 #if USERAGENTOVERRIDE
 			SelectedView?.SetUserAgentOverride("Mozilla/5.0 (Windows 10.0) CustomAgent/1.0");
 #endif
+		}
+
+		private void HandlePrintToPdf(object sender, EventArgs e)
+		{
+			using (var dialog = new SaveFileDialog())
+			{
+				var settings = new CefPdfPrintSettings
+				{
+					HeaderFooterUrl = SelectedView.GetMainFrame().Url
+				};
+				try
+				{
+					dialog.Filter = "PDF file|*.pdf";
+					if (dialog.ShowDialog() == DialogResult.OK)
+					{
+						SelectedView.PrintToPdf(dialog.FileName, settings);
+					}
+				}
+				finally
+				{
+					settings.Dispose();
+				}
+			}
 		}
 
 		private void HandleShowSimulator(object sender, EventArgs e)
@@ -218,8 +243,24 @@ namespace WinFormsCoreApp
 			if (tab != null)
 			{
 				tab.WebView.Navigated += WebView_Navigated;
+				tab.WebView.PdfPrintFinished += WebView_PdfPrintFinished;
 				tabs.SelectTab(tab);
 			}
+		}
+
+		private void Tabs_ControlRemoved(object sender, ControlEventArgs e)
+		{
+			var tab = e.Control as WebViewTab;
+			if (tab != null)
+			{
+				tab.WebView.Navigated -= WebView_Navigated;
+				tab.WebView.PdfPrintFinished -= WebView_PdfPrintFinished;
+			}
+		}
+
+		private void WebView_PdfPrintFinished(object sender, IPdfPrintFinishedEventArgs e)
+		{
+			MessageBox.Show(e.Success ? $"Success ({e.Path})." : "Error.", "PDF print", MessageBoxButtons.OK, e.Success ? MessageBoxIcon.Information : MessageBoxIcon.Error);
 		}
 
 		private void Tabs_SelectedIndexChanged(object sender, EventArgs e)

@@ -25,19 +25,30 @@ namespace CefNet
 	/// structure will be called on the browser process UI thread.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefPdfPrintCallback : CefBaseRefCounted<cef_pdf_print_callback_t>
+	public unsafe partial class CefPdfPrintCallback : CefBaseRefCounted<cef_pdf_print_callback_t>, ICefPdfPrintCallbackPrivate
 	{
+		private static readonly OnPdfPrintFinishedDelegate fnOnPdfPrintFinished = OnPdfPrintFinishedImpl;
+
 		internal static unsafe CefPdfPrintCallback Create(IntPtr instance)
 		{
 			return new CefPdfPrintCallback((cef_pdf_print_callback_t*)instance);
+		}
+
+		public CefPdfPrintCallback()
+		{
+			cef_pdf_print_callback_t* self = this.NativeInstance;
+			self->on_pdf_print_finished = (void*)Marshal.GetFunctionPointerForDelegate(fnOnPdfPrintFinished);
 		}
 
 		public CefPdfPrintCallback(cef_pdf_print_callback_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefPdfPrintCallbackPrivate.AvoidOnPdfPrintFinished();
 
 		/// <summary>
 		/// Method that will be executed when the PDF printing has completed. |path| is
@@ -46,12 +57,20 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnPdfPrintFinished(string path, bool ok)
 		{
-			fixed (char* s0 = path)
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnPdfPrintFinishedDelegate(cef_pdf_print_callback_t* self, cef_string_t* path, int ok);
+
+		// void (*)(_cef_pdf_print_callback_t* self, const cef_string_t* path, int ok)*
+		private static unsafe void OnPdfPrintFinishedImpl(cef_pdf_print_callback_t* self, cef_string_t* path, int ok)
+		{
+			var instance = GetInstance((IntPtr)self) as CefPdfPrintCallback;
+			if (instance == null || ((ICefPdfPrintCallbackPrivate)instance).AvoidOnPdfPrintFinished())
 			{
-				var cstr0 = new cef_string_t { Str = s0, Length = path != null ? path.Length : 0 };
-				NativeInstance->OnPdfPrintFinished(&cstr0, ok ? 1 : 0);
+				return;
 			}
-			GC.KeepAlive(this);
+			instance.OnPdfPrintFinished(CefString.Read(path), ok != 0);
 		}
 	}
 }
