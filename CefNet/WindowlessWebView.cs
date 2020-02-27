@@ -25,6 +25,7 @@ namespace CefNet
 
 		private EventHandler<ITextFoundEventArgs> TextFoundEvent;
 		private EventHandler<IPdfPrintFinishedEventArgs> PdfPrintFinishedEvent;
+		private EventHandler<EventArgs> StatusTextChangedEvent;
 
 		public event EventHandler PopupShow;
 

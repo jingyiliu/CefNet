@@ -21,12 +21,7 @@ namespace CefNet.Windows.Forms
 
 		private EventHandler<ITextFoundEventArgs> TextFoundEvent;
 		private EventHandler<IPdfPrintFinishedEventArgs> PdfPrintFinishedEvent;
-
-		/// <summary>
-		/// Occurs when the StatusText property value changes.
-		/// </summary>
-		[Browsable(false)]
-		public event EventHandler StatusTextChanged;
+		private EventHandler<EventArgs> StatusTextChangedEvent;
 
 		public WebView()
 			: this((WebView)null)
@@ -423,15 +418,6 @@ namespace CefNet.Windows.Forms
 		{
 			this.StatusText = statusText;
 			RaiseCrossThreadEvent(OnStatusTextChanged, EventArgs.Empty, false);
-		}
-
-		/// <summary>
-		/// Raises the StatusTextChanged event.
-		/// </summary>
-		/// <param name="e">An EventArgs that contains the event data.</param>
-		protected virtual void OnStatusTextChanged(EventArgs e)
-		{
-			StatusTextChanged?.Invoke(this, e);
 		}
 
 		protected override void WndProc(ref Message m)

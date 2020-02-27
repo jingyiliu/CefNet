@@ -43,15 +43,6 @@ namespace CefNet.Wpf
 		public static readonly RoutedEvent StatusTextChangedEvent = EventManager.RegisterRoutedEvent(nameof(StatusTextChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
 
 		/// <summary>
-		/// Occurs when the <see cref="StatusText"/> property value changes.
-		/// </summary>
-		public event RoutedEventHandler StatusTextChanged
-		{
-			add { AddHandler(StatusTextChangedEvent, value); }
-			remove { RemoveHandler(StatusTextChangedEvent, value); }
-		}
-
-		/// <summary>
 		/// Identifies the <see cref="StartDragging"/> routed event.
 		/// </summary>
 		public static readonly RoutedEvent StartDraggingEvent = EventManager.RegisterRoutedEvent(nameof(StartDragging), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(WebView));
@@ -490,12 +481,7 @@ namespace CefNet.Wpf
 		void IWpfWebViewPrivate.CefSetStatusText(string statusText)
 		{
 			this.StatusText = statusText;
-			RaiseCrossThreadEvent(OnStatusTextChanged, EventArgs.Empty, false);
-		}
-
-		protected virtual void OnStatusTextChanged(EventArgs e)
-		{
-			RaiseEvent(new RoutedEventArgs(StatusTextChangedEvent, this));
+			RaiseCrossThreadEvent(OnStatusTextChanged, new RoutedEventArgs(StatusTextChangedEvent, this), false);
 		}
 
 		void IWpfWebViewPrivate.RaiseStartDragging(StartDraggingEventArgs e)

@@ -98,7 +98,15 @@ namespace CefNet
 		/// Occurs when the page title changes.
 		/// </summary>
 		public event EventHandler<DocumentTitleChangedEventArgs> DocumentTitleChanged;
-		
+
+		/// <summary>
+		/// Occurs when the <see cref="StatusText"/> property value changes.
+		/// </summary>
+		public event EventHandler<EventArgs> StatusTextChanged
+		{
+			add { AddHandler(in StatusTextChangedEvent, value); }
+			remove { RemoveHandler(in StatusTextChangedEvent, value); }
+		}
 
 
 		private static CefBrowserSettings _DefaultBrowserSettings;
@@ -915,6 +923,16 @@ namespace CefNet
 		protected virtual void OnPdfPrintFinished(IPdfPrintFinishedEventArgs e)
 		{
 			PdfPrintFinishedEvent?.Invoke(this, e);
+		}
+
+
+		/// <summary>
+		/// Raises the StatusTextChanged event.
+		/// </summary>
+		/// <param name="e">An EventArgs that contains the event data.</param>
+		protected virtual void OnStatusTextChanged(EventArgs e)
+		{
+			StatusTextChangedEvent?.Invoke(this, e);
 		}
 
 		private void InitMouseEvent(int x, int y, CefEventFlags modifiers)
