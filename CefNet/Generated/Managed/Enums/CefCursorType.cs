@@ -109,7 +109,11 @@ namespace CefNet
 
 		Grabbing = 42,
 
-		Custom = 43,
+		Middlepanningvertical = 43,
+
+		Middlepanninghorizontal = 44,
+
+		Custom = 45,
 	}
 }
 
