@@ -116,7 +116,24 @@ namespace CefGen
 				string name = pattern != null ? item.Name.Substring(pattern.Length).ToLowerInvariant().ToUpperCamel() : item.Name;
 				string value = item.ValueExpression?.ToString();
 				value = (string.IsNullOrEmpty(value) || value.StartsWith("(")) ? item.Value.ToString() : value;
-				value = pattern != null && value.StartsWith(pattern) ? value.Substring(pattern.Length).ToLowerInvariant().ToUpperCamel() : value;
+				if (pattern != null)
+				{
+					string[] combined = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+					if (combined.Length > 1)
+					{
+						for (int i = 0; i < combined.Length; i++)
+						{
+							string subVal = combined[i];
+							if(subVal.StartsWith(pattern))
+								combined[i] = subVal.Substring(pattern.Length).ToLowerInvariant().ToUpperCamel();
+						}
+						value = string.Join(' ', combined);
+					}
+					else if (value.StartsWith(pattern))
+					{
+						value = value.Substring(pattern.Length).ToLowerInvariant().ToUpperCamel();
+					}
+				}
 				if (Regex.IsMatch(value, @"\d<<\d"))
 					value = value.Replace("<<", " << ");
 				var itemDecl = new CodeEnumItem(name, value);
