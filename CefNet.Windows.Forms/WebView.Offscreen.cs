@@ -153,6 +153,11 @@ namespace CefNet.Windows.Forms
 
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
+			if (GetState(State.Created) && !GetState(State.Closing))
+			{
+				OnDestroyBrowser();
+			}
+
 			if (OffscreenGraphics != null)
 				OffscreenGraphics.WidgetHandle = IntPtr.Zero;
 
