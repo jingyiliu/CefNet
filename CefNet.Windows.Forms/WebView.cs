@@ -87,11 +87,7 @@ namespace CefNet.Windows.Forms
 		{
 			if (GetState(State.Created) && !GetState(State.Closing))
 			{
-				SetState(State.Closing, true);
-				if (!this.DesignMode)
-				{
-					ViewGlue.BrowserObject?.Host.CloseBrowser(true);
-				}
+				OnDestroyBrowser();
 			}
 			base.DestroyHandle();
 		}
@@ -168,6 +164,18 @@ namespace CefNet.Windows.Forms
 
 				if (!CefApi.CreateBrowser(windowInfo, ViewGlue.Client, initialUrl, browserSettings, extraInfo, requestContext))
 					throw new InvalidOperationException("Failed to create browser instance.");
+			}
+		}
+
+		protected virtual void OnDestroyBrowser()
+		{
+			if (GetState(State.Created) && !GetState(State.Closing))
+			{
+				SetState(State.Closing, true);
+				if (!this.DesignMode)
+				{
+					ViewGlue.BrowserObject?.Host.CloseBrowser(true);
+				}
 			}
 		}
 
