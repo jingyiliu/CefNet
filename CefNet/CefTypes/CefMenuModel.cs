@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using CefNet.CApi;
 
 namespace CefNet
@@ -13,5 +14,12 @@ namespace CefNet
 		{
 
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool AddItem(CefMenuId id, string label)
+		{
+			return AddItem((int)id, label);
+		}
+
 	}
 }
