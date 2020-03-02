@@ -304,6 +304,17 @@ namespace CefNet.Windows.Forms
 			ResizeBrowserWindow();
 		}
 
+		protected override void OnVisibleChanged(EventArgs e)
+		{
+			base.OnVisibleChanged(e);
+
+			if (!WindowlessRenderingEnabled)
+			{
+				ResizeBrowserWindow();
+				if (Visible) Invalidate();
+			}
+		}
+
 		internal void ResizeBrowserWindow()
 		{
 			const uint SWP_NOSIZE = 0x0001;
