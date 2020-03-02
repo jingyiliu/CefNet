@@ -132,6 +132,17 @@ namespace CefNet
 		bool HasDocument { get; }
 
 		/// <summary>
+		/// Gets a WebView that opened the current WebView. If this WebView was not
+		/// opened by being linked to or created by another, returns null.
+		/// </summary>
+		IChromiumWebView Opener { get; }
+
+		/// <summary>
+		/// Gets the <see cref="CefClient"/> for this WebView.
+		/// </summary>
+		CefClient Client { get; }
+
+		/// <summary>
 		/// Navigates the WebView control to the previous page in the navigation history, if one is available.
 		/// </summary>
 		/// <returns>

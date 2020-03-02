@@ -267,6 +267,10 @@ namespace CefNet
 			get { return AliveBrowserObject.Host; }
 		}
 
+		/// <summary>
+		/// Gets a WebView that opened the current WebView. If this WebView was not
+		/// opened by being linked to or created by another, returns null.
+		/// </summary>
 		[Browsable(false)]
 		public IChromiumWebView Opener
 		{
