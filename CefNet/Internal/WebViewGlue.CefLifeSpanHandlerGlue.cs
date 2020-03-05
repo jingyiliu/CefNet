@@ -56,7 +56,7 @@ namespace CefNet.Internal
 			if (!BrowserObject.IsSame(browser))
 				throw new InvalidOperationException();
 #endif
-			var ea = new CreateWindowEventArgs(frame, targetUrl, targetFrameName, targetDisposition, userGesture, popupFeatures, windowInfo, client, settings, extraInfo, noJavascriptAccess != 0);
+			var ea = new CreateWindowEventArgs(frame, targetUrl, targetFrameName, targetDisposition, userGesture, popupFeatures, windowInfo, null, settings, extraInfo, noJavascriptAccess != 0);
 			WebView.RaiseCefCreateWindow(ea);
 			extraInfo = ea.ExtraInfo;
 			noJavascriptAccess = ea.NoJavaScriptAccess ? 1 : 0;
@@ -80,6 +80,10 @@ namespace CefNet.Internal
 		/// <param name="browser">The browser instance.</param>
 		internal protected virtual void OnAfterCreated(CefBrowser browser)
 		{
+#if DEBUG
+			if (this.BrowserObject != null)
+				throw new InvalidOperationException();
+#endif
 			this.BrowserObject = browser;
 			CefNetApplication.Instance.OnBrowserCreated(browser, null);
 			WebView.RaiseCefBrowserCreated();

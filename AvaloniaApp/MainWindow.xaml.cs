@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using CefNet;
 using CefNet.Avalonia;
 using System;
@@ -143,5 +144,24 @@ namespace AvaloniaApp
 			SelectedView?.Find(0, "i", true, true, false);
 		}
 
+		private void OpenPopup_Click(object sender, RoutedEventArgs e)
+		{
+			var tab = tabs.SelectedItem as WebViewTab;
+			if (tab == null)
+				return;
+
+			IChromiumWebView webView = tab.WebView;
+			if (webView == null)
+				return;
+
+			tab.PopupHandlingDisabled = true;
+			EventHandler<CreateWindowEventArgs> callback = null;
+			callback = (a, b) => {
+				tab.PopupHandlingDisabled = false;
+				Dispatcher.UIThread.Post(() => webView.CreateWindow -= callback, DispatcherPriority.Normal);
+			};
+			webView.CreateWindow += callback;
+			webView.GetMainFrame().ExecuteJavaScript("window.open('http://example.com')", null, 1);
+		}
 	}
 }
