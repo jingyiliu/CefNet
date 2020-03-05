@@ -198,8 +198,13 @@ namespace AvaloniaApp
 
 		public IChromiumWebView WebView { get; protected set; }
 
+		public bool PopupHandlingDisabled { get; set; }
+
 		private void Webview_CreateWindow(object sender, CreateWindowEventArgs e)
 		{
+			if (PopupHandlingDisabled)
+				return;
+
 			TabControl tabs = this.FindTabControl();
 			if (tabs == null)
 			{

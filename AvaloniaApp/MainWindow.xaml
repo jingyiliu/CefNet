@@ -39,6 +39,9 @@
       <MenuItem Header="File">
         <MenuItem Header="Add Tab" Click="AddTab_Click" />
         <MenuItem Header="Find i" Click="Find_Click" />
+        <MenuItem Header="Tests">
+          <MenuItem Header="Open unhandled popup" Click="OpenPopup_Click" />
+        </MenuItem>
       </MenuItem>
     </Menu>
     <DockPanel DockPanel.Dock="Top" Name="controlsPanel">
