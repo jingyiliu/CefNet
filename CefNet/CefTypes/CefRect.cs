@@ -1,6 +1,7 @@
 ﻿using CefNet.CApi;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace CefNet
@@ -316,7 +317,11 @@ namespace CefNet
 		/// </returns>
 		public override string ToString()
 		{
-			return $"X = {X}; Y = {Y}; Width = {Width}; Height = {Height}";
+			return "{X=" + X.ToString(CultureInfo.InvariantCulture)
+				+ ",Y=" + Y.ToString(CultureInfo.InvariantCulture)
+				+ ",Width=" + Width.ToString(CultureInfo.InvariantCulture)
+				+ ",Height=" + Height.ToString(CultureInfo.InvariantCulture)
+				+ "}";
 		}
 
 		/// <summary>

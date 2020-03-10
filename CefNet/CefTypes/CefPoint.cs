@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace CefNet
@@ -16,6 +17,11 @@ namespace CefNet
 		{
 			_instance.x = (int)(_instance.x * value);
 			_instance.y = (int)(_instance.y * value);
+		}
+
+		public override string ToString()
+		{
+			return "{X=" + X.ToString(CultureInfo.InvariantCulture) + ",Y=" + Y.ToString(CultureInfo.InvariantCulture) + "}";
 		}
 	}
 }
