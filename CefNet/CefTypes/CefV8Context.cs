@@ -86,5 +86,43 @@ namespace CefNet
 			get { return CefNativeApi.cef_v8context_in_context() != 0; }
 		}
 
+		/// <summary>
+		/// Evaluates JavaScript code represented as a <see cref="String"/> in this V8 context.
+		/// </summary>
+		/// <param name="code">The JavaScript code.</param>
+		/// <param name="scriptUrl">The URL where the script in question can be found, if any.</param>
+		/// <param name="line">The base line number to use for error reporting.</param>
+		/// <returns>The completion value of evaluating the given code.</returns>
+		/// <exception cref="CefNetJSExcepton">
+		/// Thrown when an exception is raised in the JavaScript engine.
+		/// </exception>
+		public CefV8Value Eval(string code, string scriptUrl, int line = 1)
+		{
+			if (line <= 0)
+				throw new ArgumentOutOfRangeException(nameof(line));
+			if (code is null)
+				throw new ArgumentNullException(nameof(code));
+
+			fixed (char* s0 = code)
+			fixed (char* s1 = scriptUrl)
+			{
+				var cstr0 = new cef_string_t { Str = s0, Length = code.Length };
+				var cstr1 = new cef_string_t { Str = s1, Length = scriptUrl != null ? scriptUrl.Length : 0 };
+
+
+				cef_v8value_t* rv = null;
+				cef_v8value_t** pRv = &rv;
+				cef_v8exception_t* jsex = null;
+				cef_v8exception_t** pJsex = &jsex;
+				if (NativeInstance->Eval(&cstr0, &cstr1, line, pRv, pJsex) != 0)
+				{
+					return CefV8Value.Wrap(CefV8Value.Create, rv);
+				}
+				GC.KeepAlive(this);
+
+				throw new CefNetJSExcepton(CefV8Exception.Wrap(CefV8Exception.Create, jsex));
+			}
+			
+		}
 	}
 }
