@@ -6,6 +6,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+// TODO: It should be documented. But these API are subject to change: this layer must be configurable.
+#pragma warning disable 0169, 1591, 1573
+
 namespace CefNet.JSInterop
 {
 	//[DebuggerNonUserCode]
