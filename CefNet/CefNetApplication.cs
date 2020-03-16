@@ -99,11 +99,13 @@ namespace CefNet
 			if (CefApi.ApiHash.Equals(hash, StringComparison.OrdinalIgnoreCase))
 				return;
 
+			Version assemblyVersion = typeof(CefApi).Assembly.GetName().Version;
 			throw new CefVersionMismatchException(string.Format(
-				"CEF runtime version mismatch. Loaded version API hash: '{0}', expected: '{1}' (CEF {2}).",
+				"CEF runtime version mismatch. Loaded version API hash: '{0}', expected: '{1}' (CEF {2}.{3}).",
 				hash,
 				CefApi.ApiHash,
-				typeof(CefApi).Assembly.GetName().Version.Major
+				assemblyVersion.Major,
+				assemblyVersion.Minor
 			));
 		}
 
