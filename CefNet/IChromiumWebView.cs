@@ -261,6 +261,12 @@ namespace CefNet
 		/// the webview window from one display to another, or changing the properties
 		/// of the current display.
 		/// </remarks>
+		void NotifyScreenInfoChanged();
+
+		/// <summary>
+		/// Sends a notification to the browser that the root window has been moved or resized.<para/>
+		/// This function is only used when window rendering is disabled.
+		/// </summary>
 		void NotifyRootMovedOrResized();
 
 		/// <summary>

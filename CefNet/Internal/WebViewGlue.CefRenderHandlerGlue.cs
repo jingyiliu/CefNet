@@ -66,17 +66,25 @@ namespace CefNet.Internal
 			if (!PlatformInfo.IsWindows)
 				return false;
 
-			//IntPtr hDesktop = WindowsNativeMethods.GetDesktopWindow();
+			float devicePixelRatio = WebView.GetDevicePixelRatio();
 			IntPtr hMonitor = NativeMethods.MonitorFromWindow(IntPtr.Zero, MonitorFlag.MONITOR_DEFAULTTOPRIMARY);
 
 			var monitorInfo = new MONITORINFO();
 			monitorInfo.Size = Marshal.SizeOf(typeof(MONITORINFO));
 			NativeMethods.GetMonitorInfo(hMonitor, ref monitorInfo);
+
 			screenInfo.Depth = 24;
 			screenInfo.DepthPerComponent = 24;
-			screenInfo.Rect = monitorInfo.Monitor.ToCefRect();
-			screenInfo.AvailableRect = monitorInfo.Work.ToCefRect();
-			screenInfo.DeviceScaleFactor = WebView.GetDevicePixelRatio();
+			screenInfo.DeviceScaleFactor = devicePixelRatio;
+
+			CefRect rect;
+			rect = monitorInfo.Monitor.ToCefRect();
+			rect.Scale(1.0f / devicePixelRatio);
+			screenInfo.Rect = rect;
+
+			rect = monitorInfo.Work.ToCefRect();
+			rect.Scale(1.0f / devicePixelRatio);
+			screenInfo.AvailableRect = rect;
 			return true;
 		}
 

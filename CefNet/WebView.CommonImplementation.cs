@@ -683,6 +683,7 @@ namespace CefNet
 		//	return new Window(Provider.GetGlobal(), Provider);
 		//}
 
+
 		/// <summary>
 		/// Send a notification to the browser that the screen info has changed.<para/>
 		/// This function is only used when window rendering is disabled.
@@ -693,9 +694,28 @@ namespace CefNet
 		/// the webview window from one display to another, or changing the properties
 		/// of the current display.
 		/// </remarks>
+		public void NotifyScreenInfoChanged()
+		{
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null || !browserHost.IsWindowRenderingDisabled)
+				return;
+
+			browserHost.NotifyScreenInfoChanged();
+		}
+
+		/// <summary>
+		/// Sends a notification to the browser that the root window has been moved or resized.<para/>
+		/// This function is only used when window rendering is disabled.
+		/// </summary>
 		public void NotifyRootMovedOrResized()
 		{
-			this.BrowserObject?.Host.NotifyScreenInfoChanged();
+			CefBrowserHost browserHost = this.BrowserObject?.Host;
+			if (browserHost is null || !browserHost.IsWindowRenderingDisabled)
+				return;
+
+			browserHost.NotifyMoveOrResizeStarted();
+			UpdateOffscreenViewLocation();
+			browserHost.NotifyScreenInfoChanged();
 		}
 
 		/// <summary>

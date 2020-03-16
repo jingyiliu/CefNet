@@ -106,7 +106,13 @@ namespace CefNet.Internal
 			_bounds = new CefRect(0, 0, 1, 1);
 		}
 
-		public static DpiScale Dpi { get; set; } = new DpiScale(1, 1);
+		public static DpiScale DpiScale { get; set; } = new DpiScale(1, 1);
+
+		public void SetLocation(int x, int y)
+		{
+			_bounds.X = x;
+			_bounds.Y = y;
+		}
 
 		public bool SetSize(int width, int height)
 		{
@@ -192,7 +198,7 @@ namespace CefNet.Internal
 				|| surface.PixelWidth != pixelBuffer.Width
 				|| surface.PixelHeight != pixelBuffer.Height)
 			{
-				DpiScale dpi = OffscreenGraphics.Dpi;
+				DpiScale dpi = OffscreenGraphics.DpiScale;
 				surface = new WriteableBitmap(pixelBuffer.Width, pixelBuffer.Height, dpi.PixelsPerInchX, dpi.PixelsPerInchY, PixelFormats.Bgra32, null);
 				pixelBuffer.Surface = surface;
 			}

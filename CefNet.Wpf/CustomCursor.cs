@@ -24,7 +24,7 @@ namespace CefNet.Wpf
 			int ICON_HEADER_SIZE = sizeof(ICONDIR);
 			var stream = new MemoryStream(bufferSize);
 			{
-				DpiScale dpi = OffscreenGraphics.Dpi;
+				DpiScale dpi = OffscreenGraphics.DpiScale;
 				var source = BitmapSource.Create(size.Width, size.Height, dpi.PixelsPerInchX, dpi.PixelsPerInchY, PixelFormats.Bgra32, null, cursorInfo.Buffer, bufferSize, size.Width << 2);
 				if (stream.Seek(ICON_HEADER_SIZE, SeekOrigin.Begin) != ICON_HEADER_SIZE)
 				{

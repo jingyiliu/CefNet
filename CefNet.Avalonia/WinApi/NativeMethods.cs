@@ -24,5 +24,11 @@ namespace CefNet.WinApi
 
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr pPid);
+
+		[DllImport("Dwmapi.dll", CharSet = CharSet.Auto)]
+		public static unsafe extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE attribute, void* value, int size);
+
+		[DllImport("Dwmapi.dll", CharSet = CharSet.Auto, PreserveSig = false)]
+		public static extern bool DwmIsCompositionEnabled();
 	}
 }

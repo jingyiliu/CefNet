@@ -13,5 +13,15 @@ namespace CefNet.WinApi
 
 		[DllImport("user32.dll", EntryPoint = "VkKeyScanW", CharSet = CharSet.Unicode, SetLastError = true)]
 		public static extern ushort VkKeyScan(char ch);
+
+		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
+
+		[DllImport("Dwmapi.dll", CharSet = CharSet.Auto)]
+		public static unsafe extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE attribute, void* value, int size);
+
+		[DllImport("Dwmapi.dll", CharSet = CharSet.Auto, PreserveSig = false)]
+		public static extern bool DwmIsCompositionEnabled();
 	}
 }

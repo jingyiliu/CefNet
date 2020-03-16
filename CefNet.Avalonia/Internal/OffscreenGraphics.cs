@@ -105,7 +105,13 @@ namespace CefNet.Internal
 			_bounds = new CefRect(0, 0, 1, 1);
 		}
 
-		public static Vector Dpi { get; set; } = new Vector(1, 1);
+		public static DpiScale DpiScale { get; set; } = new DpiScale(1, 1);
+
+		public void SetLocation(int x, int y)
+		{
+			_bounds.X = x;
+			_bounds.Y = y;
+		}
 
 		public bool SetSize(int width, int height)
 		{
@@ -167,20 +173,23 @@ namespace CefNet.Internal
 			{
 				if (ViewPixels != null)
 				{
-					Size size;
+					PixelSize pixelSize;
 					WriteableBitmap surface;
 
 					surface = GetSurface(ViewPixels);
-					size = surface.Size;
-					drawingContext.DrawImage(surface, 1, new Rect(size), new Rect(size));
+					pixelSize = surface.PixelSize;
+					drawingContext.DrawImage(surface, 1, new Rect(0, 0, pixelSize.Width, pixelSize.Height), new Rect(surface.Size));
 
 					PixelBuffer pixelBuffer = PopupPixels;
 					if (pixelBuffer == null)
 						return;
 
 					surface = GetSurface(pixelBuffer);
-					size = surface.Size;
-					drawingContext.DrawImage(surface, 1, new Rect(size), new Rect(_popupBounds.X, _popupBounds.Y, size.Width, size.Height));
+					Size size = surface.Size;
+					pixelSize = surface.PixelSize;
+					drawingContext.DrawImage(surface, 1,
+						new Rect(0, 0, pixelSize.Width, pixelSize.Height),
+						new Rect(_popupBounds.X, _popupBounds.Y, size.Width, size.Height));
 				}
 			}
 		}
@@ -191,11 +200,10 @@ namespace CefNet.Internal
 				throw new InvalidOperationException();
 
 			WriteableBitmap surface = pixelBuffer.Surface;
-			if (surface == null
-				|| surface.PixelSize != new PixelSize(pixelBuffer.Width,pixelBuffer.Height))
+			if (surface is null || surface.PixelSize != new PixelSize(pixelBuffer.Width, pixelBuffer.Height))
 			{
 				surface?.Dispose();
-				surface = new WriteableBitmap(new PixelSize(pixelBuffer.Width, pixelBuffer.Height), OffscreenGraphics.Dpi, PixelFormat.Bgra8888);
+				surface = new WriteableBitmap(new PixelSize(pixelBuffer.Width, pixelBuffer.Height), OffscreenGraphics.DpiScale.Dpi, PixelFormat.Bgra8888);
 				pixelBuffer.Surface = surface;
 			}
 

@@ -201,6 +201,7 @@ namespace WinFormsCoreApp
 
 		protected override void OnResizeBegin(EventArgs e)
 		{
+			tabs?.NotifyRootMovedOrResized();
 			this.SuspendLayout();
 			base.OnResizeBegin(e);
 		}
@@ -209,18 +210,19 @@ namespace WinFormsCoreApp
 		{
 			this.ResumeLayout(true);
 			base.OnResizeEnd(e);
+			tabs?.NotifyRootMovedOrResized();
 		}
 
 		protected override void OnLocationChanged(EventArgs e)
 		{
 			base.OnLocationChanged(e);
-			((WebView)SelectedView)?.NotifyRootMovedOrResized();
+			//((WebView)SelectedView)?.NotifyRootMovedOrResized();
 		}
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
-			((WebView)SelectedView)?.NotifyRootMovedOrResized();
+			tabs?.NotifyRootMovedOrResized();
 		}
 
 		private void BtnGo_Click(object sender, EventArgs e)

@@ -71,13 +71,13 @@ namespace CefNet.Internal
 		private PixelBuffer PopupPixels;
 
 		private readonly object _syncRoot;
-		private CefSize _viewSize;
+		private CefRect _bounds;
 		private Rectangle _popupBounds;
 
 		public OffscreenGraphics()
 		{
 			_syncRoot = new object();
-			_viewSize = new CefSize(1, 1);
+			_bounds = new CefRect(0, 0, 1, 1);
 		}
 
 		public VirtualDevice Device { get; set; }
@@ -90,12 +90,18 @@ namespace CefNet.Internal
 
 		public InterpolationMode InterpolationMode { get; set; } = InterpolationMode.Bilinear;
 
+		public void SetLocation(int x, int y)
+		{
+			_bounds.X = x;
+			_bounds.Y = y;
+		}
+
 		public bool SetSize(int width, int height)
 		{
 			width = Math.Max(width, 1);
 			height = Math.Max(height, 1);
-			_viewSize.Width = width;
-			_viewSize.Height = height;
+			_bounds.Width = width;
+			_bounds.Height = height;
 
 			lock (_syncRoot)
 			{
@@ -107,8 +113,8 @@ namespace CefNet.Internal
 		{
 			float ppd = PixelsPerDip;
 			if (ppd == 1.0f || Device != null)
-				return new CefRect(0, 0, _viewSize.Width, _viewSize.Height);
-			return new CefRect(0, 0, (int)(_viewSize.Width / ppd), (int)(_viewSize.Height / ppd));
+				return _bounds;
+			return new CefRect((int)(_bounds.X / ppd), (int)(_bounds.Y / ppd), (int)(_bounds.Width / ppd), (int)(_bounds.Height / ppd));
 		}
 
 		public CefRect Draw(CefPaintEventArgs e)
@@ -149,8 +155,8 @@ namespace CefNet.Internal
 				{
 					if (e.PaintElementType == CefPaintElementType.View)
 					{
-						width = (int)(_viewSize.Width * device.Scale * ppd);
-						height = (int)(_viewSize.Height * device.Scale * ppd);
+						width = (int)(_bounds.Width * device.Scale * ppd);
+						height = (int)(_bounds.Height * device.Scale * ppd);
 					}
 					else if (e.PaintElementType == CefPaintElementType.Popup)
 					{

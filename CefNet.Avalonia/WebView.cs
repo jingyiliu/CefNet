@@ -312,20 +312,44 @@ namespace CefNet.Avalonia
 					if (OffscreenGraphics.SetSize((int)bounds.Width, (int)bounds.Height))
 					{
 						double scaling = this.VisualRoot?.RenderScaling ?? 1.0;
-						OffscreenGraphics.Dpi = new Vector(scaling, scaling);
+						OffscreenGraphics.DpiScale = new DpiScale(scaling, scaling);
 						BrowserObject?.Host.WasResized();
 					}
 				}
 			}
 		}
 
-		protected void OnUpdateRootBounds()
+		protected internal virtual unsafe void OnUpdateRootBounds()
 		{
 			var window = this.GetVisualRoot() as Window;
 			if (window != null)
 			{
-				Rect bounds = window.Bounds;
-				RootBoundsChanged(new CefRect((int)bounds.X, (int)bounds.Y, (int)bounds.Width, (int)bounds.Height));
+				RECT windowBounds;
+				DpiScale scale = OffscreenGraphics.DpiScale;
+
+				if (PlatformInfo.IsWindows && NativeMethods.DwmIsCompositionEnabled()
+					&& NativeMethods.DwmGetWindowAttribute(window.PlatformImpl.Handle.Handle, DWMWINDOWATTRIBUTE.ExtendedFrameBounds, &windowBounds, sizeof(RECT)) == 0)
+				{
+					windowBounds = new RECT
+					{
+						Left = (int)Math.Floor(windowBounds.Left / scale.DpiScaleX),
+						Top = (int)Math.Floor(windowBounds.Top / scale.DpiScaleY),
+						Right = (int)Math.Ceiling(windowBounds.Right / scale.DpiScaleX),
+						Bottom = (int)Math.Ceiling(windowBounds.Bottom / scale.DpiScaleY)
+					};
+				}
+				else
+				{
+					Rect bounds = window.Bounds;
+					PixelPoint pos = window.Position;
+					windowBounds = new RECT {
+						Left = (int)Math.Floor(pos.X / scale.DpiScaleX),
+						Top = (int)Math.Floor(pos.Y / scale.DpiScaleY),
+						Right = (int)Math.Ceiling(bounds.Right / scale.DpiScaleX),
+						Bottom = (int)Math.Ceiling(bounds.Bottom / scale.DpiScaleY)
+					};
+				}
+				RootBoundsChanged(windowBounds.ToCefRect());
 			}
 		}
 
@@ -352,14 +376,18 @@ namespace CefNet.Avalonia
 
 		protected internal void RootBoundsChanged(CefRect bounds)
 		{
-			int previousWidth = _windowBounds.Width;
-			int previousHeight = _windowBounds.Height;
 			_windowBounds = bounds;
 
-			if (_allowResizeNotifications)// || (previousWidth == bounds.Width && previousHeight == bounds.Height))
+			if (_allowResizeNotifications)
 			{
-				BrowserObject?.Host.NotifyScreenInfoChanged();
+				NotifyRootMovedOrResized();
 			}
+		}
+
+		private void UpdateOffscreenViewLocation()
+		{
+			PixelPoint screenPoint = PointToScreen(default);
+			OffscreenGraphics.SetLocation(screenPoint.X, screenPoint.Y);
 		}
 
 		protected override Size MeasureOverride(Size constraint)
@@ -444,7 +472,13 @@ namespace CefNet.Avalonia
 		public PixelPoint PointToScreen(Point point)
 		{
 			if (((IVisual)this).IsAttachedToVisualTree)
-				return global::Avalonia.VisualExtensions.PointToScreen(this, point);
+			{
+				PixelPoint pixelPoint = global::Avalonia.VisualExtensions.PointToScreen(this, point);
+				DpiScale dpi = OffscreenGraphics.DpiScale;
+				if (dpi.DpiScaleX == 1.0 && dpi.DpiScaleY == 1.0)
+					return pixelPoint;
+				return new PixelPoint((int)Math.Ceiling(pixelPoint.X / dpi.DpiScaleX), (int)Math.Ceiling(pixelPoint.Y / dpi.DpiScaleY));
+			}
 			CefRect viewRect = OffscreenGraphics.GetBounds();
 			return new PixelPoint(viewRect.X + (int)point.X, viewRect.Y + (int)point.Y);
 		}
@@ -479,7 +513,7 @@ namespace CefNet.Avalonia
 
 		float IChromiumWebViewPrivate.GetDevicePixelRatio()
 		{
-			return (float)OffscreenGraphics.Dpi.Y;
+			return (float)OffscreenGraphics.DpiScale.DpiScaleX;
 		}
 
 		CefRect IChromiumWebViewPrivate.GetCefRootBounds()

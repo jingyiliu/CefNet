@@ -82,8 +82,7 @@ namespace CefNet.Internal
 						break;
 					foreach (var tuple in GetViews(hwnd))
 					{
-						Rect bounds = tuple.Item2.Bounds;
-						tuple.Item1.RootBoundsChanged(new CefRect((int)bounds.X, (int)bounds.Y, (int)bounds.Width, (int)bounds.Height));
+						tuple.Item1.OnUpdateRootBounds();
 					}
 					break;
 				case 0x0231: // WM_ENTERSIZEMOVE

@@ -234,7 +234,7 @@ namespace CefNet.Wpf
 				OnUpdateRootBounds();
 				if (OffscreenGraphics != null && OffscreenGraphics.SetSize((int)this.ActualWidth, (int)this.ActualHeight))
 				{
-					OffscreenGraphics.Dpi = VisualTreeHelper.GetDpi(this);
+					OffscreenGraphics.DpiScale = VisualTreeHelper.GetDpi(this);
 					BrowserObject?.Host.WasResized();
 				}
 			}
@@ -242,12 +242,31 @@ namespace CefNet.Wpf
 			base.OnRenderSizeChanged(sizeInfo);
 		}
 
-		protected void OnUpdateRootBounds()
+		protected internal virtual unsafe void OnUpdateRootBounds()
 		{
 			Window window = Window.GetWindow(this);
 			if (window != null)
 			{
-				RootBoundsChanged(new CefRect((int)window.Left, (int)window.Top, (int)window.ActualWidth, (int)window.ActualHeight));
+				IntPtr hwnd = new WindowInteropHelper(window).Handle;
+				RECT windowBounds;
+				if ((NativeMethods.DwmIsCompositionEnabled() && NativeMethods.DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.ExtendedFrameBounds, &windowBounds, sizeof(RECT)) == 0)
+					|| NativeMethods.GetWindowRect(hwnd, out windowBounds))
+				{
+					DpiScale scale = OffscreenGraphics.DpiScale;
+
+					windowBounds = new RECT
+					{
+						Left = (int)Math.Floor(windowBounds.Left / scale.DpiScaleX),
+						Top = (int)Math.Floor(windowBounds.Top / scale.DpiScaleY),
+						Right = (int)Math.Ceiling(windowBounds.Right / scale.DpiScaleX),
+						Bottom = (int)Math.Ceiling(windowBounds.Bottom / scale.DpiScaleY)
+					};
+					RootBoundsChanged(windowBounds.ToCefRect());
+				}
+				else
+				{
+					RootBoundsChanged(new CefRect((int)window.Left, (int)window.Top, (int)window.ActualWidth, (int)window.ActualHeight));
+				}
 			}
 		}
 
@@ -274,14 +293,18 @@ namespace CefNet.Wpf
 
 		protected internal void RootBoundsChanged(CefRect bounds)
 		{
-			int previousWidth = _windowBounds.Width;
-			int previousHeight = _windowBounds.Height;
 			_windowBounds = bounds;
 
-			if (_allowResizeNotifications)// || (previousWidth == bounds.Width && previousHeight == bounds.Height))
+			if (_allowResizeNotifications)
 			{
-				BrowserObject?.Host.NotifyScreenInfoChanged();
+				NotifyRootMovedOrResized();
 			}
+		}
+
+		private void UpdateOffscreenViewLocation()
+		{
+			Point screenPoint = PointToScreen(default);
+			OffscreenGraphics.SetLocation((int)screenPoint.X, (int)screenPoint.Y);
 		}
 
 		protected override Size MeasureOverride(Size constraint)
@@ -367,7 +390,13 @@ namespace CefNet.Wpf
 		public new Point PointToScreen(Point point)
 		{
 			if (PresentationSource.FromVisual(this) != null)
-				return base.PointToScreen(point);
+			{
+				point = base.PointToScreen(point);
+				DpiScale dpi = OffscreenGraphics.DpiScale;
+				if (dpi.PixelsPerDip == 1.0)
+					return point;
+				return new Point(point.X / dpi.PixelsPerDip, point.Y / dpi.PixelsPerDip);
+			}
 			CefRect viewRect = OffscreenGraphics.GetBounds();
 			point.Offset(viewRect.X, viewRect.Y);
 			return point;
@@ -405,7 +434,7 @@ namespace CefNet.Wpf
 
 		float IChromiumWebViewPrivate.GetDevicePixelRatio()
 		{
-			return (float)OffscreenGraphics.Dpi.PixelsPerDip;
+			return (float)OffscreenGraphics.DpiScale.PixelsPerDip;
 		}
 
 		CefRect IChromiumWebViewPrivate.GetCefRootBounds()

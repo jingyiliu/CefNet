@@ -383,5 +383,8 @@ namespace CefNet
 			this.BrowserObject.Host.SetFocus(focus);
 		}
 
+		private void UpdateOffscreenViewLocation() { }
+
+
 	}
 }

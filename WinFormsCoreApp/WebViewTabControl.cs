@@ -193,5 +193,13 @@ namespace WinFormsCoreApp
 			}
 		}
 
+		public void NotifyRootMovedOrResized()
+		{
+			foreach (TabPage tab in TabPages)
+			{
+				(tab as IWebViewTab)?.WebView.NotifyRootMovedOrResized();
+			}
+		}
+
 	}
 }

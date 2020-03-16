@@ -74,9 +74,10 @@ namespace CefNet.Internal
 					WINDOWPOS* windowPos = (WINDOWPOS*)lParam;
 					if ((windowPos->flags & 0x0002) != 0) // SWP_NOMOVE
 						break;
+
 					foreach (var tuple in GetViews(hwnd))
 					{
-						tuple.Item1.RootBoundsChanged(new CefRect((int)tuple.Item2.Left, (int)tuple.Item2.Top, (int)tuple.Item2.ActualWidth, (int)tuple.Item2.ActualHeight));
+						tuple.Item1.OnUpdateRootBounds();
 					}
 					break;
 				case 0x0231: // WM_ENTERSIZEMOVE

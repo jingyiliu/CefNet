@@ -225,15 +225,17 @@ namespace CefNet.Windows.Forms
 			return GetCefRootBounds();
 		}
 
-		protected virtual CefRect GetCefRootBounds()
+		protected virtual unsafe CefRect GetCefRootBounds()
 		{
 			VirtualDevice device = Device;
 			if (device == null)
 			{
 				const int GA_ROOT = 2;
 
+				RECT windowBounds;
 				IntPtr hwnd = NativeMethods.GetAncestor(OffscreenGraphics.WidgetHandle, GA_ROOT);
-				if (NativeMethods.GetWindowRect(hwnd, out RECT windowBounds))
+				if ((NativeMethods.DwmIsCompositionEnabled() && NativeMethods.DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.ExtendedFrameBounds, &windowBounds, sizeof(RECT)) == 0)
+					|| NativeMethods.GetWindowRect(hwnd, out windowBounds))
 				{
 					float ppd = OffscreenGraphics.PixelsPerDip;
 					if (ppd == 1.0f)
@@ -250,6 +252,25 @@ namespace CefNet.Windows.Forms
 			else
 			{
 				return device.GetRootBounds();
+			}
+		}
+
+		private void UpdateOffscreenViewLocation()
+		{
+			if (OffscreenGraphics is null)
+				return;
+
+			VirtualDevice device = this.Device;
+			if (device is null)
+			{
+				Point screenPoint = PointToScreen(default);
+				OffscreenGraphics.SetLocation(screenPoint.X, screenPoint.Y);
+			}
+			else
+			{
+				CefPoint screenPoint = default;
+				device.PointToScreen(ref screenPoint);
+				OffscreenGraphics.SetLocation(screenPoint.X, screenPoint.Y);
 			}
 		}
 
@@ -459,17 +480,23 @@ namespace CefNet.Windows.Forms
 
 			if (WindowlessRenderingEnabled)
 			{
-				CefRect? viewportRect = Device?.ViewportRect;
-				if (viewportRect != null)
+				UpdateOffscreenViewLocation();
+
+				VirtualDevice device = this.Device;
+				if (device is null)
 				{
-					if (OffscreenGraphics.SetSize(viewportRect.Value.Width, viewportRect.Value.Height))
+					if (OffscreenGraphics.SetSize(this.Width, this.Height))
 					{
 						BrowserObject?.Host.WasResized();
 					}
 				}
-				else if (OffscreenGraphics.SetSize(this.Width, this.Height))
+				else
 				{
-					BrowserObject?.Host.WasResized();
+					CefRect viewportRect = device.ViewportRect;
+					if (OffscreenGraphics.SetSize(viewportRect.Width, viewportRect.Height))
+					{
+						BrowserObject?.Host.WasResized();
+					}
 				}
 			}
 		}
