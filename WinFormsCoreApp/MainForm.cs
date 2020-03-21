@@ -46,10 +46,6 @@ namespace WinFormsCoreApp
 				new ToolStripMenuItem("Add Tab (new context)", null, HandleAddTab) { Tag = false },
 				new ToolStripMenuItem("Show Device Simulator", null, HandleShowSimulator),
 				new ToolStripMenuItem("Print to PDF", null, HandlePrintToPdf),
-#if USERAGENTOVERRIDE
-				new ToolStripMenuItem("Custom UserAgent", null, HandleCustomUserAgent),
-#endif
-				
 				new ToolStripMenuItem("Test2", null, Button2_Click),
 				new ToolStripMenuItem("Main Process", null, new ToolStripItem[] {
 					new ToolStripMenuItem("Test ScriptableObject", null, async (s,e) => await ScriptableObjectTests.ScriptableObjectTestAsync(SelectedView.GetMainFrame())),
@@ -110,13 +106,6 @@ namespace WinFormsCoreApp
 			tabs.ControlRemoved += Tabs_ControlRemoved;
 			tabs.SelectedIndexChanged += Tabs_SelectedIndexChanged;
 			this.Controls.Add(tabs);
-		}
-
-		private void HandleCustomUserAgent(object sender, EventArgs e)
-		{
-#if USERAGENTOVERRIDE
-			SelectedView?.SetUserAgentOverride("Mozilla/5.0 (Windows 10.0) CustomAgent/1.0");
-#endif
 		}
 
 		private void HandlePrintToPdf(object sender, EventArgs e)

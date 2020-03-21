@@ -10,7 +10,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);TRACE;WPF;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;WPF</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net')) AND $([System.Char]::IsDigit($(TargetFramework), 3))">

@@ -5,7 +5,7 @@
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net45;net48</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>$(NoWarn),IDE1006,IDE0017,IDE0016</NoWarn>
-    <DefineConstants>$(DefineConstants);TRACE;WINDOWLESS;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;WINDOWLESS</DefineConstants>
     <Configurations>Debug;Release;Nuget_Release</Configurations>
     <Description>
       .NET binding for the Chromium Embedded Framework v.$(CefVersion).*

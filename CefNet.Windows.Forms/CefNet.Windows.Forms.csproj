@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);TRACE;WINFORMS;USERAGENTOVERRIDE_OFF;NAVIGATEWITHPARAMS_OFF</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;WINFORMS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="($(TargetFramework) == 'netcoreapp3.0') OR ($(TargetFramework.StartsWith('net')) AND $([System.Char]::IsDigit($(TargetFramework), 3)))">
     <DefineConstants>$(DefineConstants);OBSOLETED_CONTROLS_3_1</DefineConstants>

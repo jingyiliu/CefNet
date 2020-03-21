@@ -280,13 +280,6 @@ namespace CefNet
 		/// <param name="url">The URL of the document to load.</param>
 		void Navigate(string url);
 
-#if NAVIGATEWITHPARAMS
-		void Navigate(string url, string referrer);
-		void NavigateWithParams(string url, string referrer, PageTransition navigationType, PostData postData, string extraHeaders);
-		void LoadContent(string url, string referrer, string contentType, string content, Encoding encoding);
-#endif //NAVIGATEWITHPARAMS
-		//Window GetWindow();
-
 		/// <summary>
 		/// Gets the associated <see cref="CefBrowser"/> object.
 		/// </summary>
@@ -412,9 +405,5 @@ namespace CefNet
 		/// </summary>
 		void StopFinding(bool clearSelection);
 
-#if USERAGENTOVERRIDE
-		void SetUserAgentOverride(string useragent);
-		string GetUserAgentOverride();
-#endif //USERAGENTOVERRIDE
 	}
 }

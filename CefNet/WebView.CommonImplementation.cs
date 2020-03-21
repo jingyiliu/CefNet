@@ -727,74 +727,9 @@ namespace CefNet
 			AliveBrowserObject.MainFrame.LoadUrl(url);
 		}
 
-#if NAVIGATEWITHPARAMS
-		public void Navigate(string url, string referrer)
-		{
-			if (referrer == null || "about:blank".Equals(referrer, StringComparison.OrdinalIgnoreCase))
-			{
-				Navigate(url);
-				return;
-			}
-			BrowserObject.Host.LoadUrlwithParams(url, referrer, (int)PageTransition.Link, IntPtr.Zero, 0, null);
-		}
-
-		public unsafe void NavigateWithParams(string url, string referrer, PageTransition navigationType, PostData postData, string extraHeaders)
-		{
-			if (postData != null)
-			{
-				if (navigationType != PageTransition.FormSubmit)
-					throw new ArgumentOutOfRangeException(nameof(navigationType));
-
-				if (string.IsNullOrEmpty(extraHeaders))
-					extraHeaders = "Content-Type: " + postData.ContentType;
-				else
-					extraHeaders = "\nContent-Type: " + postData.ContentType;
-
-				fixed (byte* ptr = postData.Content)
-				{
-					BrowserObject.Host.LoadUrlwithParams(url, referrer, (int)navigationType, new IntPtr(ptr), (ulong)postData.Length, extraHeaders);
-				}
-				return;
-			}
-
-			BrowserObject.Host.LoadUrlwithParams(url, referrer, (int)navigationType, IntPtr.Zero, 0, extraHeaders);
-		}
-
-		public void LoadContent(string url, string referrer, string contentType, string content, Encoding encoding)
-		{
-			LoadContent(url, referrer, contentType, encoding.GetBytes(content));
-		}
-
-		public unsafe void LoadContent(string url, string referrer, string contentType, byte[] content)
-		{
-			var r = new CefRequest();
-			r.Url = "http://hello.world";
-
-			var request = new ContentRequest(requestHandler);
-			request.ContentType = contentType;
-			request.Url = r.Url;
-			request.Content = content;
-			request.Subscribe();
-			r.Dispose();
-			//lock (contentHandlers)
-			//{
-			//	contentHandlers.Add(url, request);
-			//}
-			BrowserObject.Host.LoadUrlwithParams(url, referrer, (int)PageTransition.Link, IntPtr.Zero, 0, "");
-			//BrowserObject.MainFrame.LoadUrl(request.Url);
-		}
-#endif
-		public void Post(string url, string referrer, string contentType, byte[] content)
-		{
-
-		}
-
 		void IChromiumWebViewPrivate.RaiseCefBrowserCreated()
 		{
 			SetState(State.Created, true);
-#if USERAGENTOVERRIDE
-			OnSetUserAgentInNewTab();
-#endif
 			RaiseCrossThreadEvent(OnBrowserCreated, EventArgs.Empty, true);
 		}
 
@@ -1290,30 +1225,6 @@ namespace CefNet
 			k.UnmodifiedCharacter = c;
 			this.BrowserObject?.Host?.SendKeyEvent(k);
 		}
-
-
-
-
-#if USERAGENTOVERRIDE
-
-		protected virtual void OnSetUserAgentInNewTab()
-		{
-			string useragent = Opener?.GetUserAgentOverride();
-			if (!string.IsNullOrWhiteSpace(useragent))
-				SetUserAgentOverride(useragent);
-		}
-
-		public virtual void SetUserAgentOverride(string useragent)
-		{
-			BrowserObject?.Host.SetUserAgentOverride(useragent, true);
-		}
-
-		public string GetUserAgentOverride()
-		{
-			return BrowserObject?.Host.GetUserAgentOverride();
-		}
-
-#endif //USERAGENTOVERRIDE
 
 	}
 }

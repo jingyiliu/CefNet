@@ -32,15 +32,7 @@ namespace WinFormsCoreApp
 			view.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 			view.Navigated += View_Navigated;
 			view.CreateWindow += View_CreateWindow;
-			view.BrowserCreated += View_BrowserCreated;
 			this.Controls.Add(view);
-		}
-
-		private void View_BrowserCreated(object sender, EventArgs e)
-		{
-#if USERAGENTOVERRIDE
-			view.BrowserObject.Host.SetUserAgentOverride("Mozilla/5.0 (Linux; U; Android 9) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 CefNet Mobile Safari/533.1", false);
-#endif
 		}
 
 		protected override void OnResizeBegin(EventArgs e)
