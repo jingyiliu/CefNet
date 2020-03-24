@@ -51,29 +51,46 @@ namespace CefNet
 		/// </summary>
 		public event EventHandler<CreateWindowEventArgs> CreateWindow;
 
+		/// <summary>
+		/// Occurs before a CefFrame navigates to a new document.
+		/// </summary>
 		public event EventHandler<BeforeBrowseEventArgs> BeforeBrowse;
+
 		/// <summary>
 		/// Occurs before the WebView control navigates to a new document.
 		/// </summary>
 		public event EventHandler<BeforeBrowseEventArgs> Navigating;
+
 		/// <summary>
 		/// Occurs when the WebView control has navigated to a new document
 		/// and has begun loading it.
 		/// </summary>
 		public event EventHandler<NavigatedEventArgs> Navigated;
+
 		/// <summary>
 		/// Occurs when a frame&apos;s address has changed.
 		/// </summary>
 		public event EventHandler<AddressChangeEventArgs> AddressChange;
+
 		/// <summary>
 		/// Occurs when the loading state has changed.
 		/// </summary>
 		public event EventHandler<LoadingStateChangeEventArgs> LoadingStateChange;
 
 		/// <summary>
-		/// 
+		/// Occurs just before a browser is destroyed.
 		/// </summary>
+		/// <remarks>
+		/// Release all references to the <see cref="BrowserObject"/> and do not attempt to execute
+		/// any methods on the <see cref="CefBrowser"/> object (other than <see cref="CefBrowser.Identifier"/>
+		/// or <see cref="CefBrowser.IsSame"/> after this event.<para/>
+		/// This event will be the last notification that references <see cref="BrowserObject"/> on the UI thread.
+		/// Any in-progress network requests associated with <see cref="BrowserObject"/> will be aborted when
+		/// the browser is destroyed, and <see cref="CefResourceRequestHandler"/> callbacks related to those
+		/// requests may still arrive on the IO thread after this method is called.
+		/// </remarks>
 		public event EventHandler Closed;
+
 		/// <summary>
 		/// Occurs when a browser has recieved a request to close.
 		/// </summary>

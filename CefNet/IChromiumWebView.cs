@@ -30,6 +30,11 @@ namespace CefNet
 		event EventHandler<NavigatedEventArgs> Navigated;
 
 		/// <summary>
+		/// Occurs before a CefFrame navigates to a new document.
+		/// </summary>
+		event EventHandler<BeforeBrowseEventArgs> BeforeBrowse;
+
+		/// <summary>
 		/// Occurs when a frame&apos;s address has changed.
 		/// </summary>
 		event EventHandler<AddressChangeEventArgs> AddressChange;
