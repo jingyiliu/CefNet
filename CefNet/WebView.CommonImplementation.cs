@@ -822,7 +822,7 @@ namespace CefNet
 			RaiseCrossThreadEvent(OnAddressChange, e, false);
 		}
 
-		protected virtual void OnNavigated(AddressChangeEventArgs e)
+		protected virtual void OnNavigated(NavigatedEventArgs e)
 		{
 			Navigated?.Invoke(this, e);
 		}
