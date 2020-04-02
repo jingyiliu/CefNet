@@ -231,6 +231,13 @@ namespace CefGen
 			return s;
 		}
 
+		public static string GetSourceFile(this CppTypeDeclaration cppType)
+		{
+			if (cppType is CppClass @class)
+				return GetSourceFile(@class);
+			return cppType.Span.Start.File;
+		}
+
 		public static string GetSourceFile(this CppClass @class)
 		{
 			CppField field = @class.Fields.FirstOrDefault();

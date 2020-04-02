@@ -128,7 +128,7 @@ namespace CefGen
 			string sources;
 			if (decls.Count == 1)
 			{
-				sources = decls[0].Span.Start.File;
+				sources = decls[0].GetSourceFile();
 				if (sources != null)
 					sources = Path.GetRelativePath(BaseDirectory, sources).Replace('\\', '/');
 			}
@@ -137,7 +137,7 @@ namespace CefGen
 				var files = new HashSet<string>(decls.Count);
 				foreach (CppTypeDeclaration decl in decls)
 				{
-					string filename = decl.Span.Start.File;
+					string filename = decl.GetSourceFile();
 					filename = Path.GetRelativePath(BaseDirectory, filename);
 					files.Add(filename.Replace('\\', '/'));
 				}
