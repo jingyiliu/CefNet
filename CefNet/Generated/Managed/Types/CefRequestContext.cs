@@ -89,6 +89,17 @@ namespace CefNet
 		}
 
 		/// <summary>
+		/// Gets the MediaRouter object associated with this context.
+		/// </summary>
+		public unsafe virtual CefMediaRouter MediaRouter
+		{
+			get
+			{
+				return SafeCall(CefMediaRouter.Wrap(CefMediaRouter.Create, NativeInstance->GetMediaRouter()));
+			}
+		}
+
+		/// <summary>
 		/// Returns true (1) if this object is pointing to the same context as |that|
 		/// object.
 		/// </summary>

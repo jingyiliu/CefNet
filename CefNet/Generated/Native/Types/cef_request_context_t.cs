@@ -421,6 +421,18 @@ namespace CefNet.CApi
 		[NativeName("get_extension")]
 		[MethodImpl(MethodImplOptions.ForwardRef)]
 		public unsafe extern cef_extension_t* GetExtension([Immutable]cef_string_t* extension_id);
+
+		/// <summary>
+		/// _cef_media_router_t* (*)(_cef_request_context_t* self)*
+		/// </summary>
+		public void* get_media_router;
+
+		/// <summary>
+		/// Returns the MediaRouter object associated with this context.
+		/// </summary>
+		[NativeName("get_media_router")]
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		public unsafe extern cef_media_router_t* GetMediaRouter();
 	}
 }
 

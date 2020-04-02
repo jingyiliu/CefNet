@@ -68,6 +68,8 @@
     <Compile Remove="Generated\Managed\Internal\CefDOMVisitorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefEndTracingCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefExtensionHandlerGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefMediaObserverGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefMediaRouteCreateCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefMenuModelDelegateGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefPrintHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefReadHandlerGlue.cs" />

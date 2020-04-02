@@ -430,6 +430,23 @@
 				valuetype CefNet.CApi.cef_extension_t*(valuetype CefNet.CApi.cef_request_context_t*, valuetype CefNet.CApi.cef_string_t*)
 			ret
 		}
+
+		// _cef_media_router_t* (*)(_cef_request_context_t* self)*
+		.method public hidebysig valuetype CefNet.CApi.cef_media_router_t* GetMediaRouter()
+		{
+			.maxstack 2
+			ldarg.0
+			ldarg.0
+			ldfld void* CefNet.CApi.cef_request_context_t::get_media_router
+			calli explicit unmanaged
+#ifdef WINDOWS
+				stdcall
+#else
+				cdecl
+#endif
+				valuetype CefNet.CApi.cef_media_router_t*(valuetype CefNet.CApi.cef_request_context_t*)
+			ret
+		}
 	}
 }
 

@@ -16,7 +16,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <PropertyGroup>
-    <CefVersion>80.0</CefVersion>
+    <CefVersion>80.1</CefVersion>
     <VersionBuild>$([System.DateTime]::UtcNow.ToString(yy))$([System.DateTime]::UtcNow.DayOfYear.ToString(000))</VersionBuild>
     <VersionRevision>$([System.DateTime]::UtcNow.ToString(HHmm))</VersionRevision>
     <VersionPrefix>$(CefVersion).$(VersionBuild).$(VersionRevision)</VersionPrefix>

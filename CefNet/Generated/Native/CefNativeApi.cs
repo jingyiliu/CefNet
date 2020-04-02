@@ -20,7 +20,7 @@ namespace CefNet.CApi
 {
 	public static partial class CefNativeApi
 	{
-		public static readonly string ApiHash = "3ad9591f7024619a1e2fd796c7ad51ae3a34abbb";
+		public static readonly string ApiHash = "5f9a1d7977affd8006aff83fe4ab7c408c3288f0";
 
 		/// <summary>
 		/// Add an entry to the cross-origin access whitelist.
@@ -688,6 +688,18 @@ namespace CefNet.CApi
 		/// </remarks>
 		[DllImport("libcef", CallingConvention = CallingConvention.Cdecl)]
 		public static unsafe extern void cef_load_crlsets_file(cef_string_t* path);
+
+		/// <summary>
+		/// Returns the MediaRouter object associated with the global request context.
+		/// Equivalent to calling cef_request_context_t::cef_request_context_get_global_c
+		/// ontext()-&gt;get_media_router().
+		/// </summary>
+		/// <remarks>
+		/// Defined in include/capi/cef_media_router_capi.h as
+		/// cef_media_router_t* cef_media_router_get_global()
+		/// </remarks>
+		[DllImport("libcef", CallingConvention = CallingConvention.Cdecl)]
+		public static unsafe extern cef_media_router_t* cef_media_router_get_global();
 
 		/// <summary>
 		/// Create a new MenuModel with the specified |delegate|.
