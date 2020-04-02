@@ -25,19 +25,30 @@ namespace CefNet
 	/// functions of this structure will be called on the browser process UI thread.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefNavigationEntryVisitor : CefBaseRefCounted<cef_navigation_entry_visitor_t>
+	public unsafe partial class CefNavigationEntryVisitor : CefBaseRefCounted<cef_navigation_entry_visitor_t>, ICefNavigationEntryVisitorPrivate
 	{
+		private static readonly VisitDelegate fnVisit = VisitImpl;
+
 		internal static unsafe CefNavigationEntryVisitor Create(IntPtr instance)
 		{
 			return new CefNavigationEntryVisitor((cef_navigation_entry_visitor_t*)instance);
+		}
+
+		public CefNavigationEntryVisitor()
+		{
+			cef_navigation_entry_visitor_t* self = this.NativeInstance;
+			self->visit = (void*)Marshal.GetFunctionPointerForDelegate(fnVisit);
 		}
 
 		public CefNavigationEntryVisitor(cef_navigation_entry_visitor_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefNavigationEntryVisitorPrivate.AvoidVisit();
 
 		/// <summary>
 		/// Method that will be executed. Do not keep a reference to |entry| outside of
@@ -48,7 +59,22 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool Visit(CefNavigationEntry entry, bool current, int index, int total)
 		{
-			return SafeCall(NativeInstance->Visit((entry != null) ? entry.GetNativeInstance() : null, current ? 1 : 0, index, total) != 0);
+			return default;
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate int VisitDelegate(cef_navigation_entry_visitor_t* self, cef_navigation_entry_t* entry, int current, int index, int total);
+
+		// int (*)(_cef_navigation_entry_visitor_t* self, _cef_navigation_entry_t* entry, int current, int index, int total)*
+		private static unsafe int VisitImpl(cef_navigation_entry_visitor_t* self, cef_navigation_entry_t* entry, int current, int index, int total)
+		{
+			var instance = GetInstance((IntPtr)self) as CefNavigationEntryVisitor;
+			if (instance == null || ((ICefNavigationEntryVisitorPrivate)instance).AvoidVisit())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)entry);
+				return default;
+			}
+			return instance.Visit(CefNavigationEntry.Wrap(CefNavigationEntry.Create, entry), current != 0, index, total) ? 1 : 0;
 		}
 	}
 }

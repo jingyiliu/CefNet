@@ -24,13 +24,21 @@ namespace CefNet
 	/// Generic callback structure used for asynchronous completion.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefCompletionCallback : CefBaseRefCounted<cef_completion_callback_t>
+	public unsafe partial class CefCompletionCallback : CefBaseRefCounted<cef_completion_callback_t>, ICefCompletionCallbackPrivate
 	{
+		private static readonly OnCompleteDelegate fnOnComplete = OnCompleteImpl;
+
 		internal static unsafe CefCompletionCallback Create(IntPtr instance)
 		{
 			return new CefCompletionCallback((cef_completion_callback_t*)instance);
+		}
+
+		public CefCompletionCallback()
+		{
+			cef_completion_callback_t* self = this.NativeInstance;
+			self->on_complete = (void*)Marshal.GetFunctionPointerForDelegate(fnOnComplete);
 		}
 
 		public CefCompletionCallback(cef_completion_callback_t* instance)
@@ -43,8 +51,20 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnComplete()
 		{
-			NativeInstance->OnComplete();
-			GC.KeepAlive(this);
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnCompleteDelegate(cef_completion_callback_t* self);
+
+		// void (*)(_cef_completion_callback_t* self)*
+		private static unsafe void OnCompleteImpl(cef_completion_callback_t* self)
+		{
+			var instance = GetInstance((IntPtr)self) as CefCompletionCallback;
+			if (instance == null)
+			{
+				return;
+			}
+			instance.OnComplete();
 		}
 	}
 }

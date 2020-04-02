@@ -26,19 +26,42 @@ namespace CefNet
 	/// the request unless otherwise documented.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefUrlRequestClient : CefBaseRefCounted<cef_urlrequest_client_t>
+	public unsafe partial class CefUrlRequestClient : CefBaseRefCounted<cef_urlrequest_client_t>, ICefUrlRequestClientPrivate
 	{
+		private static readonly OnRequestCompleteDelegate fnOnRequestComplete = OnRequestCompleteImpl;
+
+		private static readonly OnUploadProgressDelegate fnOnUploadProgress = OnUploadProgressImpl;
+
+		private static readonly OnDownloadProgressDelegate fnOnDownloadProgress = OnDownloadProgressImpl;
+
+		private static readonly OnDownloadDataDelegate fnOnDownloadData = OnDownloadDataImpl;
+
+		private static readonly GetAuthCredentialsDelegate fnGetAuthCredentials = GetAuthCredentialsImpl;
+
 		internal static unsafe CefUrlRequestClient Create(IntPtr instance)
 		{
 			return new CefUrlRequestClient((cef_urlrequest_client_t*)instance);
+		}
+
+		public CefUrlRequestClient()
+		{
+			cef_urlrequest_client_t* self = this.NativeInstance;
+			self->on_request_complete = (void*)Marshal.GetFunctionPointerForDelegate(fnOnRequestComplete);
+			self->on_upload_progress = (void*)Marshal.GetFunctionPointerForDelegate(fnOnUploadProgress);
+			self->on_download_progress = (void*)Marshal.GetFunctionPointerForDelegate(fnOnDownloadProgress);
+			self->on_download_data = (void*)Marshal.GetFunctionPointerForDelegate(fnOnDownloadData);
+			self->get_auth_credentials = (void*)Marshal.GetFunctionPointerForDelegate(fnGetAuthCredentials);
 		}
 
 		public CefUrlRequestClient(cef_urlrequest_client_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefUrlRequestClientPrivate.AvoidOnRequestComplete();
 
 		/// <summary>
 		/// Notifies the client that the request has completed. Use the
@@ -47,9 +70,25 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnRequestComplete(CefUrlRequest request)
 		{
-			NativeInstance->OnRequestComplete((request != null) ? request.GetNativeInstance() : null);
-			GC.KeepAlive(this);
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnRequestCompleteDelegate(cef_urlrequest_client_t* self, cef_urlrequest_t* request);
+
+		// void (*)(_cef_urlrequest_client_t* self, _cef_urlrequest_t* request)*
+		private static unsafe void OnRequestCompleteImpl(cef_urlrequest_client_t* self, cef_urlrequest_t* request)
+		{
+			var instance = GetInstance((IntPtr)self) as CefUrlRequestClient;
+			if (instance == null || ((ICefUrlRequestClientPrivate)instance).AvoidOnRequestComplete())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)request);
+				return;
+			}
+			instance.OnRequestComplete(CefUrlRequest.Wrap(CefUrlRequest.Create, request));
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefUrlRequestClientPrivate.AvoidOnUploadProgress();
 
 		/// <summary>
 		/// Notifies the client of upload progress. |current| denotes the number of
@@ -59,9 +98,25 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnUploadProgress(CefUrlRequest request, long current, long total)
 		{
-			NativeInstance->OnUploadProgress((request != null) ? request.GetNativeInstance() : null, current, total);
-			GC.KeepAlive(this);
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnUploadProgressDelegate(cef_urlrequest_client_t* self, cef_urlrequest_t* request, long current, long total);
+
+		// void (*)(_cef_urlrequest_client_t* self, _cef_urlrequest_t* request, int64 current, int64 total)*
+		private static unsafe void OnUploadProgressImpl(cef_urlrequest_client_t* self, cef_urlrequest_t* request, long current, long total)
+		{
+			var instance = GetInstance((IntPtr)self) as CefUrlRequestClient;
+			if (instance == null || ((ICefUrlRequestClientPrivate)instance).AvoidOnUploadProgress())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)request);
+				return;
+			}
+			instance.OnUploadProgress(CefUrlRequest.Wrap(CefUrlRequest.Create, request), current, total);
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefUrlRequestClientPrivate.AvoidOnDownloadProgress();
 
 		/// <summary>
 		/// Notifies the client of download progress. |current| denotes the number of
@@ -70,9 +125,25 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnDownloadProgress(CefUrlRequest request, long current, long total)
 		{
-			NativeInstance->OnDownloadProgress((request != null) ? request.GetNativeInstance() : null, current, total);
-			GC.KeepAlive(this);
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnDownloadProgressDelegate(cef_urlrequest_client_t* self, cef_urlrequest_t* request, long current, long total);
+
+		// void (*)(_cef_urlrequest_client_t* self, _cef_urlrequest_t* request, int64 current, int64 total)*
+		private static unsafe void OnDownloadProgressImpl(cef_urlrequest_client_t* self, cef_urlrequest_t* request, long current, long total)
+		{
+			var instance = GetInstance((IntPtr)self) as CefUrlRequestClient;
+			if (instance == null || ((ICefUrlRequestClientPrivate)instance).AvoidOnDownloadProgress())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)request);
+				return;
+			}
+			instance.OnDownloadProgress(CefUrlRequest.Wrap(CefUrlRequest.Create, request), current, total);
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefUrlRequestClientPrivate.AvoidOnDownloadData();
 
 		/// <summary>
 		/// Called when some part of the response is read. |data| contains the current
@@ -81,9 +152,25 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnDownloadData(CefUrlRequest request, IntPtr data, long dataLength)
 		{
-			NativeInstance->OnDownloadData((request != null) ? request.GetNativeInstance() : null, (void*)data, new UIntPtr((ulong)dataLength));
-			GC.KeepAlive(this);
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnDownloadDataDelegate(cef_urlrequest_client_t* self, cef_urlrequest_t* request, void* data, UIntPtr data_length);
+
+		// void (*)(_cef_urlrequest_client_t* self, _cef_urlrequest_t* request, const void* data, size_t data_length)*
+		private static unsafe void OnDownloadDataImpl(cef_urlrequest_client_t* self, cef_urlrequest_t* request, void* data, UIntPtr data_length)
+		{
+			var instance = GetInstance((IntPtr)self) as CefUrlRequestClient;
+			if (instance == null || ((ICefUrlRequestClientPrivate)instance).AvoidOnDownloadData())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)request);
+				return;
+			}
+			instance.OnDownloadData(CefUrlRequest.Wrap(CefUrlRequest.Create, request), unchecked((IntPtr)data), (long)data_length);
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefUrlRequestClientPrivate.AvoidGetAuthCredentials();
 
 		/// <summary>
 		/// Called on the IO thread when the browser needs credentials from the user.
@@ -98,15 +185,22 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool GetAuthCredentials(bool isProxy, string host, int port, string realm, string scheme, CefAuthCallback callback)
 		{
-			fixed (char* s1 = host)
-			fixed (char* s3 = realm)
-			fixed (char* s4 = scheme)
+			return default;
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate int GetAuthCredentialsDelegate(cef_urlrequest_client_t* self, int isProxy, cef_string_t* host, int port, cef_string_t* realm, cef_string_t* scheme, cef_auth_callback_t* callback);
+
+		// int (*)(_cef_urlrequest_client_t* self, int isProxy, const cef_string_t* host, int port, const cef_string_t* realm, const cef_string_t* scheme, _cef_auth_callback_t* callback)*
+		private static unsafe int GetAuthCredentialsImpl(cef_urlrequest_client_t* self, int isProxy, cef_string_t* host, int port, cef_string_t* realm, cef_string_t* scheme, cef_auth_callback_t* callback)
+		{
+			var instance = GetInstance((IntPtr)self) as CefUrlRequestClient;
+			if (instance == null || ((ICefUrlRequestClientPrivate)instance).AvoidGetAuthCredentials())
 			{
-				var cstr1 = new cef_string_t { Str = s1, Length = host != null ? host.Length : 0 };
-				var cstr3 = new cef_string_t { Str = s3, Length = realm != null ? realm.Length : 0 };
-				var cstr4 = new cef_string_t { Str = s4, Length = scheme != null ? scheme.Length : 0 };
-				return SafeCall(NativeInstance->GetAuthCredentials(isProxy ? 1 : 0, &cstr1, port, &cstr3, &cstr4, (callback != null) ? callback.GetNativeInstance() : null) != 0);
+				ReleaseIfNonNull((cef_base_ref_counted_t*)callback);
+				return default;
 			}
+			return instance.GetAuthCredentials(isProxy != 0, CefString.Read(host), port, CefString.Read(realm), CefString.Read(scheme), CefAuthCallback.Wrap(CefAuthCallback.Create, callback)) ? 1 : 0;
 		}
 	}
 }

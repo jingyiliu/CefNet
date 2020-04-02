@@ -26,19 +26,30 @@ namespace CefNet
 	/// thread.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefSchemeHandlerFactory : CefBaseRefCounted<cef_scheme_handler_factory_t>
+	public unsafe partial class CefSchemeHandlerFactory : CefBaseRefCounted<cef_scheme_handler_factory_t>, ICefSchemeHandlerFactoryPrivate
 	{
+		private static readonly CreateDelegate fnCreate = CreateImpl;
+
 		internal static unsafe CefSchemeHandlerFactory Create(IntPtr instance)
 		{
 			return new CefSchemeHandlerFactory((cef_scheme_handler_factory_t*)instance);
+		}
+
+		public CefSchemeHandlerFactory()
+		{
+			cef_scheme_handler_factory_t* self = this.NativeInstance;
+			self->create = (void*)Marshal.GetFunctionPointerForDelegate(fnCreate);
 		}
 
 		public CefSchemeHandlerFactory(cef_scheme_handler_factory_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefSchemeHandlerFactoryPrivate.AvoidCreate();
 
 		/// <summary>
 		/// Return a new resource handler instance to handle the request or an NULL
@@ -50,11 +61,27 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual CefResourceHandler Create(CefBrowser browser, CefFrame frame, string schemeName, CefRequest request)
 		{
-			fixed (char* s2 = schemeName)
+			return default;
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate cef_resource_handler_t* CreateDelegate(cef_scheme_handler_factory_t* self, cef_browser_t* browser, cef_frame_t* frame, cef_string_t* scheme_name, cef_request_t* request);
+
+		// _cef_resource_handler_t* (*)(_cef_scheme_handler_factory_t* self, _cef_browser_t* browser, _cef_frame_t* frame, const cef_string_t* scheme_name, _cef_request_t* request)*
+		private static unsafe cef_resource_handler_t* CreateImpl(cef_scheme_handler_factory_t* self, cef_browser_t* browser, cef_frame_t* frame, cef_string_t* scheme_name, cef_request_t* request)
+		{
+			var instance = GetInstance((IntPtr)self) as CefSchemeHandlerFactory;
+			if (instance == null || ((ICefSchemeHandlerFactoryPrivate)instance).AvoidCreate())
 			{
-				var cstr2 = new cef_string_t { Str = s2, Length = schemeName != null ? schemeName.Length : 0 };
-				return SafeCall(CefResourceHandler.Wrap(CefResourceHandler.Create, NativeInstance->Create((browser != null) ? browser.GetNativeInstance() : null, (frame != null) ? frame.GetNativeInstance() : null, &cstr2, (request != null) ? request.GetNativeInstance() : null)));
+				ReleaseIfNonNull((cef_base_ref_counted_t*)browser);
+				ReleaseIfNonNull((cef_base_ref_counted_t*)frame);
+				ReleaseIfNonNull((cef_base_ref_counted_t*)request);
+				return default;
 			}
+			CefResourceHandler rv = instance.Create(CefBrowser.Wrap(CefBrowser.Create, browser), CefFrame.Wrap(CefFrame.Create, frame), CefString.Read(scheme_name), CefRequest.Wrap(CefRequest.Create, request));
+			if (rv == null)
+				return null;
+			return (rv != null) ? rv.GetNativeInstance() : null;
 		}
 	}
 }

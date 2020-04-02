@@ -24,19 +24,30 @@ namespace CefNet
 	/// Callback structure for cef_request_context_t::ResolveHost.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefResolveCallback : CefBaseRefCounted<cef_resolve_callback_t>
+	public unsafe partial class CefResolveCallback : CefBaseRefCounted<cef_resolve_callback_t>, ICefResolveCallbackPrivate
 	{
+		private static readonly OnResolveCompletedDelegate fnOnResolveCompleted = OnResolveCompletedImpl;
+
 		internal static unsafe CefResolveCallback Create(IntPtr instance)
 		{
 			return new CefResolveCallback((cef_resolve_callback_t*)instance);
+		}
+
+		public CefResolveCallback()
+		{
+			cef_resolve_callback_t* self = this.NativeInstance;
+			self->on_resolve_completed = (void*)Marshal.GetFunctionPointerForDelegate(fnOnResolveCompleted);
 		}
 
 		public CefResolveCallback(cef_resolve_callback_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefResolveCallbackPrivate.AvoidOnResolveCompleted();
 
 		/// <summary>
 		/// Called on the UI thread after the ResolveHost request has completed.
@@ -45,8 +56,20 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnResolveCompleted(CefErrorCode result, CefStringList resolvedIps)
 		{
-			NativeInstance->OnResolveCompleted(result, resolvedIps.GetNativeInstance());
-			GC.KeepAlive(this);
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnResolveCompletedDelegate(cef_resolve_callback_t* self, CefErrorCode result, cef_string_list_t resolved_ips);
+
+		// void (*)(_cef_resolve_callback_t* self, cef_errorcode_t result, cef_string_list_t resolved_ips)*
+		private static unsafe void OnResolveCompletedImpl(cef_resolve_callback_t* self, CefErrorCode result, cef_string_list_t resolved_ips)
+		{
+			var instance = GetInstance((IntPtr)self) as CefResolveCallback;
+			if (instance == null || ((ICefResolveCallbackPrivate)instance).AvoidOnResolveCompleted())
+			{
+				return;
+			}
+			instance.OnResolveCompleted(result, CefStringList.Wrap(resolved_ips));
 		}
 	}
 }

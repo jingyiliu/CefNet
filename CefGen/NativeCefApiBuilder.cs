@@ -156,7 +156,38 @@ namespace CefGen
 				throw new NotImplementedException();
 			}
 
-			var decl = new CodeStruct(GetClassName(@class.Name));
+			string className = GetClassName(@class.Name);
+
+			string sourceFile = @class.GetSourceFile();
+
+			if (sourceFile.EndsWith("_capi.h"))
+			{
+				string fname = Path.GetFileName(sourceFile);
+				fname = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(sourceFile)), fname.Remove(fname.Length - 7) + ".h");
+				if (File.Exists(fname))
+				{
+					string cppClassName = className.EndsWith("_t") ? className.Remove(className.Length - 2).ToUpperCamel() : className.ToUpperCamel();
+					string prevLine = null;
+					foreach (string line in File.ReadLines(fname))
+					{
+						if (line.IndexOf("class " + cppClassName + " ", StringComparison.OrdinalIgnoreCase) != -1)
+						{
+							if (prevLine.Contains("source=library"))
+							{
+								Extensions.StructTypes.Add(className, CefSourceKind.Library);
+							}
+							else if (prevLine.Contains("source=client"))
+							{
+								Extensions.StructTypes.Add(className, CefSourceKind.Client);
+							}
+							break;
+						}
+						prevLine = line;
+					}
+				}
+			}
+
+			var decl = new CodeStruct(className);
 			decl.Attributes = CodeAttributes.Public | CodeAttributes.Unsafe | CodeAttributes.Partial;
 			decl.Comments.AddVSDocComment(@class.Comment, "summary");
 

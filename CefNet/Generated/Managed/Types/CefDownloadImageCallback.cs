@@ -25,19 +25,30 @@ namespace CefNet
 	/// this structure will be called on the browser process UI thread.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefDownloadImageCallback : CefBaseRefCounted<cef_download_image_callback_t>
+	public unsafe partial class CefDownloadImageCallback : CefBaseRefCounted<cef_download_image_callback_t>, ICefDownloadImageCallbackPrivate
 	{
+		private static readonly OnDownloadImageFinishedDelegate fnOnDownloadImageFinished = OnDownloadImageFinishedImpl;
+
 		internal static unsafe CefDownloadImageCallback Create(IntPtr instance)
 		{
 			return new CefDownloadImageCallback((cef_download_image_callback_t*)instance);
+		}
+
+		public CefDownloadImageCallback()
+		{
+			cef_download_image_callback_t* self = this.NativeInstance;
+			self->on_download_image_finished = (void*)Marshal.GetFunctionPointerForDelegate(fnOnDownloadImageFinished);
 		}
 
 		public CefDownloadImageCallback(cef_download_image_callback_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefDownloadImageCallbackPrivate.AvoidOnDownloadImageFinished();
 
 		/// <summary>
 		/// Method that will be executed when the image download has completed.
@@ -47,12 +58,21 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnDownloadImageFinished(string imageUrl, int httpStatusCode, CefImage image)
 		{
-			fixed (char* s0 = imageUrl)
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnDownloadImageFinishedDelegate(cef_download_image_callback_t* self, cef_string_t* image_url, int http_status_code, cef_image_t* image);
+
+		// void (*)(_cef_download_image_callback_t* self, const cef_string_t* image_url, int http_status_code, _cef_image_t* image)*
+		private static unsafe void OnDownloadImageFinishedImpl(cef_download_image_callback_t* self, cef_string_t* image_url, int http_status_code, cef_image_t* image)
+		{
+			var instance = GetInstance((IntPtr)self) as CefDownloadImageCallback;
+			if (instance == null || ((ICefDownloadImageCallbackPrivate)instance).AvoidOnDownloadImageFinished())
 			{
-				var cstr0 = new cef_string_t { Str = s0, Length = imageUrl != null ? imageUrl.Length : 0 };
-				NativeInstance->OnDownloadImageFinished(&cstr0, httpStatusCode, (image != null) ? image.GetNativeInstance() : null);
+				ReleaseIfNonNull((cef_base_ref_counted_t*)image);
+				return;
 			}
-			GC.KeepAlive(this);
+			instance.OnDownloadImageFinished(CefString.Read(image_url), http_status_code, CefImage.Wrap(CefImage.Create, image));
 		}
 	}
 }

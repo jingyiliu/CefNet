@@ -1,6 +1,0 @@
-﻿cef_v8array_buffer_release_callback_t
-cef_download_handler_t
-cef_v8handler_t
-cef_pdf_print_callback_t
-cef_media_observer_t
-cef_media_route_create_callback_t

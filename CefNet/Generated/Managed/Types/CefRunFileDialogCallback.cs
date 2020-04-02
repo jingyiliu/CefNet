@@ -25,19 +25,30 @@ namespace CefNet
 	/// this structure will be called on the browser process UI thread.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefRunFileDialogCallback : CefBaseRefCounted<cef_run_file_dialog_callback_t>
+	public unsafe partial class CefRunFileDialogCallback : CefBaseRefCounted<cef_run_file_dialog_callback_t>, ICefRunFileDialogCallbackPrivate
 	{
+		private static readonly OnFileDialogDismissedDelegate fnOnFileDialogDismissed = OnFileDialogDismissedImpl;
+
 		internal static unsafe CefRunFileDialogCallback Create(IntPtr instance)
 		{
 			return new CefRunFileDialogCallback((cef_run_file_dialog_callback_t*)instance);
+		}
+
+		public CefRunFileDialogCallback()
+		{
+			cef_run_file_dialog_callback_t* self = this.NativeInstance;
+			self->on_file_dialog_dismissed = (void*)Marshal.GetFunctionPointerForDelegate(fnOnFileDialogDismissed);
 		}
 
 		public CefRunFileDialogCallback(cef_run_file_dialog_callback_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefRunFileDialogCallbackPrivate.AvoidOnFileDialogDismissed();
 
 		/// <summary>
 		/// Called asynchronously after the file dialog is dismissed.
@@ -48,8 +59,20 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual void OnFileDialogDismissed(bool selectedAcceptFilter, CefStringList filePaths)
 		{
-			NativeInstance->OnFileDialogDismissed(selectedAcceptFilter ? 1 : 0, filePaths.GetNativeInstance());
-			GC.KeepAlive(this);
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate void OnFileDialogDismissedDelegate(cef_run_file_dialog_callback_t* self, int selected_accept_filter, cef_string_list_t file_paths);
+
+		// void (*)(_cef_run_file_dialog_callback_t* self, int selected_accept_filter, cef_string_list_t file_paths)*
+		private static unsafe void OnFileDialogDismissedImpl(cef_run_file_dialog_callback_t* self, int selected_accept_filter, cef_string_list_t file_paths)
+		{
+			var instance = GetInstance((IntPtr)self) as CefRunFileDialogCallback;
+			if (instance == null || ((ICefRunFileDialogCallbackPrivate)instance).AvoidOnFileDialogDismissed())
+			{
+				return;
+			}
+			instance.OnFileDialogDismissed(selected_accept_filter != 0, CefStringList.Wrap(file_paths));
 		}
 	}
 }

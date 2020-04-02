@@ -29,19 +29,39 @@ namespace CefNet
 	/// by integer.
 	/// </summary>
 	/// <remarks>
-	/// Role: Proxy
+	/// Role: Handler
 	/// </remarks>
-	public unsafe partial class CefV8Interceptor : CefBaseRefCounted<cef_v8interceptor_t>
+	public unsafe partial class CefV8Interceptor : CefBaseRefCounted<cef_v8interceptor_t>, ICefV8InterceptorPrivate
 	{
+		private static readonly GetByNameDelegate fnGetByName = GetByNameImpl;
+
+		private static readonly GetByIndexDelegate fnGetByIndex = GetByIndexImpl;
+
+		private static readonly SetByNameDelegate fnSetByName = SetByNameImpl;
+
+		private static readonly SetByIndexDelegate fnSetByIndex = SetByIndexImpl;
+
 		internal static unsafe CefV8Interceptor Create(IntPtr instance)
 		{
 			return new CefV8Interceptor((cef_v8interceptor_t*)instance);
+		}
+
+		public CefV8Interceptor()
+		{
+			cef_v8interceptor_t* self = this.NativeInstance;
+			self->get_byname = (void*)Marshal.GetFunctionPointerForDelegate(fnGetByName);
+			self->get_byindex = (void*)Marshal.GetFunctionPointerForDelegate(fnGetByIndex);
+			self->set_byname = (void*)Marshal.GetFunctionPointerForDelegate(fnSetByName);
+			self->set_byindex = (void*)Marshal.GetFunctionPointerForDelegate(fnSetByIndex);
 		}
 
 		public CefV8Interceptor(cef_v8interceptor_t* instance)
 			: base((cef_base_ref_counted_t*)instance)
 		{
 		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefV8InterceptorPrivate.AvoidGetByName();
 
 		/// <summary>
 		/// Handle retrieval of the interceptor value identified by |name|. |object| is
@@ -54,20 +74,33 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool GetByName(string name, CefV8Value @object, ref CefV8Value retval, ref string exception)
 		{
-			fixed (char* s0 = name)
-			fixed (char* s3 = exception)
-			{
-				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				cef_v8value_t* p2 = (retval != null) ? retval.GetNativeInstance() : null;
-				cef_v8value_t** pp2 = &p2;
-				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->GetByName(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
-				retval = CefV8Value.Wrap(CefV8Value.Create, p2);
-				exception = CefString.ReadAndFree(&cstr3);
-				GC.KeepAlive(this);
-				return rv;
-			}
+			return default;
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate int GetByNameDelegate(cef_v8interceptor_t* self, cef_string_t* name, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception);
+
+		// int (*)(_cef_v8interceptor_t* self, const cef_string_t* name, _cef_v8value_t* object, _cef_v8value_t** retval, cef_string_t* exception)*
+		private static unsafe int GetByNameImpl(cef_v8interceptor_t* self, cef_string_t* name, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception)
+		{
+			var instance = GetInstance((IntPtr)self) as CefV8Interceptor;
+			if (instance == null || ((ICefV8InterceptorPrivate)instance).AvoidGetByName())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)@object);
+				return default;
+			}
+			CefV8Value obj_retval = CefV8Value.Wrap(CefV8Value.Create, *retval);
+			string s_exception = CefString.Read(exception);
+			string s_orig_exception = s_exception;
+			int rv = instance.GetByName(CefString.Read(name), CefV8Value.Wrap(CefV8Value.Create, @object), ref obj_retval, ref s_exception) ? 1 : 0;
+			*retval = (obj_retval != null) ? obj_retval.GetNativeInstance() : null;
+			if (s_exception != s_orig_exception)
+				CefString.Replace(exception, s_exception);
+			return rv;
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefV8InterceptorPrivate.AvoidGetByIndex();
 
 		/// <summary>
 		/// Handle retrieval of the interceptor value identified by |index|. |object|
@@ -79,18 +112,33 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool GetByIndex(int index, CefV8Value @object, ref CefV8Value retval, ref string exception)
 		{
-			fixed (char* s3 = exception)
-			{
-				cef_v8value_t* p2 = (retval != null) ? retval.GetNativeInstance() : null;
-				cef_v8value_t** pp2 = &p2;
-				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->GetByIndex(index, (@object != null) ? @object.GetNativeInstance() : null, pp2, &cstr3) != 0;
-				retval = CefV8Value.Wrap(CefV8Value.Create, p2);
-				exception = CefString.ReadAndFree(&cstr3);
-				GC.KeepAlive(this);
-				return rv;
-			}
+			return default;
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate int GetByIndexDelegate(cef_v8interceptor_t* self, int index, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception);
+
+		// int (*)(_cef_v8interceptor_t* self, int index, _cef_v8value_t* object, _cef_v8value_t** retval, cef_string_t* exception)*
+		private static unsafe int GetByIndexImpl(cef_v8interceptor_t* self, int index, cef_v8value_t* @object, cef_v8value_t** retval, cef_string_t* exception)
+		{
+			var instance = GetInstance((IntPtr)self) as CefV8Interceptor;
+			if (instance == null || ((ICefV8InterceptorPrivate)instance).AvoidGetByIndex())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)@object);
+				return default;
+			}
+			CefV8Value obj_retval = CefV8Value.Wrap(CefV8Value.Create, *retval);
+			string s_exception = CefString.Read(exception);
+			string s_orig_exception = s_exception;
+			int rv = instance.GetByIndex(index, CefV8Value.Wrap(CefV8Value.Create, @object), ref obj_retval, ref s_exception) ? 1 : 0;
+			*retval = (obj_retval != null) ? obj_retval.GetNativeInstance() : null;
+			if (s_exception != s_orig_exception)
+				CefString.Replace(exception, s_exception);
+			return rv;
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefV8InterceptorPrivate.AvoidSetByName();
 
 		/// <summary>
 		/// Handle assignment of the interceptor value identified by |name|. |object|
@@ -102,17 +150,32 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetByName(string name, CefV8Value @object, CefV8Value value, ref string exception)
 		{
-			fixed (char* s0 = name)
-			fixed (char* s3 = exception)
-			{
-				var cstr0 = new cef_string_t { Str = s0, Length = name != null ? name.Length : 0 };
-				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->SetByName(&cstr0, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
-				exception = CefString.ReadAndFree(&cstr3);
-				GC.KeepAlive(this);
-				return rv;
-			}
+			return default;
 		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate int SetByNameDelegate(cef_v8interceptor_t* self, cef_string_t* name, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception);
+
+		// int (*)(_cef_v8interceptor_t* self, const cef_string_t* name, _cef_v8value_t* object, _cef_v8value_t* value, cef_string_t* exception)*
+		private static unsafe int SetByNameImpl(cef_v8interceptor_t* self, cef_string_t* name, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception)
+		{
+			var instance = GetInstance((IntPtr)self) as CefV8Interceptor;
+			if (instance == null || ((ICefV8InterceptorPrivate)instance).AvoidSetByName())
+			{
+				ReleaseIfNonNull((cef_base_ref_counted_t*)@object);
+				ReleaseIfNonNull((cef_base_ref_counted_t*)value);
+				return default;
+			}
+			string s_exception = CefString.Read(exception);
+			string s_orig_exception = s_exception;
+			int rv = instance.SetByName(CefString.Read(name), CefV8Value.Wrap(CefV8Value.Create, @object), CefV8Value.Wrap(CefV8Value.Create, value), ref s_exception) ? 1 : 0;
+			if (s_exception != s_orig_exception)
+				CefString.Replace(exception, s_exception);
+			return rv;
+		}
+
+		[MethodImpl(MethodImplOptions.ForwardRef)]
+		extern bool ICefV8InterceptorPrivate.AvoidSetByIndex();
 
 		/// <summary>
 		/// Handle assignment of the interceptor value identified by |index|. |object|
@@ -123,14 +186,28 @@ namespace CefNet
 		/// </summary>
 		public unsafe virtual bool SetByIndex(int index, CefV8Value @object, CefV8Value value, ref string exception)
 		{
-			fixed (char* s3 = exception)
+			return default;
+		}
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		private unsafe delegate int SetByIndexDelegate(cef_v8interceptor_t* self, int index, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception);
+
+		// int (*)(_cef_v8interceptor_t* self, int index, _cef_v8value_t* object, _cef_v8value_t* value, cef_string_t* exception)*
+		private static unsafe int SetByIndexImpl(cef_v8interceptor_t* self, int index, cef_v8value_t* @object, cef_v8value_t* value, cef_string_t* exception)
+		{
+			var instance = GetInstance((IntPtr)self) as CefV8Interceptor;
+			if (instance == null || ((ICefV8InterceptorPrivate)instance).AvoidSetByIndex())
 			{
-				var cstr3 = new cef_string_t { Str = s3, Length = exception != null ? exception.Length : 0 };
-				var rv = NativeInstance->SetByIndex(index, (@object != null) ? @object.GetNativeInstance() : null, (value != null) ? value.GetNativeInstance() : null, &cstr3) != 0;
-				exception = CefString.ReadAndFree(&cstr3);
-				GC.KeepAlive(this);
-				return rv;
+				ReleaseIfNonNull((cef_base_ref_counted_t*)@object);
+				ReleaseIfNonNull((cef_base_ref_counted_t*)value);
+				return default;
 			}
+			string s_exception = CefString.Read(exception);
+			string s_orig_exception = s_exception;
+			int rv = instance.SetByIndex(index, CefV8Value.Wrap(CefV8Value.Create, @object), CefV8Value.Wrap(CefV8Value.Create, value), ref s_exception) ? 1 : 0;
+			if (s_exception != s_orig_exception)
+				CefString.Replace(exception, s_exception);
+			return rv;
 		}
 	}
 }

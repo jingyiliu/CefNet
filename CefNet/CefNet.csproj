@@ -63,27 +63,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Generated\Managed\Internal\CefCompletionCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefCookieVisitorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefDeleteCookiesCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefDOMVisitorGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefDownloadImageCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefEndTracingCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefExtensionHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefMediaObserverGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefMediaRouteCreateCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefMenuModelDelegateGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefNavigationEntryVisitorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefPrintHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefReadHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefRegisterCDMCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefRequestContextHandlerGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefResolveCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefResourceBundleHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefResourceHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefResponseFilterGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefRunFileDialogCallbackGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefSchemeHandlerFactoryGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefServerHandlerGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefSetCookieCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefStringVisitorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefTaskGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefUrlRequestClientGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefV8AccessorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefV8ArrayBufferReleaseCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefV8HandlerGlue.cs" />
+    <Compile Remove="Generated\Managed\Internal\CefV8InterceptorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefWebPluginInfoVisitorGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefWebPluginUnstableCallbackGlue.cs" />
     <Compile Remove="Generated\Managed\Internal\CefWriteHandlerGlue.cs" />

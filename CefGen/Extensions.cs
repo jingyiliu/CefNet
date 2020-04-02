@@ -34,6 +34,8 @@ namespace CefGen
 			File.ReadAllLines(Path.Combine("Settings", "Handlers.txt"), Encoding.UTF8)
 			.Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s)).ToArray(), true);
 
+		internal readonly static Dictionary<string, CefSourceKind> StructTypes = new Dictionary<string, CefSourceKind>();
+
 		private readonly static Lazy<BoolIntInfo[]> BooleanInt = new Lazy<BoolIntInfo[]>(() =>
 		{
 			var info = new List<BoolIntInfo>();
@@ -229,14 +231,20 @@ namespace CefGen
 			return s;
 		}
 
+		public static string GetSourceFile(this CppClass @class)
+		{
+			CppField field = @class.Fields.FirstOrDefault();
+			if (field is null)
+				return @class.Span.Start.File;
+			return field.Span.Start.File;
+		}
+
 		public static bool IsImplementation(this INamedTypeSymbol symbol)
 		{
-			string comment = symbol.GetDocumentationCommentXml();
-			if (string.IsNullOrWhiteSpace(comment))
-				throw new NotImplementedException();
-			if (Handlers.Value.Contains(symbol.Name.TrimStart('_')))
-				return false;
-			return !comment.Contains("Implement ", StringComparison.InvariantCultureIgnoreCase);
+			if (StructTypes.TryGetValue(symbol.Name, out CefSourceKind sourceKind))
+				return sourceKind != CefSourceKind.Client;
+
+			throw new NotImplementedException();
 		}
 
 		public static string GetComment(this ISymbol symbol)
