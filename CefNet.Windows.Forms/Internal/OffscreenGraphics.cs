@@ -92,9 +92,8 @@ namespace CefNet.Internal
 
 		public void SetLocation(int x, int y)
 		{
-			// TODO: https://bitbucket.org/chromiumembedded/cef/issues/2902/osr-combobox-drop-down-list-location-is
-			//_bounds.X = x;
-			//_bounds.Y = y;
+			_bounds.X = x;
+			_bounds.Y = y;
 		}
 
 		public bool SetSize(int width, int height)
