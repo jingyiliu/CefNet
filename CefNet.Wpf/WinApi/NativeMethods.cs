@@ -6,7 +6,7 @@ namespace CefNet.WinApi
 	static class NativeMethods
 	{
 		[DllImport("user32.dll")]
-		public static extern IntPtr GetKeyboardLayout(ushort dwLayout);
+		public static extern IntPtr GetKeyboardLayout(uint idThread);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr ActivateKeyboardLayout(IntPtr hkl, int flags);
